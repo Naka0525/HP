@@ -1,0 +1,164 @@
+{
+  "purpose": "展示会・セミナー管理アプリを kintone MCP で作成・更新するための定義。認証情報はここには書かない。",
+  "mcp": {
+    "serverName": "kintone",
+    "cursorConfigExample": ".cursor/mcp.json.example",
+    "cursorConfigLocal": ".cursor/mcp.json",
+    "command": "kintone-mcp-server",
+    "envKeys": [
+      "KINTONE_BASE_URL",
+      "KINTONE_USERNAME",
+      "KINTONE_PASSWORD"
+    ],
+    "note": "プロジェクトの .cursor/mcp.json は git 管理しない。example をコピーしてサブドメインと認証情報を入れる。"
+  },
+  "kintone": {
+    "baseUrl": "https://commoncom.cybozu.com",
+    "spaceId": "42",
+    "appId": "695",
+    "appName": "展示会・セミナー管理",
+    "listViewId": "13313387",
+    "calendarViewId": "13313393",
+    "wordpressEditUrl": "https://commoncom.jp/wp/wp-admin/post.php?post=6042&action=edit"
+  },
+  "app": {
+    "name": "展示会・セミナー管理",
+    "description": "WordPress / SWELL 貼り付け用HTMLの情報元。1イベント1レコード。",
+    "fields": {
+      "event_name": {
+        "type": "SINGLE_LINE_TEXT",
+        "label": "イベント名",
+        "required": true
+      },
+      "event_date": {
+        "type": "DATE",
+        "label": "開催日",
+        "required": true
+      },
+      "prefecture": {
+        "type": "DROP_DOWN",
+        "label": "都道府県",
+        "required": true,
+        "options": [
+          "埼玉",
+          "新潟"
+        ]
+      },
+      "venue": {
+        "type": "SINGLE_LINE_TEXT",
+        "label": "会場",
+        "required": true
+      },
+      "event_type": {
+        "type": "DROP_DOWN",
+        "label": "イベント種別",
+        "required": true,
+        "options": [
+          "セミナー＋出展",
+          "出展"
+        ]
+      },
+      "publish_status": {
+        "type": "DROP_DOWN",
+        "label": "公開状態",
+        "required": true,
+        "defaultValue": "下書き",
+        "options": [
+          "下書き",
+          "公開",
+          "非公開"
+        ]
+      },
+      "apply_url": {
+        "type": "LINK",
+        "label": "申込みURL",
+        "protocol": "WEB",
+        "required": false
+      },
+      "detail_url": {
+        "type": "LINK",
+        "label": "詳細URL",
+        "protocol": "WEB",
+        "required": false
+      },
+      "flyer_url": {
+        "type": "LINK",
+        "label": "チラシURL",
+        "protocol": "WEB",
+        "required": false
+      },
+      "visitor_companies": {
+        "type": "NUMBER",
+        "label": "来場社数",
+        "required": false
+      },
+      "visitors": {
+        "type": "NUMBER",
+        "label": "来場人数",
+        "required": false
+      },
+      "seminars": {
+        "type": "SUBTABLE",
+        "label": "セミナー情報",
+        "fields": {
+          "seminar_sort": {
+            "type": "NUMBER",
+            "label": "並び順"
+          },
+          "seminar_title": {
+            "type": "SINGLE_LINE_TEXT",
+            "label": "セミナータイトル"
+          }
+        }
+      },
+      "help_images": {
+        "type": "FILE",
+        "label": "ヘルプ画像"
+      },
+      "exhibits": {
+        "type": "SUBTABLE",
+        "label": "出展情報",
+        "fields": {
+          "exhibit_sort": {
+            "type": "NUMBER",
+            "label": "並び順"
+          },
+          "exhibit_title": {
+            "type": "SINGLE_LINE_TEXT",
+            "label": "出展内容"
+          }
+        }
+      }
+    }
+  },
+  "htmlGeneration": {
+    "sourceHtml": "展示会のページ/swell-paste.html",
+    "timezone": "Asia/Tokyo",
+    "publishFilter": "公開",
+    "upcomingRule": "都道府県ごとに開催日が最も新しいイベントのみ。かつ開催日 >= 今日",
+    "pastRule": "上記以外（同じ都道府県の古い開催、および開催日 < 今日）",
+    "upcomingSort": "event_date desc",
+    "pastSort": "event_date desc",
+    "cardThemeByEventType": {
+      "セミナー＋出展": "orange",
+      "出展": "navy"
+    },
+    "prefectureEn": {
+      "埼玉": "SAITAMA",
+      "新潟": "NIIGATA"
+    },
+    "cta": {
+      "proposed": "allUpcomingWithApplyUrl",
+      "order": "event_date desc",
+      "note": "現行HTMLは開催予定のうち申込みURLがあるイベントをすべてCTAに出す。並びは新しい開催日が上。"
+    },
+    "fixedTemplate": [
+      "CSS（.ccx）",
+      "Hero画像",
+      "ページタイトル",
+      "説明文",
+      "展示会写真",
+      "セミナー写真"
+    ]
+  }
+}
