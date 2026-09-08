@@ -7,11 +7,33 @@
   - 汎用クラスを使わず vlp- プレフィックスで隔離
   - すべてのCSSを #vlp-root 配下にスコープ
   - SWELLの見出し/リスト/ボタン/figure/details装飾を局所リセット
+  - ページ内リンクは SWELL スムーススクロールを横取りし、固定ヘッダー分だけずらす
+  - CONTACT の #vlp-form-slot に、直後の Contact Form 7 ブロックを JS で移動する
+  - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子を使わない
+  - SWELL の h1.c-pageTitle は残し、直書きHTMLでは h1 もタイトル文言も書かない。
+    プレースホルダ p.vlp-hero__title は空にして、JS で SWELL の h1 と差し替える。
+    初期HTMLにタイトルを2つ置くと、JSを実行しないSEOクローラが見出しを二重に拾う
+  - 公開後は SWELL のタイトル欄に次を手入力する（SNSクローラは JS を実行しない）
+    ページタイトル（H1）: 運転者台帳パッケージ for kintone
 -->
 <style>
   /* =========================================================
    Driver Ledger LP / SWELL isolated styles
    ========================================================= */
+
+  /* SWELL H1 をヒーローへ移すまでのチラつき防止（#vlp-root があるページだけ） */
+  body:has(#vlp-root) .l-mainContent__inner > h1.c-pageTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   body #vlp-root,
   body #vlp-root *,
   body #vlp-root *::before,
@@ -32,6 +54,7 @@
     --vlp-dark: #333333;
     --vlp-shadow: 0 12px 32px rgba(35, 18, 0, 0.08);
     --vlp-radius: 12px;
+    --vlp-scroll-margin: 72px;
 
     width: 100%;
     max-width: none;
@@ -116,6 +139,14 @@
     padding: 96px 0;
   }
 
+  body #vlp-root .vlp-section[id],
+  body #vlp-root .vlp-menuitem,
+  body #vlp-root .vlp-menuitem__extra,
+  body #vlp-root .vlp-menuitem__below,
+  body #vlp-root .vlp-cta {
+    scroll-margin-top: var(--vlp-scroll-margin);
+  }
+
   body #vlp-root .vlp-section--alt {
     background: var(--vlp-bg);
   }
@@ -195,11 +226,26 @@
     content: "CAMPAIGN";
   }
 
-  body #vlp-root .vlp-hero__title {
+  body #vlp-root .vlp-hero__title,
+  body #vlp-root h1.vlp-hero__title.c-pageTitle {
     color: var(--vlp-navy);
     font-size: clamp(26px, 2.9vw, 32px);
     font-weight: 700;
     line-height: 1.3;
+    letter-spacing: 0.02em;
+  }
+
+  body #vlp-root h1.vlp-hero__title.c-pageTitle::before,
+  body #vlp-root h1.vlp-hero__title.c-pageTitle::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body #vlp-root .vlp-hero__title-sub {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.72em;
+    font-weight: 700;
     letter-spacing: 0.02em;
   }
 
@@ -614,7 +660,6 @@
     border-radius: 12px;
     background: #fff;
     box-shadow: none;
-    scroll-margin-top: 100px;
   }
 
   body #vlp-root .vlp-menuitem:nth-child(even) .vlp-menucopy {
@@ -737,6 +782,49 @@
     gap: 6px;
   }
 
+  body #vlp-root .vlp-menuitem__below {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 28px;
+    align-items: start;
+    margin-top: 28px;
+    padding-top: 28px;
+    border-top: 1px solid var(--vlp-line);
+  }
+
+  body #vlp-root .vlp-menuitem:nth-child(even) .vlp-menuitem__below {
+    order: 3;
+  }
+
+  body
+    #vlp-root
+    .vlp-menuitem:nth-child(even)
+    .vlp-menuitem__below
+    .vlp-menucopy,
+  body
+    #vlp-root
+    .vlp-menuitem:nth-child(even)
+    .vlp-menuitem__below
+    .vlp-menushot {
+    order: unset;
+  }
+
+  body #vlp-root .vlp-menuitem__below .vlp-menuitem__title {
+    font-size: clamp(22px, 2.4vw, 28px);
+  }
+
+  body #vlp-root .vlp-menuitem__below .vlp-menuitem__text {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  body #vlp-root .vlp-menuitem__below .vlp-menuitem__list {
+    margin-top: 12px;
+    gap: 6px;
+  }
+
   body #vlp-root .vlp-menuitem__extra .vlp-menushot {
     background: #fff;
   }
@@ -749,6 +837,12 @@
 
   body #vlp-root .vlp-menuitem__extra .vlp-menushot__caption {
     display: none;
+  }
+
+  body #vlp-root #vlp-m1-filter .vlp-menushot img {
+    max-height: 360px;
+    object-fit: contain;
+    object-position: center top;
   }
 
   body #vlp-root .vlp-tag {
@@ -880,7 +974,6 @@
     padding: 62px 0;
     color: var(--vlp-navy);
     background: var(--vlp-blue);
-    scroll-margin-top: 100px;
   }
 
   body #vlp-root .vlp-cta__inner {
@@ -937,12 +1030,6 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  body #vlp-root .vlp-offer--featured {
-    border-color: var(--vlp-blue);
-    background: linear-gradient(180deg, #fffdf6 0%, #fff 100%);
-    box-shadow: 0 12px 28px rgba(255, 191, 0, 0.18);
-  }
-
   body #vlp-root .vlp-offer__label {
     margin-bottom: 10px;
     color: var(--vlp-navy);
@@ -970,12 +1057,187 @@
     line-height: 1.9;
   }
 
-  body #vlp-root .vlp-offers-actions {
+  /* ---- Contact Form 7 (moved into #vlp-form-slot) ---- */
+  body #vlp-root .vlp-form-slot {
+    margin-top: 36px;
+  }
+
+  body #vlp-root .wp-block-contact-form-7-contact-form-selector,
+  body #vlp-root .wpcf7 {
+    margin: 0;
+  }
+
+  body #vlp-root .wpcf7-form {
+    padding: 32px 36px;
+    border: 1px solid var(--vlp-line);
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  body #vlp-root .wpcf7-form > p {
+    margin: 0;
+  }
+
+  body #vlp-root .wpcf7-form > p > b {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 20px;
+    font-weight: 400;
+  }
+
+  body #vlp-root .wpcf7-form br {
+    display: none;
+  }
+
+  body #vlp-root .wpcf7-form > p > b > .wpcf7-form-control-wrap,
+  body #vlp-root .wpcf7-form > p > b > label:has(textarea),
+  body #vlp-root .wpcf7-form > p > b > label:has(input[name="text-591"]) {
+    grid-column: 1 / -1;
+  }
+
+  body #vlp-root .wpcf7-form label {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    margin: 0;
+    color: var(--vlp-navy);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  body #vlp-root .wpcf7-form label .wpcf7-form-control-wrap {
+    flex: 1 1 100%;
+  }
+
+  body #vlp-root .wpcf7-form label span[style] {
+    color: #b42318 !important;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  body #vlp-root .wpcf7-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  body #vlp-root .wpcf7-list-item {
+    margin: 0 !important;
+  }
+
+  body #vlp-root .wpcf7-list-item label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 16px;
+    border: 1px solid var(--vlp-line);
+    border-radius: 999px;
+    background: var(--vlp-sky);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  body #vlp-root .wpcf7-list-item label:has(input:checked) {
+    border-color: var(--vlp-navy);
+    background: var(--vlp-blue);
+  }
+
+  body #vlp-root .wpcf7-list-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--vlp-navy);
+  }
+
+  body #vlp-root .wpcf7-form label input[type="text"],
+  body #vlp-root .wpcf7-form label input[type="email"],
+  body #vlp-root .wpcf7-form label input[type="tel"],
+  body #vlp-root .wpcf7-form label textarea {
+    width: 100%;
+    max-width: none;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid var(--vlp-line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--vlp-navy);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    box-shadow: none;
+  }
+
+  body #vlp-root .wpcf7-form label textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  body #vlp-root .wpcf7-form label input:focus,
+  body #vlp-root .wpcf7-form label textarea:focus {
+    outline: 2px solid var(--vlp-blue);
+    outline-offset: 1px;
+    border-color: var(--vlp-blue);
+  }
+
+  body #vlp-root .wpcf7-not-valid {
+    border-color: #b42318 !important;
+  }
+
+  body #vlp-root .wpcf7-form > p:has(.wpcf7-submit) {
+    display: flex;
     justify-content: center;
-    gap: 14px;
-    margin-top: 36px;
+    margin-top: 24px;
+  }
+
+  body #vlp-root .wpcf7-submit {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 220px;
+    min-height: 52px;
+    padding: 13px 28px !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    color: var(--vlp-navy) !important;
+    background: var(--vlp-blue) !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  body #vlp-root .wpcf7-submit:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+
+  body #vlp-root .wpcf7-spinner {
+    margin-left: 10px;
+  }
+
+  body #vlp-root .wpcf7-response-output {
+    margin: 16px 0 0 !important;
+    padding: 12px 16px !important;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  body #vlp-root .wpcf7-form > p[class]:not(.wpcf7-response-output) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
   }
 
   body #vlp-root .vlp-legal {
@@ -1023,7 +1285,8 @@
 
     body #vlp-root .vlp-hero__grid,
     body #vlp-root .vlp-menuitem,
-    body #vlp-root .vlp-menuitem__extra {
+    body #vlp-root .vlp-menuitem__extra,
+    body #vlp-root .vlp-menuitem__below {
       grid-template-columns: 1fr;
     }
 
@@ -1097,14 +1360,22 @@
     }
 
     body #vlp-root .vlp-actions,
-    body #vlp-root .vlp-cta__actions,
-    body #vlp-root .vlp-offers-actions {
+    body #vlp-root .vlp-cta__actions {
       display: grid;
       grid-template-columns: 1fr;
     }
 
-    body #vlp-root .vlp-button {
+    body #vlp-root .vlp-button,
+    body #vlp-root .wpcf7-submit {
       width: 100%;
+    }
+
+    body #vlp-root .wpcf7-form {
+      padding: 22px 18px;
+    }
+
+    body #vlp-root .wpcf7-form > p > b {
+      grid-template-columns: 1fr;
     }
 
     body #vlp-root .vlp-quicknav {
@@ -1287,6 +1558,13 @@
     color: var(--vlp-muted);
     font-size: 12px;
     text-align: center;
+  }
+
+  body #vlp-root .vlp-gallery:not(.is-multi) .vlp-gallery__prev,
+  body #vlp-root .vlp-gallery:not(.is-multi) .vlp-gallery__next,
+  body #vlp-root .vlp-gallery:not(.is-multi) .vlp-gallery__dots,
+  body #vlp-root .vlp-gallery:not(.is-multi) .vlp-gallery__count {
+    display: none;
   }
 
   @media (max-width: 900px) {
@@ -1521,6 +1799,19 @@
     }
   }
 </style>
+<noscript>
+  <style>
+    body:has(#vlp-root) .l-mainContent__inner > h1.c-pageTitle {
+      position: static !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 0 1em !important;
+      overflow: visible !important;
+      clip: auto !important;
+      white-space: normal !important;
+    }
+  </style>
+</noscript>
 
 <div id="vlp-root">
   <section class="vlp-hero">
@@ -1543,7 +1834,55 @@
                 height="80" />
             </div>
           </div>
-          <h1 class="vlp-hero__title">運転者台帳パッケージ for&nbsp;kintone</h1>
+          <p class="vlp-hero__title"></p>
+          <script>
+            (function () {
+              var swellH1 = document.querySelector("h1.c-pageTitle");
+              var rootEarly = document.getElementById("vlp-root");
+              var placeholder;
+              var titleMain;
+              var titleSub;
+              var raw;
+              var parts;
+              var sub;
+              function fillTitle(target, main, extra) {
+                target.textContent = "";
+                target.appendChild(document.createTextNode(main));
+                if (extra) {
+                  sub = document.createElement("span");
+                  sub.className = "vlp-hero__title-sub";
+                  sub.textContent = extra;
+                  target.appendChild(sub);
+                }
+              }
+              if (!rootEarly) return;
+              placeholder = rootEarly.querySelector(".vlp-hero__title");
+              titleMain = "運転者台帳パッケージ for\u00a0kintone";
+              titleSub = "";
+              if (!swellH1) {
+                if (!placeholder) return;
+                raw = (placeholder.textContent || "").replace(/\s+/g, "");
+                if (!raw) fillTitle(placeholder, titleMain, titleSub);
+                return;
+              }
+              if (!placeholder) return;
+              if (placeholder === swellH1) return;
+              raw = (swellH1.textContent || "").replace(/\s+/g, " ").trim();
+              parts = raw.split("｜");
+              if (parts.length < 2) parts = raw.split("|");
+              if (parts.length > 1) {
+                titleMain = parts[0].trim();
+                titleSub = parts.slice(1).join("｜").trim();
+              } else if (raw) {
+                titleMain = raw;
+                titleSub = "";
+              }
+              swellH1.className = "vlp-hero__title c-pageTitle";
+              swellH1.removeAttribute("data-style");
+              fillTitle(swellH1, titleMain, titleSub);
+              placeholder.parentNode.replaceChild(swellH1, placeholder);
+            })();
+          </script>
           <p class="vlp-hero__catch">
             紙やExcelの運転者情報を、<br /><em>ひとつの台帳へ。</em>
           </p>
@@ -1556,30 +1895,27 @@
             <li>1か月間、無料でお試しいただけます</li>
           </ul>
           <div class="vlp-actions">
-            <a
-              class="vlp-button vlp-button--primary"
-              href="https://commoncom.jp/contact/"
+            <a class="vlp-button vlp-button--primary" href="#vlp-contact"
               >お問い合わせ</a
             >
             <a
               class="vlp-button vlp-button--accent"
-              href="https://commoncom.jp/contact/"
+              href="#vlp-contact"
+              data-vlp-inquiry="一カ月無料体験"
               >1か月無料で試す</a
             >
             <a
               class="vlp-button vlp-button--secondary"
-              href="https://commoncom.jp/contact/"
+              href="#vlp-contact"
+              data-vlp-inquiry="資料請求"
               >資料請求</a
             >
           </div>
         </div>
         <figure class="vlp-hero__shot">
-          <a class="vlp-lightbox-trigger" href="#" aria-label="画像を拡大表示">
-            <img
-              src="https://commoncom.jp/wp/wp-content/uploads/2026/08/hero-driver-ledger.png"
-              data-full="https://commoncom.jp/wp/wp-content/uploads/2026/08/hero-driver-ledger.png"
-              alt="運転者台帳パッケージのイメージ" />
-          </a>
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/08/hero-driver-ledger.png"
+            alt="運転者台帳パッケージのイメージ" />
           <small>運転者台帳・免許アラート・カレンダーをひとつの画面で</small>
         </figure>
       </div>
@@ -1623,7 +1959,7 @@
         <div class="vlp-proof__panel">
           <div class="vlp-proof__item">
             <strong>8</strong>
-            <span>標準メニュー</span>
+            <span>メニュー</span>
           </div>
           <div class="vlp-proof__item">
             <strong>無料</strong>
@@ -1718,7 +2054,7 @@
           運転者管理に必要なメニューを、すべてひとつに。
         </h2>
         <p class="vlp-sectionhead__text">
-          運転者管理に必要な全8メニューを、実際の製品画面とともに紹介します。免許・健診・適性の期限管理に加え、運転者台帳のExcel風入力などオプション機能も掲載しています。
+          運転者管理に必要な全8メニューを、実際の製品画面とともに紹介します。運転者台帳のExcel風入力やクリック絞り込みなど、追加機能も掲載しています。
         </p>
       </header>
 
@@ -1806,6 +2142,37 @@
               </div>
             </figure>
           </div>
+
+          <div class="vlp-menuitem__extra" id="vlp-m1-filter">
+            <div class="vlp-menucopy">
+              <div class="vlp-menuitem__no">
+                <span class="vlp-tag vlp-tag--new">NEW</span>
+              </div>
+              <h3 class="vlp-menuitem__title">クリック絞り込み</h3>
+              <p class="vlp-menuitem__text">
+                営業所・部門、乗務可否、免許・資格、健康・教育などの条件を、タグをクリックするだけで絞り込めます。よく使う条件は保存でき、該当する運転者を一覧ですぐ確認できます。
+              </p>
+              <ul class="vlp-menuitem__list">
+                <li>営業所・乗務可否・免許・期限などをクリックで絞り込み</li>
+                <li>よく使う条件や保存した条件をすぐ呼び出し</li>
+                <li>検索結果はそのまま一覧表示・Excel出力</li>
+              </ul>
+            </div>
+            <figure class="vlp-menushot">
+              <a
+                class="vlp-lightbox-trigger"
+                href="#"
+                aria-label="画像を拡大表示">
+                <img
+                  src="https://commoncom.jp/wp/wp-content/uploads/2026/09/fa2f929de73eba210874e83dfd41712f.png"
+                  data-full="https://commoncom.jp/wp/wp-content/uploads/2026/09/fa2f929de73eba210874e83dfd41712f.png"
+                  alt="運転者台帳のクリック絞り込み画面" />
+              </a>
+              <div class="vlp-menushot__caption">
+                クリック絞り込み（運転者台帳）
+              </div>
+            </figure>
+          </div>
         </article>
 
         <article class="vlp-menuitem" id="vlp-m2">
@@ -1818,7 +2185,7 @@
             <ul class="vlp-menuitem__list">
               <li>同じ運転者を免許・健診・適性の3通りで確認</li>
               <li>期限切れは赤、接近は黄、対象外はグレー</li>
-              <li>画面上の表をそのまま印刷。帳票出力にも対応</li>
+              <li>画面上の表をそのまま印刷</li>
             </ul>
           </div>
           <figure class="vlp-menushot">
@@ -1836,17 +2203,6 @@
                         alt="免許更新の期限管理画面" />
                     </a>
                   </div>
-                  <div class="vlp-gallery__slide">
-                    <a
-                      class="vlp-lightbox-trigger"
-                      href="#"
-                      aria-label="画像を拡大表示">
-                      <img
-                        src="https://commoncom.jp/wp/wp-content/uploads/2026/08/c4b6cdc4594e74f12b2a1f09739b2793.png"
-                        data-full="https://commoncom.jp/wp/wp-content/uploads/2026/08/c4b6cdc4594e74f12b2a1f09739b2793.png"
-                        alt="免許更新の帳票" />
-                    </a>
-                  </div>
                 </div>
               </div>
               <div class="vlp-gallery__nav">
@@ -1864,10 +2220,34 @@
                 </button>
               </div>
               <div class="vlp-gallery__dots" aria-label="画像切り替え"></div>
-              <div class="vlp-gallery__count" aria-live="polite">1 / 2</div>
+              <div class="vlp-gallery__count" aria-live="polite">1 / 1</div>
             </div>
-            <div class="vlp-menushot__caption">免許更新の一覧と帳票</div>
+            <div class="vlp-menushot__caption">免許更新の期限管理画面</div>
           </figure>
+
+          <div class="vlp-menuitem__below" id="vlp-m2-report">
+            <div class="vlp-menucopy">
+              <h3 class="vlp-menuitem__title">帳票出力にも対応</h3>
+              <p class="vlp-menuitem__text">
+                免許の期限が近い運転者を、帳票として出力できます。期限切れ・接近を色分けし、更新案内や現場共有に使えます。
+              </p>
+              <ul class="vlp-menuitem__list">
+                <li>免許期限一覧の帳票出力に対応</li>
+              </ul>
+            </div>
+            <figure class="vlp-menushot">
+              <a
+                class="vlp-lightbox-trigger"
+                href="#"
+                aria-label="画像を拡大表示">
+                <img
+                  src="https://commoncom.jp/wp/wp-content/uploads/2026/08/c4b6cdc4594e74f12b2a1f09739b2793.png"
+                  data-full="https://commoncom.jp/wp/wp-content/uploads/2026/08/c4b6cdc4594e74f12b2a1f09739b2793.png"
+                  alt="免許更新の帳票" />
+              </a>
+              <div class="vlp-menushot__caption">免許更新の帳票</div>
+            </figure>
+          </div>
         </article>
 
         <article class="vlp-menuitem" id="vlp-m3">
@@ -1880,7 +2260,7 @@
             <ul class="vlp-menuitem__list">
               <li>健診区分・受診日・受診場所・検査結果を一覧で管理</li>
               <li>期限が近い人から優先して対応</li>
-              <li>画面印刷、帳票出力、Excel出力に対応</li>
+              <li>画面印刷とExcel出力に対応</li>
             </ul>
           </div>
           <figure class="vlp-menushot">
@@ -1898,17 +2278,6 @@
                         alt="健康診断の期限管理画面" />
                     </a>
                   </div>
-                  <div class="vlp-gallery__slide">
-                    <a
-                      class="vlp-lightbox-trigger"
-                      href="#"
-                      aria-label="画像を拡大表示">
-                      <img
-                        src="https://commoncom.jp/wp/wp-content/uploads/2026/08/1f03cc903b400dee8d61c027b3600b70.png"
-                        data-full="https://commoncom.jp/wp/wp-content/uploads/2026/08/1f03cc903b400dee8d61c027b3600b70.png"
-                        alt="健康診断の帳票" />
-                    </a>
-                  </div>
                 </div>
               </div>
               <div class="vlp-gallery__nav">
@@ -1926,10 +2295,34 @@
                 </button>
               </div>
               <div class="vlp-gallery__dots" aria-label="画像切り替え"></div>
-              <div class="vlp-gallery__count" aria-live="polite">1 / 2</div>
+              <div class="vlp-gallery__count" aria-live="polite">1 / 1</div>
             </div>
-            <div class="vlp-menushot__caption">健康診断の一覧と帳票</div>
+            <div class="vlp-menushot__caption">健康診断の期限管理画面</div>
           </figure>
+
+          <div class="vlp-menuitem__below" id="vlp-m3-report">
+            <div class="vlp-menucopy">
+              <h3 class="vlp-menuitem__title">帳票出力にも対応</h3>
+              <p class="vlp-menuitem__text">
+                健康診断の期限一覧を帳票として出力できます。期限切れ・接近を色分けし、受診案内や現場共有に使えます。
+              </p>
+              <ul class="vlp-menuitem__list">
+                <li>健診期限一覧の帳票出力に対応</li>
+              </ul>
+            </div>
+            <figure class="vlp-menushot">
+              <a
+                class="vlp-lightbox-trigger"
+                href="#"
+                aria-label="画像を拡大表示">
+                <img
+                  src="https://commoncom.jp/wp/wp-content/uploads/2026/08/1f03cc903b400dee8d61c027b3600b70.png"
+                  data-full="https://commoncom.jp/wp/wp-content/uploads/2026/08/1f03cc903b400dee8d61c027b3600b70.png"
+                  alt="健康診断の帳票" />
+              </a>
+              <div class="vlp-menushot__caption">健康診断の帳票</div>
+            </figure>
+          </div>
         </article>
 
         <article class="vlp-menuitem" id="vlp-m4">
@@ -1942,7 +2335,7 @@
             <ul class="vlp-menuitem__list">
               <li>診断区分・実施機関・診断結果を一覧で記録</li>
               <li>特定診断や特別診断は、周期の起点には使わない</li>
-              <li>画面印刷と帳票出力に対応。結果ファイルは履歴から添付</li>
+              <li>画面上の表をそのまま印刷。結果ファイルは履歴から添付</li>
             </ul>
           </div>
           <figure class="vlp-menushot">
@@ -1960,17 +2353,6 @@
                         alt="適性診断の期限管理画面" />
                     </a>
                   </div>
-                  <div class="vlp-gallery__slide">
-                    <a
-                      class="vlp-lightbox-trigger"
-                      href="#"
-                      aria-label="画像を拡大表示">
-                      <img
-                        src="https://commoncom.jp/wp/wp-content/uploads/2026/08/20c10a399601aa1debef8f4507dc5201.png"
-                        data-full="https://commoncom.jp/wp/wp-content/uploads/2026/08/20c10a399601aa1debef8f4507dc5201.png"
-                        alt="適性診断の帳票" />
-                    </a>
-                  </div>
                 </div>
               </div>
               <div class="vlp-gallery__nav">
@@ -1988,10 +2370,34 @@
                 </button>
               </div>
               <div class="vlp-gallery__dots" aria-label="画像切り替え"></div>
-              <div class="vlp-gallery__count" aria-live="polite">1 / 2</div>
+              <div class="vlp-gallery__count" aria-live="polite">1 / 1</div>
             </div>
-            <div class="vlp-menushot__caption">適性診断の一覧と帳票</div>
+            <div class="vlp-menushot__caption">適性診断の期限管理画面</div>
           </figure>
+
+          <div class="vlp-menuitem__below" id="vlp-m4-report">
+            <div class="vlp-menucopy">
+              <h3 class="vlp-menuitem__title">帳票出力にも対応</h3>
+              <p class="vlp-menuitem__text">
+                適性診断の実施状況を帳票として出力できます。期限切れから順に対応できるよう、進み具合を共有できます。
+              </p>
+              <ul class="vlp-menuitem__list">
+                <li>適性診断の帳票出力に対応</li>
+              </ul>
+            </div>
+            <figure class="vlp-menushot">
+              <a
+                class="vlp-lightbox-trigger"
+                href="#"
+                aria-label="画像を拡大表示">
+                <img
+                  src="https://commoncom.jp/wp/wp-content/uploads/2026/08/20c10a399601aa1debef8f4507dc5201.png"
+                  data-full="https://commoncom.jp/wp/wp-content/uploads/2026/08/20c10a399601aa1debef8f4507dc5201.png"
+                  alt="適性診断の帳票" />
+              </a>
+              <div class="vlp-menushot__caption">適性診断の帳票</div>
+            </figure>
+          </div>
         </article>
 
         <article class="vlp-menuitem" id="vlp-m5">
@@ -2212,7 +2618,8 @@
         </div>
         <a
           class="vlp-button vlp-button--accent"
-          href="https://commoncom.jp/contact/"
+          href="#vlp-contact"
+          data-vlp-inquiry="一カ月無料体験"
           >1か月無料で試す</a
         >
       </div>
@@ -2245,7 +2652,7 @@
       <header class="vlp-sectionhead">
         <div class="vlp-sectionhead__en">BENEFIT</div>
         <h2 class="vlp-sectionhead__title">
-          kintoneだから、運転者管理を柔軟に改善できます。
+          kintoneを活用した車両管理システムだから、業務に合わせて柔軟に改善できます。
         </h2>
       </header>
 
@@ -2317,7 +2724,7 @@
             実際の画面を見ながらご説明します。導入前のイメージづくりにもご活用ください。デモ費用はかかりません。
           </p>
         </article>
-        <article class="vlp-offer vlp-offer--featured">
+        <article class="vlp-offer">
           <div class="vlp-offer__label">FREE TRIAL</div>
           <h3 class="vlp-offer__title">1か月無料お試し</h3>
           <p class="vlp-offer__text">
@@ -2333,23 +2740,7 @@
         </article>
       </div>
 
-      <div class="vlp-offers-actions">
-        <a
-          class="vlp-button vlp-button--primary"
-          href="https://commoncom.jp/contact/"
-          >お問い合わせ</a
-        >
-        <a
-          class="vlp-button vlp-button--accent"
-          href="https://commoncom.jp/contact/"
-          >1か月無料で試す</a
-        >
-        <a
-          class="vlp-button vlp-button--secondary"
-          href="https://commoncom.jp/contact/"
-          >資料請求</a
-        >
-      </div>
+      <div id="vlp-form-slot" class="vlp-form-slot"></div>
     </div>
   </section>
 
@@ -2456,17 +2847,17 @@
         </p>
       </div>
       <div class="vlp-cta__actions">
-        <a class="vlp-button" href="https://commoncom.jp/contact/"
-          >お問い合わせ</a
-        >
+        <a class="vlp-button" href="#vlp-contact">お問い合わせ</a>
         <a
           class="vlp-button vlp-button--secondary"
-          href="https://commoncom.jp/contact/"
+          href="#vlp-contact"
+          data-vlp-inquiry="一カ月無料体験"
           >1か月無料で試す</a
         >
         <a
           class="vlp-button vlp-button--secondary"
-          href="https://commoncom.jp/contact/"
+          href="#vlp-contact"
+          data-vlp-inquiry="資料請求"
           >資料請求</a
         >
       </div>
@@ -2498,10 +2889,16 @@
       if (!root) return;
 
       var lightbox = root.querySelector("#vlp-lightbox");
-      var lightboxImage = lightbox.querySelector(".vlp-lightbox__image");
-      var closeButton = lightbox.querySelector(".vlp-lightbox__close");
+      var lightboxImage = lightbox
+        ? lightbox.querySelector(".vlp-lightbox__image")
+        : null;
+      var closeButton = lightbox
+        ? lightbox.querySelector(".vlp-lightbox__close")
+        : null;
 
       function bindLightbox(scope) {
+        if (!lightbox) return;
+        if (!lightboxImage) return;
         var triggers = scope.querySelectorAll(".vlp-lightbox-trigger");
         triggers.forEach(function (trigger) {
           if (trigger.dataset.lightboxBound === "true") return;
@@ -2519,15 +2916,16 @@
             lightbox.classList.add("is-open");
             lightbox.setAttribute("aria-hidden", "false");
             document.documentElement.style.overflow = "hidden";
-            closeButton.focus();
+            if (closeButton) closeButton.focus();
           });
         });
       }
 
       function closeLightbox() {
+        if (!lightbox) return;
         lightbox.classList.remove("is-open");
         lightbox.setAttribute("aria-hidden", "true");
-        lightboxImage.src = "";
+        if (lightboxImage) lightboxImage.src = "";
         document.documentElement.style.overflow = "";
       }
 
@@ -2542,9 +2940,10 @@
       }
 
       document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && lightbox.classList.contains("is-open")) {
-          closeLightbox();
-        }
+        if (e.key !== "Escape") return;
+        if (!lightbox) return;
+        if (!lightbox.classList.contains("is-open")) return;
+        closeLightbox();
       });
 
       function initGallery(gallery) {
@@ -2556,14 +2955,12 @@
         var count = gallery.querySelector(".vlp-gallery__count");
         var current = 0;
 
-        if (!track || !slides.length) return;
+        if (!track) return;
+        if (!slides.length) return;
+        if (slides.length < 2) return;
 
-        if (slides.length <= 1) {
-          if (prev) prev.style.display = "none";
-          if (next) next.style.display = "none";
-          if (dotsWrap) dotsWrap.style.display = "none";
-          if (count) count.style.display = "none";
-        }
+        gallery.classList.add("is-multi");
+        if (!dotsWrap) return;
 
         slides.forEach(function (_, index) {
           var dot = document.createElement("button");
@@ -2613,6 +3010,229 @@
 
       var galleries = root.querySelectorAll("[data-gallery]");
       galleries.forEach(initGallery);
+
+      function getScrollOffset() {
+        var extra = 20;
+        var header = document.getElementById("header");
+        var headerH = 0;
+        if (header) {
+          var headerStyle = window.getComputedStyle(header);
+          if (headerStyle.position === "fixed") {
+            headerH = header.getBoundingClientRect().height;
+          } else if (headerStyle.position === "sticky") {
+            headerH = header.getBoundingClientRect().height;
+          }
+        }
+        var adminbar = document.getElementById("wpadminbar");
+        var adminH = 0;
+        if (adminbar) {
+          var adminStyle = window.getComputedStyle(adminbar);
+          if (adminStyle.display !== "none") {
+            if (adminStyle.position === "fixed") {
+              adminH = adminbar.getBoundingClientRect().height;
+            } else if (adminStyle.position === "sticky") {
+              adminH = adminbar.getBoundingClientRect().height;
+            }
+          }
+        }
+        if (!headerH) {
+          var swell = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--swl-offset_y",
+            ),
+          );
+          if (!isNaN(swell)) {
+            if (swell > 0) return swell + extra;
+          }
+        }
+        return adminH + headerH + extra;
+      }
+
+      function updateScrollMargin() {
+        root.style.setProperty("--vlp-scroll-margin", getScrollOffset() + "px");
+      }
+
+      function scrollToTarget(target, behavior) {
+        if (!target) return;
+        updateScrollMargin();
+        var top =
+          window.pageYOffset +
+          target.getBoundingClientRect().top -
+          getScrollOffset();
+        window.scrollTo({
+          top: Math.max(0, top),
+          behavior: behavior || "smooth",
+        });
+      }
+
+      function getHashTarget(hash) {
+        if (!hash) return null;
+        if (hash === "#") return null;
+        var id = hash.slice(1);
+        try {
+          id = decodeURIComponent(id);
+        } catch (err) {}
+        if (!id) return null;
+        return document.getElementById(id);
+      }
+
+      var pendingInquiry = "";
+
+      function applyInquiry(value, reset) {
+        if (reset) pendingInquiry = value || "";
+        else if (value) pendingInquiry = value;
+        var form = root.querySelector(".wpcf7-form");
+        if (!form) form = document.querySelector(".wpcf7-form");
+        if (!form) return;
+        var inputs = form.querySelectorAll('input[type="checkbox"]');
+        inputs.forEach(function (input) {
+          if (input.name) {
+            if (input.name.indexOf("_") === 0) return;
+          }
+          input.checked = false;
+          if (pendingInquiry) {
+            if (input.value === pendingInquiry) input.checked = true;
+          }
+        });
+      }
+
+      function inquiryFromLink(link) {
+        var specified = link.getAttribute("data-vlp-inquiry");
+        if (specified) return specified;
+        var text = (link.textContent || "").replace(/\s+/g, "");
+        if (text.indexOf("資料") !== -1) return "資料請求";
+        if (text.indexOf("無料") !== -1) return "一カ月無料体験";
+        if (text.indexOf("デモ") !== -1) return "デモ依頼";
+        return "";
+      }
+
+      document.addEventListener(
+        "click",
+        function (e) {
+          if (e.defaultPrevented) return;
+          if (e.button !== 0) return;
+          if (e.metaKey) return;
+          if (e.ctrlKey) return;
+          if (e.shiftKey) return;
+          if (e.altKey) return;
+          var link = e.target.closest("a");
+          if (!link) return;
+          if (link.getAttribute("target") === "_blank") return;
+          var href = link.getAttribute("href");
+          if (!href) return;
+          if (href.indexOf("#") === -1) return;
+          var url;
+          try {
+            url = new URL(link.href, location.href);
+          } catch (err) {
+            return;
+          }
+          if (url.hash.length < 2) return;
+          var samePath = true;
+          try {
+            samePath =
+              decodeURIComponent(url.pathname) ===
+              decodeURIComponent(location.pathname);
+          } catch (err2) {
+            samePath = url.pathname === location.pathname;
+          }
+          if (!samePath) return;
+          var target = getHashTarget(url.hash);
+          if (!target) return;
+          if (!root.contains(target)) return;
+          e.preventDefault();
+          e.stopPropagation();
+          if (url.hash === "#vlp-contact") {
+            applyInquiry(inquiryFromLink(link), true);
+          }
+          if (history.pushState) {
+            history.pushState(null, "", url.hash);
+          }
+          scrollToTarget(target, "smooth");
+        },
+        true,
+      );
+
+      function syncHashScroll(behavior) {
+        var target = getHashTarget(location.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        scrollToTarget(target, behavior || "auto");
+      }
+
+      window.addEventListener("hashchange", function () {
+        syncHashScroll("smooth");
+      });
+
+      window.addEventListener("resize", updateScrollMargin);
+      updateScrollMargin();
+
+      function correctHashScroll() {
+        if (!location.hash) return;
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 0);
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 80);
+      }
+
+      if (document.readyState === "complete") {
+        correctHashScroll();
+      } else {
+        window.addEventListener("load", correctHashScroll);
+      }
+
+      function findContactFormNode() {
+        var scope = root.parentElement || document;
+        var wraps = scope.querySelectorAll(
+          ".wp-block-contact-form-7-contact-form-selector",
+        );
+        var i;
+        for (i = 0; i < wraps.length; i++) {
+          if (!root.contains(wraps[i])) return wraps[i];
+        }
+        var forms = scope.querySelectorAll(".wpcf7");
+        for (i = 0; i < forms.length; i++) {
+          if (!root.contains(forms[i])) return forms[i];
+        }
+        var wrap = document.querySelector(
+          ".wp-block-contact-form-7-contact-form-selector",
+        );
+        if (wrap) return wrap;
+        return document.querySelector(".wpcf7");
+      }
+
+      function mountContactForm() {
+        var slot = root.querySelector("#vlp-form-slot");
+        if (!slot) return false;
+        if (slot.querySelector(".wpcf7")) return true;
+        var node = findContactFormNode();
+        if (!node) return false;
+        if (root.contains(node)) return false;
+        slot.appendChild(node);
+        applyInquiry();
+        return true;
+      }
+
+      var formObserver = new MutationObserver(function () {
+        if (mountContactForm()) formObserver.disconnect();
+      });
+      formObserver.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", mountContactForm);
+      } else {
+        mountContactForm();
+      }
+      window.addEventListener("load", function () {
+        mountContactForm();
+        setTimeout(function () {
+          formObserver.disconnect();
+        }, 2000);
+      });
     })();
   </script>
 </div>

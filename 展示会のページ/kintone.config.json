@@ -87,6 +87,16 @@
         "protocol": "WEB",
         "required": false
       },
+      "添付ファイル": {
+        "type": "FILE",
+        "label": "チラシファイル",
+        "note": "1レコード1つのPDF。保存時にWordPressメディアへ送り、flyer_url を自動更新する。"
+      },
+      "flyer_synced_filekey": {
+        "type": "SINGLE_LINE_TEXT",
+        "label": "チラシ同期キー",
+        "note": "同じファイルの再送防止。フォームでは非表示。"
+      },
       "visitor_companies": {
         "type": "NUMBER",
         "label": "来場社数",

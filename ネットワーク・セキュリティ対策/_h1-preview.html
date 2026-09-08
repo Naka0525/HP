@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>H1 preview — ネットワーク・セキュリティ対策</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .l-mainContent__inner { padding: 16px; }
+  h1.c-pageTitle[data-style="b_bottom"] {
+    font-size: 24px;
+    border-bottom: 2px solid #c8c4bc;
+    padding: 14px 18px;
+    margin: 0 0 12px;
+  }
+</style>
+</head>
+<body>
+<div id="content">
+<main id="main_content">
+<div class="l-mainContent__inner">
+<h1 class="c-pageTitle" data-style="b_bottom">ネットワーク・セキュリティ対策</h1>
+<!-- @format -->
+
+<meta charset="utf-8" />
+<!--
+  Network / Security LP partial for WordPress / SWELL
+  - visual identity: teal #00B794 / navy #1F3440
+  - 汎用クラスを使わず nsc- プレフィックスで隔離
+  - すべてのCSSを #nsc-root 配下にスコープ
+  - お問い合わせは https://commoncom.jp/contact/ へ遷移する
+  - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子を使わない
+  - SWELL の h1.c-pageTitle は残し、直書きHTMLでは h1 もタイトル文言も書かない。
+    プレースホルダ p.nsc-hero__title は空にして、JS で SWELL の h1 と差し替える。
+    初期HTMLにタイトルを2つ置くと、JSを実行しないSEOクローラが見出しを二重に拾う
+  - 公開後は SWELL のタイトル欄に次を手入力する（SNSクローラは JS を実行しない）
+    ページタイトル（H1）: ネットワーク・セキュリティ対策
+-->
+<style>
+  body:has(#nsc-root) .l-mainContent__inner > h1.c-pageTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  body #nsc-root,
+  body #nsc-root *,
+  body #nsc-root *::before,
+  body #nsc-root *::after {
+    box-sizing: border-box;
+  }
+
+  body #nsc-root {
+    --nsc-navy: #1f3440;
+    --nsc-main: #00b794;
+    --nsc-main-dark: #009e80;
+    --nsc-soft: #f5fbf9;
+    --nsc-line: #dce9e6;
+    --nsc-text: #1f3440;
+    --nsc-muted: #5f737d;
+    --nsc-white: #ffffff;
+    --nsc-bg: #f4f8f7;
+    --nsc-dark: #16303a;
+    --nsc-shadow: 0 14px 36px rgba(31, 52, 64, 0.1);
+    --nsc-radius: 10px;
+    --nsc-scroll-margin: 72px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: var(--nsc-text);
+    background: var(--nsc-white);
+    font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+      "Yu Gothic", "Meiryo", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    letter-spacing: 0.02em;
+    isolation: isolate;
+  }
+
+  body #nsc-root h1,
+  body #nsc-root h2,
+  body #nsc-root h3,
+  body #nsc-root p,
+  body #nsc-root figure,
+  body #nsc-root figcaption,
+  body #nsc-root ul,
+  body #nsc-root li,
+  body #nsc-root nav,
+  body #nsc-root article,
+  body #nsc-root header,
+  body #nsc-root section {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  body #nsc-root h1::before,
+  body #nsc-root h1::after,
+  body #nsc-root h2::before,
+  body #nsc-root h2::after,
+  body #nsc-root h3::before,
+  body #nsc-root h3::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body #nsc-root ul { list-style: none; }
+  body #nsc-root a { color: inherit; text-decoration: none; }
+  body #nsc-root img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  body #nsc-root .nsc-container {
+    width: min(1160px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+  body #nsc-root .nsc-section { padding: 88px 0; }
+  body #nsc-root .nsc-section[id],
+  body #nsc-root .nsc-cta {
+    scroll-margin-top: var(--nsc-scroll-margin);
+  }
+  body #nsc-root .nsc-section--alt { background: var(--nsc-bg); }
+  body #nsc-root .nsc-section--soft { background: var(--nsc-soft); }
+
+  body #nsc-root .nsc-sectionhead { margin-bottom: 40px; }
+  body #nsc-root .nsc-sectionhead__en {
+    margin-bottom: 10px;
+    color: var(--nsc-main-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+  body #nsc-root .nsc-sectionhead__title {
+    color: var(--nsc-navy);
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 800;
+    line-height: 1.4;
+  }
+  body #nsc-root .nsc-sectionhead__text {
+    margin-top: 14px;
+    color: var(--nsc-muted);
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  body #nsc-root .nsc-hero {
+    overflow: hidden;
+    padding: 48px 0 56px;
+    background: linear-gradient(180deg, #eef3f3 0%, #f7f9f9 56%, #ffffff 100%);
+    border-bottom: 1px solid var(--nsc-line);
+  }
+  body #nsc-root .nsc-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 40px;
+    align-items: center;
+  }
+  body #nsc-root .nsc-hero__eyebrow {
+    margin-bottom: 12px;
+    color: var(--nsc-main-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  body #nsc-root .nsc-hero__title,
+  body #nsc-root h1.nsc-hero__title.c-pageTitle {
+    color: var(--nsc-navy);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  body #nsc-root h1.nsc-hero__title.c-pageTitle::before,
+  body #nsc-root h1.nsc-hero__title.c-pageTitle::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body #nsc-root .nsc-hero__title-sub {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.55em;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  body #nsc-root .nsc-hero__lead {
+    margin-top: 18px;
+    max-width: 36em;
+    color: var(--nsc-muted);
+    font-size: 16px;
+    line-height: 1.9;
+  }
+  body #nsc-root .nsc-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    color: var(--nsc-main-dark);
+    stroke: currentColor;
+    fill: none;
+  }
+  body #nsc-root .nsc-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background: var(--nsc-soft);
+  }
+  body #nsc-root .nsc-icon-wrap .nsc-icon {
+    width: 20px;
+    height: 20px;
+  }
+  body #nsc-root .nsc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  body #nsc-root .nsc-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    min-height: 52px;
+    padding: 13px 24px !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    text-align: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  body #nsc-root .nsc-button:hover { transform: translateY(-2px); opacity: 0.92; }
+  body #nsc-root .nsc-button--primary {
+    color: #fff !important;
+    background: var(--nsc-main-dark) !important;
+  }
+  body #nsc-root .nsc-button--secondary {
+    color: var(--nsc-navy) !important;
+    border-color: var(--nsc-line) !important;
+    background: #fff !important;
+  }
+  body #nsc-root .nsc-button--primary::after {
+    width: 7px;
+    height: 7px;
+    margin-left: 10px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    content: "";
+    transform: rotate(-45deg) translateY(-1px);
+  }
+  body #nsc-root .nsc-hero__mosaic {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    min-height: 360px;
+  }
+  body #nsc-root .nsc-hero__tile {
+    overflow: hidden;
+    margin: 0;
+    border-radius: 10px;
+    background: #16303a;
+  }
+  body #nsc-root .nsc-hero__tile:first-child { grid-row: span 2; }
+  body #nsc-root .nsc-hero__tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  body #nsc-root .nsc-hero .nsc-lightbox-trigger::after { display: none; }
+
+  body #nsc-root .nsc-quicknav { margin-top: 28px; }
+  body #nsc-root .nsc-quicknav__panel {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--nsc-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #nsc-root .nsc-quicknav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 84px;
+    padding: 12px 8px;
+    border-right: 1px solid var(--nsc-line);
+    color: var(--nsc-navy);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+  body #nsc-root .nsc-quicknav__item:last-child { border-right: 0; }
+  body #nsc-root .nsc-quicknav__item:hover { background: var(--nsc-soft); }
+  body #nsc-root .nsc-quicknav__num {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--nsc-main-dark);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  body #nsc-root .nsc-services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  body #nsc-root .nsc-service {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--nsc-line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: var(--nsc-shadow);
+  }
+  body #nsc-root .nsc-service__visual {
+    overflow: hidden;
+    background: #f8fbfa;
+  }
+  body #nsc-root .nsc-service__visual img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+  body #nsc-root .nsc-service__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px 24px 28px;
+  }
+  body #nsc-root .nsc-service__title {
+    color: var(--nsc-navy);
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+  body #nsc-root .nsc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0 18px;
+  }
+  body #nsc-root .nsc-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    color: var(--nsc-main-dark);
+    background: var(--nsc-soft);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  body #nsc-root .nsc-service__text {
+    color: var(--nsc-muted);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  body #nsc-root .nsc-service__text + .nsc-service__text { margin-top: 10px; }
+
+  body #nsc-root .nsc-siblings {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  body #nsc-root .nsc-sibling {
+    display: block;
+    padding: 22px;
+    border: 1px solid var(--nsc-line);
+    border-radius: 10px;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  body #nsc-root .nsc-sibling:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--nsc-shadow);
+  }
+  body #nsc-root .nsc-sibling__en {
+    color: var(--nsc-main-dark);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+  body #nsc-root .nsc-sibling__title {
+    margin: 8px 0 10px;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  body #nsc-root .nsc-sibling .nsc-button { min-width: 0; width: 100%; }
+
+  body #nsc-root .nsc-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  body #nsc-root .nsc-column {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--nsc-line);
+    border-radius: 10px;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  body #nsc-root .nsc-column:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--nsc-shadow);
+  }
+  body #nsc-root .nsc-column img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #eef3f3;
+  }
+  body #nsc-root .nsc-column__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px;
+  }
+  body #nsc-root .nsc-column__meta {
+    color: var(--nsc-main-dark);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  body #nsc-root .nsc-column__title {
+    color: var(--nsc-navy);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.55;
+  }
+  body #nsc-root .nsc-column__link {
+    margin-top: auto;
+    color: var(--nsc-main-dark);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  body #nsc-root .nsc-cta {
+    padding: 48px 0;
+    color: #fff;
+    background: var(--nsc-dark);
+  }
+  body #nsc-root .nsc-cta__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  body #nsc-root .nsc-cta__title { font-size: 24px; font-weight: 800; }
+  body #nsc-root .nsc-cta__text {
+    margin-top: 8px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+  }
+  body #nsc-root .nsc-cta .nsc-button--primary { background: var(--nsc-main) !important; }
+  body #nsc-root .nsc-cta .nsc-button--secondary {
+    color: #fff !important;
+    border-color: rgba(255, 255, 255, 0.28) !important;
+    background: transparent !important;
+  }
+
+  body #nsc-root .nsc-lightbox-trigger {
+    display: block;
+    position: relative;
+    cursor: zoom-in;
+  }
+  body #nsc-root .nsc-lightbox-trigger::after {
+    content: "拡大";
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--nsc-main-dark);
+    font-size: 11px;
+    font-weight: 700;
+    pointer-events: none;
+  }
+  body #nsc-root .nsc-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.84);
+  }
+  body #nsc-root .nsc-lightbox.is-open { display: flex; }
+  body #nsc-root .nsc-lightbox__dialog {
+    position: relative;
+    width: min(96vw, 1600px);
+    max-height: 92vh;
+  }
+  body #nsc-root .nsc-lightbox__image {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 88vh;
+    margin: 0 auto;
+    border-radius: 10px;
+    background: #fff;
+    object-fit: contain;
+  }
+  body #nsc-root .nsc-lightbox__close {
+    position: absolute;
+    top: -16px;
+    right: -8px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--nsc-main-dark);
+    cursor: pointer;
+    font-size: 28px;
+    line-height: 42px;
+  }
+
+  @media (max-width: 1100px) {
+    body #nsc-root .nsc-siblings { grid-template-columns: 1fr 1fr; }
+    body #nsc-root .nsc-quicknav__panel { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 900px) {
+    body #nsc-root .nsc-hero__grid,
+    body #nsc-root .nsc-services,
+    body #nsc-root .nsc-cta__inner,
+    body #nsc-root .nsc-columns {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    body #nsc-root .nsc-hero__mosaic { min-height: 240px; }
+    body #nsc-root .nsc-quicknav__panel { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    body #nsc-root .nsc-container { width: min(100% - 28px, 1160px); }
+    body #nsc-root .nsc-hero { padding: 32px 0 40px; }
+    body #nsc-root .nsc-section { padding: 64px 0; }
+    body #nsc-root .nsc-siblings { grid-template-columns: 1fr; }
+    body #nsc-root .nsc-actions,
+    body #nsc-root .nsc-cta__actions { display: grid; grid-template-columns: 1fr; }
+    body #nsc-root .nsc-button { width: 100%; }
+  }
+</style>
+<noscript>
+  <style>
+    body:has(#nsc-root) .l-mainContent__inner > h1.c-pageTitle {
+      position: static !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 0 1em !important;
+      overflow: visible !important;
+      clip: auto !important;
+      white-space: normal !important;
+    }
+  </style>
+</noscript>
+
+<div id="nsc-root">
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+    <symbol id="nsc-i-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"></circle><circle cx="19" cy="5" r="2"></circle><circle cx="19" cy="19" r="2"></circle><path d="M7 12h4M15.5 6.2l-3.2 4.1M15.5 17.8l-3.2-4.1"></path></symbol>
+    <symbol id="nsc-i-edu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5-9 5-9-5z"></path><path d="M7 11.5V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5"></path></symbol>
+    <symbol id="nsc-i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"></path><path d="M9 12l2 2 4-4"></path></symbol>
+    <symbol id="nsc-i-log" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M8 9h8M8 13h8M8 17h5"></path></symbol>
+  </svg>
+
+  <section class="nsc-hero">
+    <div class="nsc-container">
+      <div class="nsc-hero__grid">
+        <div>
+          <p class="nsc-hero__eyebrow">NETWORK / SECURITY</p>
+          <p class="nsc-hero__title"></p>
+          <script>
+            (function () {
+              var swellH1 = document.querySelector("h1.c-pageTitle");
+              var rootEarly = document.getElementById("nsc-root");
+              var placeholder;
+              var titleMain;
+              var titleSub;
+              var raw;
+              var parts;
+              var sub;
+              function fillTitle(target, main, extra) {
+                target.textContent = "";
+                target.appendChild(document.createTextNode(main));
+                if (extra) {
+                  sub = document.createElement("span");
+                  sub.className = "nsc-hero__title-sub";
+                  sub.textContent = extra;
+                  target.appendChild(sub);
+                }
+              }
+              if (!rootEarly) return;
+              placeholder = rootEarly.querySelector(".nsc-hero__title");
+              titleMain = "ネットワーク・セキュリティ対策";
+              titleSub = "";
+              if (!swellH1) {
+                if (!placeholder) return;
+                raw = (placeholder.textContent || "").replace(/\s+/g, "");
+                if (!raw) fillTitle(placeholder, titleMain, titleSub);
+                return;
+              }
+              if (!placeholder) return;
+              if (placeholder === swellH1) return;
+              raw = (swellH1.textContent || "").replace(/\s+/g, " ").trim();
+              parts = raw.split("｜");
+              if (parts.length < 2) parts = raw.split("|");
+              if (parts.length > 1) {
+                titleMain = parts[0].trim();
+                titleSub = parts.slice(1).join("｜").trim();
+              } else if (raw) {
+                titleMain = raw;
+                titleSub = "";
+              }
+              swellH1.className = "nsc-hero__title c-pageTitle";
+              swellH1.removeAttribute("data-style");
+              fillTitle(swellH1, titleMain, titleSub);
+              placeholder.parentNode.replaceChild(swellH1, placeholder);
+            })();
+          </script>
+          <p class="nsc-hero__lead">コモンコムでは、現場環境に最適化したネットワーク設計と<br />外部脅威に備えるセキュリティ対策を提供しています。</p>
+          <div class="nsc-actions">
+            <a class="nsc-button nsc-button--primary" href="https://commoncom.jp/contact/">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="nsc-hero__mosaic" aria-hidden="true">
+          <figure class="nsc-hero__tile">
+            <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/3952901_s.jpg" alt="" />
+          </figure>
+          <figure class="nsc-hero__tile">
+            <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/28401418_s.jpg.webp" alt="" />
+          </figure>
+          <figure class="nsc-hero__tile">
+            <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/4391231_s.jpg.webp" alt="" />
+          </figure>
+        </div>
+      </div>
+      <nav class="nsc-quicknav" aria-label="サービス一覧">
+        <div class="nsc-quicknav__panel">
+          <a class="nsc-quicknav__item" href="#nsc-integration"><span class="nsc-quicknav__num">01</span>ネットワークインテグレーション</a>
+          <a class="nsc-quicknav__item" href="#nsc-education"><span class="nsc-quicknav__num">02</span>教育・トレーニング</a>
+          <a class="nsc-quicknav__item" href="#nsc-malware"><span class="nsc-quicknav__num">03</span>マルウェア対策</a>
+          <a class="nsc-quicknav__item" href="#nsc-asset"><span class="nsc-quicknav__num">04</span>資産・ログ管理</a>
+          <a class="nsc-quicknav__item" href="#nsc-cases"><span class="nsc-quicknav__num">05</span>導入事例</a>
+          <a class="nsc-quicknav__item" href="#nsc-columns"><span class="nsc-quicknav__num">06</span>関連コラム</a>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <section class="nsc-section nsc-section--soft" id="nsc-services">
+    <div class="nsc-container">
+      <div class="nsc-services">
+        <article class="nsc-service" id="nsc-integration">
+          <figure class="nsc-service__visual">
+            <a class="nsc-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+              <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/3952901_s.jpg" alt="ネットワークインテグレーション" />
+            </a>
+          </figure>
+          <div class="nsc-service__body">
+            <span class="nsc-icon-wrap" aria-hidden="true"><svg class="nsc-icon"><use href="#nsc-i-network"></use></svg></span>
+            <h3 class="nsc-service__title">ネットワークインテグレーション</h3>
+            <ul class="nsc-tags">
+              <li><span class="nsc-tag">ネットワーク設計構築</span></li>
+              <li><span class="nsc-tag">ネットワークセキュリティ</span></li>
+              <li><span class="nsc-tag">バックアップ</span></li>
+              <li><span class="nsc-tag">クラウド設計構築</span></li>
+            </ul>
+            <p class="nsc-service__text">経験豊富なエンジニアが、お客様のネットワーク環境の現状分析を実施し、最適なネットワーク環境を設計・構築します。</p>
+            <p class="nsc-service__text">例）ルーター、拠点間VPN、リモートアクセス・テレワーク、無線LAN・ゲスト用Wi-Fiネットワーク、MACアドレス認証・RADIUS認証、BCP対策、オンプレミスサーバーの仮想化etc</p>
+          </div>
+        </article>
+
+        <article class="nsc-service" id="nsc-education">
+          <figure class="nsc-service__visual">
+            <a class="nsc-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+              <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/28401418_s.jpg.webp" alt="教育・トレーニング" />
+            </a>
+          </figure>
+          <div class="nsc-service__body">
+            <span class="nsc-icon-wrap" aria-hidden="true"><svg class="nsc-icon"><use href="#nsc-i-edu"></use></svg></span>
+            <h3 class="nsc-service__title">教育・トレーニング</h3>
+            <ul class="nsc-tags">
+              <li><span class="nsc-tag">情報セキュリティ教育</span></li>
+              <li><span class="nsc-tag">標的型メール訓練</span></li>
+            </ul>
+            <p class="nsc-service__text">サイバー攻撃はシステム的な対策だけでは防止できない。<br />社員のセキュリティ意識を最大化し、セキュリティの強い組織へと導きます。</p>
+          </div>
+        </article>
+
+        <article class="nsc-service" id="nsc-malware">
+          <figure class="nsc-service__visual">
+            <a class="nsc-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+              <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/4391231_s.jpg.webp" alt="マルウェア対策" />
+            </a>
+          </figure>
+          <div class="nsc-service__body">
+            <span class="nsc-icon-wrap" aria-hidden="true"><svg class="nsc-icon"><use href="#nsc-i-shield"></use></svg></span>
+            <h3 class="nsc-service__title">マルウェア対策</h3>
+            <ul class="nsc-tags">
+              <li><span class="nsc-tag">自立型EDR</span></li>
+              <li><span class="nsc-tag">DNSセキュリティ</span></li>
+            </ul>
+            <p class="nsc-service__text">サイバー攻撃の高度化・多様化により従来のウイルス対策ソフトでの対応は困難に。<br />最新のセキュリティ対策で万が一への備えを。</p>
+          </div>
+        </article>
+
+        <article class="nsc-service" id="nsc-asset">
+          <figure class="nsc-service__visual">
+            <a class="nsc-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+              <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/23845256_s.jpg.webp" alt="資産・ログ管理" />
+            </a>
+          </figure>
+          <div class="nsc-service__body">
+            <span class="nsc-icon-wrap" aria-hidden="true"><svg class="nsc-icon"><use href="#nsc-i-log"></use></svg></span>
+            <h3 class="nsc-service__title">資産・ログ管理</h3>
+            <ul class="nsc-tags">
+              <li><span class="nsc-tag">PC端末管理</span></li>
+            </ul>
+            <p class="nsc-service__text">PC端末の各種ログを集計・分析し、レポートで表示します。ログ検索やファイル追跡等、詳細なログ管理が簡単に。</p>
+            <p class="nsc-service__text">例）資産管理、更新プログラム管理、勤務時間管理、Web閲覧ログ・閲覧禁止設定、電子メール送受信ログ、PC操作ログ、印刷ログetc</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="nsc-section" id="nsc-cases">
+    <div class="nsc-container">
+      <header class="nsc-sectionhead">
+        <div class="nsc-sectionhead__en">CASE</div>
+        <h2 class="nsc-sectionhead__title">導入事例</h2>
+      </header>
+      <div class="nsc-columns">
+        <a class="nsc-column" href="https://commoncom.jp/jireishuu/%e4%ba%8b%e4%be%8bno-07%e3%80%90%e3%83%8d%e3%83%83%e3%83%88%e3%83%af%e3%83%bc%e3%82%af%e3%80%91wifi%e3%81%ae%e3%82%bb%e3%82%ad%e3%83%a5%e3%83%aa%e3%83%86%e3%82%a3%e3%83%aa%e3%82%b9%e3%82%af%e8%a7%a3/">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/6b46505ad5d38932a5771f1261e21b1a.webp" alt="事例No.07【ネットワーク】WiFiのセキュリティリスク解消！RADIUSサーバー導入による認証強化で部外者のアクセスをシャットアウト" />
+          <div class="nsc-column__body">
+            <div class="nsc-column__meta">セキュリティ　2025年6月11日</div>
+            <h3 class="nsc-column__title">事例No.07【ネットワーク】WiFiのセキュリティリスク解消！RADIUSサーバー導入による認証強化で部外者のアクセスをシャットアウト</h3>
+            <span class="nsc-column__link">記事を読む</span>
+          </div>
+        </a>
+        <a class="nsc-column" href="https://commoncom.jp/jireishuu/%e4%ba%8b%e4%be%8bno-08%e3%80%90%e3%83%8d%e3%83%83%e3%83%88%e3%83%af%e3%83%bc%e3%82%af%e3%80%91%e5%89%8d%e4%bb%bb%e8%80%85%e9%80%80%e8%81%b7%e3%81%a7%e9%97%87%e3%81%ae%e4%b8%ad%e7%bd%ae/">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/jirei_12_title.png" alt="事例No.08【ネットワーク】VPN再構築でコストも減！前任者退職で闇の中…置きざりにされていたネットワークセキュリティ" />
+          <div class="nsc-column__body">
+            <div class="nsc-column__meta">セキュリティ　2025年6月11日</div>
+            <h3 class="nsc-column__title">事例No.08【ネットワーク】VPN再構築でコストも減！前任者退職で闇の中…置きざりにされていたネットワークセキュリティ</h3>
+            <span class="nsc-column__link">記事を読む</span>
+          </div>
+        </a>
+        <a class="nsc-column" href="https://commoncom.jp/jireishuu/%e6%9d%a5%e5%ae%a2%e8%80%85%e3%81%b8%e3%81%ae%e7%84%a1%e7%b7%9alanvlan%e5%b0%8e%e5%85%a5%e3%81%ab%e3%82%88%e3%82%8bnw%e5%88%86%e9%9b%a2%e3%81%a7%e3%82%bb%e3%82%ad%e3%83%a5%e3%83%aa%e3%83%86%e3%82%a3/">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/jirei_9_title.jpg.webp" alt="事例No.09【ネットワーク】来客者への無線LAN(VLAN導入によるNW分離でセキュリティ担保)" />
+          <div class="nsc-column__body">
+            <div class="nsc-column__meta">セキュリティ　2025年6月11日</div>
+            <h3 class="nsc-column__title">事例No.09【ネットワーク】来客者への無線LAN(VLAN導入によるNW分離でセキュリティ担保)</h3>
+            <span class="nsc-column__link">記事を読む</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="nsc-section nsc-section--alt" id="nsc-columns">
+    <div class="nsc-container">
+      <header class="nsc-sectionhead">
+        <div class="nsc-sectionhead__en">COLUMN</div>
+        <h2 class="nsc-sectionhead__title">関連コラム</h2>
+      </header>
+      <div class="nsc-columns">
+        <a class="nsc-column" href="https://commoncom.jp/column/security-measures-importance/">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2025/05/DX.jpg" alt="DX実現に向けて運送会社が取るべきセキュリティ対策とは" />
+          <div class="nsc-column__body">
+            <div class="nsc-column__meta">LOGIコラム　2025年5月26日</div>
+            <h3 class="nsc-column__title">DX実現に向けて運送会社が取るべきセキュリティ対策とは</h3>
+            <span class="nsc-column__link">記事を読む</span>
+          </div>
+        </a>
+        <a class="nsc-column" href="https://commoncom.jp/column/%e7%89%a9%e6%b5%81dx%e3%81%ae%e6%88%90%e5%8a%9f%e4%ba%8b%e4%be%8b6%e9%81%b8%ef%bc%81%e4%b8%ad%e5%b0%8f%e7%89%a9%e6%b5%81%e4%bc%81%e6%a5%ad%e3%81%ae%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e9%81%b8/">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2026/02/image-4.jpeg" alt="物流DXの成功事例6選！中小物流企業のシステム選定＆導入の実践ガイド！" />
+          <div class="nsc-column__body">
+            <div class="nsc-column__meta">LOGIコラム　2026年3月10日</div>
+            <h3 class="nsc-column__title">物流DXの成功事例6選！中小物流企業のシステム選定＆導入の実践ガイド！</h3>
+            <span class="nsc-column__link">記事を読む</span>
+          </div>
+        </a>
+        <a class="nsc-column" href="https://commoncom.jp/column/onpremise/">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2025/10/onpre_shou.png" alt="オンプレミスorクラウド?システム導入のための徹底比較ガイド" />
+          <div class="nsc-column__body">
+            <div class="nsc-column__meta">LOGIコラム　2025年5月29日</div>
+            <h3 class="nsc-column__title">オンプレミスorクラウド?システム導入のための徹底比較ガイド</h3>
+            <span class="nsc-column__link">記事を読む</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="nsc-section" id="nsc-contact">
+    <div class="nsc-container">
+      <header class="nsc-sectionhead">
+        <div class="nsc-sectionhead__en">CONTACT</div>
+        <h2 class="nsc-sectionhead__title">お問い合わせ</h2>
+      </header>
+      <div class="nsc-actions">
+        <a class="nsc-button nsc-button--primary" href="https://commoncom.jp/contact/">お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="nsc-cta">
+    <div class="nsc-container nsc-cta__inner">
+      <div>
+        <h2 class="nsc-cta__title">お問い合わせ</h2>
+        <p class="nsc-cta__text">コモンコムでは、現場環境に最適化したネットワーク設計と外部脅威に備えるセキュリティ対策を提供しています。</p>
+      </div>
+      <div class="nsc-cta__actions nsc-actions">
+        <a class="nsc-button nsc-button--primary" href="https://commoncom.jp/contact/">お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="nsc-section nsc-section--alt">
+    <div class="nsc-container">
+      <div class="nsc-siblings">
+        <a class="nsc-sibling" href="https://commoncom.jp/logi-cube/express/">
+          <div class="nsc-sibling__en">SERIES</div>
+          <h3 class="nsc-sibling__title">運送管理システム「LOGI-Cube EXPRESS」</h3>
+        </a>
+        <a class="nsc-sibling" href="https://commoncom.jp/logi-cube/storage/">
+          <div class="nsc-sibling__en">SERIES</div>
+          <h3 class="nsc-sibling__title">倉庫管理システム「LOGI-Cube STORAGE</h3>
+        </a>
+        <a class="nsc-sibling" href="https://commoncom.jp/logi-cube/port/">
+          <div class="nsc-sibling__en">SERIES</div>
+          <h3 class="nsc-sibling__title">輸出入管理システム「LOGI-Cube PORT」</h3>
+        </a>
+        <a class="nsc-sibling" href="https://commoncom.jp/spec/">
+          <div class="nsc-sibling__en">SPEC</div>
+          <h3 class="nsc-sibling__title">LOGI-Cubeシステム 動作環境</h3>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="nsc-lightbox" id="nsc-lightbox" aria-hidden="true">
+    <div class="nsc-lightbox__dialog" role="dialog" aria-modal="true" aria-label="画像拡大表示">
+      <button class="nsc-lightbox__close" type="button" aria-label="閉じる">×</button>
+      <img class="nsc-lightbox__image" src="" alt="" />
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById("nsc-root");
+      if (!root) return;
+
+      var lightbox = root.querySelector("#nsc-lightbox");
+      var lightboxImage = lightbox ? lightbox.querySelector(".nsc-lightbox__image") : null;
+      var closeButton = lightbox ? lightbox.querySelector(".nsc-lightbox__close") : null;
+
+      function bindLightbox(scope) {
+        if (!lightbox) return;
+        if (!lightboxImage) return;
+        var triggers = scope.querySelectorAll(".nsc-lightbox-trigger");
+        triggers.forEach(function (trigger) {
+          if (trigger.dataset.lightboxBound === "true") return;
+          trigger.dataset.lightboxBound = "true";
+          trigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            var img = trigger.querySelector("img");
+            if (!img) return;
+            lightboxImage.src = img.getAttribute("src");
+            lightboxImage.alt = img.alt || "";
+            lightbox.classList.add("is-open");
+            lightbox.setAttribute("aria-hidden", "false");
+            document.documentElement.style.overflow = "hidden";
+            if (closeButton) closeButton.focus();
+          });
+        });
+      }
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove("is-open");
+        lightbox.setAttribute("aria-hidden", "true");
+        if (lightboxImage) lightboxImage.src = "";
+        document.documentElement.style.overflow = "";
+      }
+
+      if (closeButton) closeButton.addEventListener("click", closeLightbox);
+      if (lightbox) {
+        lightbox.addEventListener("click", function (e) {
+          if (e.target === lightbox) closeLightbox();
+        });
+      }
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        if (!lightbox) return;
+        if (!lightbox.classList.contains("is-open")) return;
+        closeLightbox();
+      });
+      bindLightbox(root);
+
+      function headerOffset() {
+        var header = document.querySelector("#header, .l-header, header");
+        return header ? header.offsetHeight + 16 : 72;
+      }
+      function updateScrollMargin() {
+        root.style.setProperty("--nsc-scroll-margin", headerOffset() + "px");
+      }
+      function scrollToTarget(target, behavior) {
+        var top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset();
+        window.scrollTo({ top: top, behavior: behavior || "auto" });
+      }
+      function getHashTarget(hash) {
+        var id = (hash || "").replace("#", "");
+        if (!id) return null;
+        return document.getElementById(id);
+      }
+
+      document.addEventListener("click", function (e) {
+        if (e.defaultPrevented) return;
+        if (e.button !== 0) return;
+        if (e.metaKey) return;
+        if (e.ctrlKey) return;
+        if (e.shiftKey) return;
+        if (e.altKey) return;
+        var link = e.target.closest("a");
+        if (!link) return;
+        if (link.getAttribute("target") === "_blank") return;
+        var href = link.getAttribute("href");
+        if (!href) return;
+        if (href.indexOf("#") === -1) return;
+        var url;
+        try { url = new URL(link.href, location.href); } catch (err) { return; }
+        if (url.hash.length < 2) return;
+        var samePath = true;
+        try {
+          samePath = decodeURIComponent(url.pathname) === decodeURIComponent(location.pathname);
+        } catch (err2) {
+          samePath = url.pathname === location.pathname;
+        }
+        if (!samePath) return;
+        var target = getHashTarget(url.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (history.pushState) history.pushState(null, "", url.hash);
+        scrollToTarget(target, "smooth");
+      }, true);
+
+      function syncHashScroll(behavior) {
+        var target = getHashTarget(location.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        scrollToTarget(target, behavior || "auto");
+      }
+      window.addEventListener("hashchange", function () { syncHashScroll("smooth"); });
+      window.addEventListener("resize", updateScrollMargin);
+      updateScrollMargin();
+      function correctHashScroll() {
+        if (!location.hash) return;
+        setTimeout(function () { syncHashScroll("auto"); }, 0);
+        setTimeout(function () { syncHashScroll("auto"); }, 80);
+      }
+      if (document.readyState === "complete") correctHashScroll();
+      else window.addEventListener("load", correctHashScroll);
+    })();
+  </script>
+</div>
+</div></main></div></body></html>

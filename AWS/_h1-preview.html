@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>H1 preview — AWS導入支援サービス</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .l-mainContent__inner { padding: 16px; }
+  h1.c-pageTitle[data-style="b_bottom"] {
+    font-size: 24px;
+    border-bottom: 2px solid #c8c4bc;
+    padding: 14px 18px;
+    margin: 0 0 12px;
+  }
+</style>
+</head>
+<body>
+<div id="content">
+<main id="main_content">
+<div class="l-mainContent__inner">
+<h1 class="c-pageTitle" data-style="b_bottom">AWS導入支援サービス</h1>
+<!-- @format -->
+
+<meta charset="utf-8" />
+<!--
+  AWS Support LP partial for WordPress / SWELL
+  - visual identity: AWS navy #232F3E / orange #FF9900
+  - 汎用クラスを使わず aws- プレフィックスで隔離
+  - すべてのCSSを #aws-root 配下にスコープ
+  - お問い合わせは https://commoncom.jp/contact/ へ遷移する
+  - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子を使わない
+  - SWELL の h1.c-pageTitle は残し、直書きHTMLでは h1 もタイトル文言も書かない。
+    プレースホルダ p.aws-hero__title は空にして、JS で SWELL の h1 と差し替える。
+    初期HTMLにタイトルを2つ置くと、JSを実行しないSEOクローラが見出しを二重に拾う
+  - 公開後は SWELL のタイトル欄に次を手入力する（SNSクローラは JS を実行しない）
+    ページタイトル（H1）: AWS導入支援サービス
+-->
+<style>
+  body:has(#aws-root) .l-mainContent__inner > h1.c-pageTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  body #aws-root,
+  body #aws-root *,
+  body #aws-root *::before,
+  body #aws-root *::after {
+    box-sizing: border-box;
+  }
+
+  body #aws-root {
+    --aws-navy: #232f3e;
+    --aws-main: #ff9900;
+    --aws-main-dark: #e88800;
+    --aws-blue: #146eb4;
+    --aws-soft: #fff8ee;
+    --aws-line: #e6e1d8;
+    --aws-text: #232f3e;
+    --aws-muted: #5d6570;
+    --aws-white: #ffffff;
+    --aws-bg: #f6f5f2;
+    --aws-dark: #161e27;
+    --aws-shadow: 0 14px 36px rgba(35, 47, 62, 0.12);
+    --aws-radius: 10px;
+    --aws-scroll-margin: 72px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: var(--aws-text);
+    background: var(--aws-white);
+    font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+      "Yu Gothic", "Meiryo", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    letter-spacing: 0.02em;
+    isolation: isolate;
+  }
+
+  body #aws-root h1,
+  body #aws-root h2,
+  body #aws-root h3,
+  body #aws-root h4,
+  body #aws-root p,
+  body #aws-root figure,
+  body #aws-root ul,
+  body #aws-root li,
+  body #aws-root nav,
+  body #aws-root article,
+  body #aws-root header,
+  body #aws-root section {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  body #aws-root h1::before,
+  body #aws-root h1::after,
+  body #aws-root h2::before,
+  body #aws-root h2::after,
+  body #aws-root h3::before,
+  body #aws-root h3::after,
+  body #aws-root h4::before,
+  body #aws-root h4::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body #aws-root ul { list-style: none; }
+  body #aws-root a { color: inherit; text-decoration: none; }
+  body #aws-root img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  body #aws-root .aws-container {
+    width: min(1160px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+  body #aws-root .aws-section { padding: 88px 0; }
+  body #aws-root .aws-section[id],
+  body #aws-root .aws-cta {
+    scroll-margin-top: var(--aws-scroll-margin);
+  }
+  body #aws-root .aws-section--alt { background: var(--aws-bg); }
+  body #aws-root .aws-section--soft { background: var(--aws-soft); }
+  body #aws-root .aws-section--navy {
+    color: #fff;
+    background: var(--aws-navy);
+  }
+
+  body #aws-root .aws-sectionhead { margin-bottom: 40px; }
+  body #aws-root .aws-sectionhead__en {
+    margin-bottom: 10px;
+    color: var(--aws-main-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+  body #aws-root .aws-section--navy .aws-sectionhead__en { color: var(--aws-main); }
+  body #aws-root .aws-sectionhead__title {
+    color: var(--aws-navy);
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 800;
+    line-height: 1.4;
+  }
+  body #aws-root .aws-section--navy .aws-sectionhead__title { color: #fff; }
+  body #aws-root .aws-sectionhead__text {
+    margin-top: 14px;
+    color: var(--aws-muted);
+    font-size: 15px;
+    line-height: 1.9;
+  }
+  body #aws-root .aws-section--navy .aws-sectionhead__text { color: rgba(255,255,255,0.78); }
+
+  body #aws-root .aws-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+    padding: 72px 0 80px;
+    color: #fff;
+    background: #1a2b44 center / cover no-repeat;
+    background-image: linear-gradient(100deg, rgba(22, 30, 39, 0.82) 0%, rgba(20, 110, 180, 0.42) 100%),
+      url("https://commoncom.jp/wp/wp-content/uploads/2026/03/pixta_98555520_M-1024x576.jpg");
+  }
+  body #aws-root .aws-hero__eyebrow {
+    margin-bottom: 12px;
+    color: var(--aws-main);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+  body #aws-root .aws-hero__title,
+  body #aws-root h1.aws-hero__title.c-pageTitle {
+    max-width: 14em;
+    color: #fff;
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  body #aws-root h1.aws-hero__title.c-pageTitle::before,
+  body #aws-root h1.aws-hero__title.c-pageTitle::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body #aws-root .aws-hero__title-sub {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.5em;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  body #aws-root .aws-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  body #aws-root .aws-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 220px;
+    min-height: 52px;
+    padding: 13px 24px !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    text-align: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  body #aws-root .aws-button:hover { transform: translateY(-2px); opacity: 0.92; }
+  body #aws-root .aws-button--primary {
+    color: #161e27 !important;
+    background: var(--aws-main) !important;
+  }
+  body #aws-root .aws-button--secondary {
+    color: #fff !important;
+    border-color: rgba(255,255,255,0.32) !important;
+    background: transparent !important;
+  }
+  body #aws-root .aws-button--primary::after {
+    width: 7px;
+    height: 7px;
+    margin-left: 10px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    content: "";
+    transform: rotate(-45deg) translateY(-1px);
+  }
+  body #aws-root .aws-button--solid {
+    color: #fff !important;
+    background: var(--aws-navy) !important;
+  }
+  body #aws-root .aws-button--ghost {
+    color: var(--aws-navy) !important;
+    border-color: var(--aws-line) !important;
+    background: #fff !important;
+  }
+
+  body #aws-root .aws-quicknav { margin-top: 36px; }
+  body #aws-root .aws-quicknav__panel {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 10px;
+    background: rgba(22, 30, 39, 0.42);
+  }
+  body #aws-root .aws-quicknav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 84px;
+    padding: 12px 8px;
+    border-right: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+  body #aws-root .aws-quicknav__item:last-child { border-right: 0; }
+  body #aws-root .aws-quicknav__item:hover { background: rgba(255,153,0,0.16); }
+  body #aws-root .aws-quicknav__num {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--aws-main);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  body #aws-root .aws-partner {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 32px;
+    align-items: center;
+    padding: 32px;
+    border: 1px solid var(--aws-line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: var(--aws-shadow);
+  }
+  body #aws-root .aws-partner__logo {
+    width: 140px !important;
+    max-width: 140px !important;
+    margin: 0 auto;
+  }
+  body #aws-root .aws-partner__mark {
+    display: inline;
+    padding: 0 4px;
+    background: linear-gradient(transparent 62%, rgba(255, 153, 0, 0.35) 62%);
+    font-weight: 800;
+  }
+  body #aws-root .aws-copy {
+    color: var(--aws-muted);
+    font-size: 15px;
+    line-height: 1.95;
+  }
+  body #aws-root .aws-copy + .aws-copy { margin-top: 14px; }
+  body #aws-root .aws-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  body #aws-root .aws-card {
+    padding: 28px 26px;
+    border: 1px solid var(--aws-line);
+    border-radius: 12px;
+    background: #fff;
+  }
+  body #aws-root .aws-card__title {
+    margin-bottom: 12px;
+    color: var(--aws-navy);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  body #aws-root .aws-certs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin: 24px 0 20px;
+  }
+  body #aws-root .aws-cert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    border: 1px solid var(--aws-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #aws-root .aws-cert img {
+    width: auto !important;
+    max-width: 110px !important;
+    max-height: 110px !important;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+
+  body #aws-root .aws-list {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 22px;
+    padding: 22px 24px;
+    border: 1px solid var(--aws-line);
+    border-radius: 10px;
+    background: var(--aws-soft);
+  }
+  body #aws-root .aws-list li {
+    position: relative;
+    padding-left: 8px;
+    color: var(--aws-navy);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.7;
+  }
+  body #aws-root .aws-list li::before {
+    display: none;
+  }
+
+  body #aws-root .aws-issues {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  body #aws-root .aws-issue {
+    padding: 24px 22px 26px;
+    border: 1px solid var(--aws-line);
+    border-radius: 12px;
+    background: #fff;
+  }
+  body #aws-root .aws-issue__label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    margin-bottom: 14px;
+    padding: 0 10px;
+    border-radius: 999px;
+    color: #161e27;
+    background: var(--aws-main);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  body #aws-root .aws-issue__title {
+    color: var(--aws-navy);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.6;
+  }
+  body #aws-root .aws-issue__text {
+    margin-top: 12px;
+    color: var(--aws-muted);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  body #aws-root .aws-solve {
+    margin-top: 28px;
+    padding: 22px 24px;
+    border-radius: 10px;
+    color: #fff;
+    background: var(--aws-navy);
+    font-size: clamp(18px, 2.2vw, 24px);
+    font-weight: 800;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  body #aws-root .aws-steps {
+    display: grid;
+    gap: 14px;
+  }
+  body #aws-root .aws-step {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+    padding: 22px 24px;
+    border: 1px solid var(--aws-line);
+    border-radius: 12px;
+    background: #fff;
+  }
+  body #aws-root .aws-step__num {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    border-radius: 10px;
+    color: #161e27;
+    background: var(--aws-main);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  body #aws-root .aws-step__num b {
+    display: block;
+    margin-top: 2px;
+    font-size: 22px;
+    letter-spacing: 0;
+  }
+  body #aws-root .aws-step__title {
+    color: var(--aws-navy);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  body #aws-root .aws-step__text {
+    margin-top: 8px;
+    color: var(--aws-muted);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  body #aws-root .aws-textlink {
+    color: var(--aws-blue) !important;
+    font-weight: 800;
+    text-decoration: underline !important;
+  }
+
+  body #aws-root .aws-phone {
+    margin-top: 18px;
+    padding: 18px 20px;
+    border-radius: 10px;
+    background: var(--aws-soft);
+    color: var(--aws-navy);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  body #aws-root .aws-cta {
+    padding: 48px 0;
+    color: #fff;
+    background: var(--aws-dark);
+  }
+  body #aws-root .aws-cta__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  body #aws-root .aws-cta__title { font-size: 24px; font-weight: 800; }
+  body #aws-root .aws-cta__text {
+    margin-top: 8px;
+    color: rgba(255,255,255,0.78);
+    font-size: 14px;
+  }
+  body #aws-root .aws-cta .aws-button--primary { color: #161e27 !important; }
+
+  body #aws-root .aws-lightbox-trigger {
+    display: block;
+    position: relative;
+    cursor: zoom-in;
+  }
+  body #aws-root .aws-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.84);
+  }
+  body #aws-root .aws-lightbox.is-open { display: flex; }
+  body #aws-root .aws-lightbox__dialog {
+    position: relative;
+    width: min(96vw, 1200px);
+    max-height: 92vh;
+  }
+  body #aws-root .aws-lightbox__image {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 88vh;
+    margin: 0 auto;
+    border-radius: 10px;
+    background: #fff;
+    object-fit: contain;
+  }
+  body #aws-root .aws-lightbox__close {
+    position: absolute;
+    top: -16px;
+    right: -8px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    color: #161e27;
+    background: var(--aws-main);
+    cursor: pointer;
+    font-size: 28px;
+    line-height: 42px;
+  }
+
+  @media (max-width: 1100px) {
+    body #aws-root .aws-quicknav__panel { grid-template-columns: repeat(3, 1fr); }
+    body #aws-root .aws-certs { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 900px) {
+    body #aws-root .aws-partner,
+    body #aws-root .aws-grid-2,
+    body #aws-root .aws-issues,
+    body #aws-root .aws-cta__inner {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    body #aws-root .aws-step { grid-template-columns: 72px minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    body #aws-root .aws-container { width: min(100% - 28px, 1160px); }
+    body #aws-root .aws-hero { padding: 48px 0 56px; min-height: 0; }
+    body #aws-root .aws-section { padding: 64px 0; }
+    body #aws-root .aws-quicknav__panel { grid-template-columns: 1fr 1fr; }
+    body #aws-root .aws-certs { grid-template-columns: 1fr 1fr; }
+    body #aws-root .aws-actions,
+    body #aws-root .aws-cta__actions { display: grid; grid-template-columns: 1fr; }
+    body #aws-root .aws-button { width: 100%; min-width: 0; }
+  }
+</style>
+<noscript>
+  <style>
+    body:has(#aws-root) .l-mainContent__inner > h1.c-pageTitle {
+      position: static !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 0 1em !important;
+      overflow: visible !important;
+      clip: auto !important;
+      white-space: normal !important;
+    }
+  </style>
+</noscript>
+
+<div id="aws-root">
+  <section class="aws-hero">
+    <div class="aws-container">
+      <p class="aws-hero__eyebrow">AWS</p>
+      <p class="aws-hero__title"></p>
+      <script>
+        (function () {
+          var swellH1 = document.querySelector("h1.c-pageTitle");
+          var rootEarly = document.getElementById("aws-root");
+          var placeholder;
+          var titleMain;
+          var titleSub;
+          var raw;
+          var parts;
+          var sub;
+          function fillTitle(target, main, extra) {
+            target.textContent = "";
+            target.appendChild(document.createTextNode(main));
+            if (extra) {
+              sub = document.createElement("span");
+              sub.className = "aws-hero__title-sub";
+              sub.textContent = extra;
+              target.appendChild(sub);
+            }
+          }
+          if (!rootEarly) return;
+          placeholder = rootEarly.querySelector(".aws-hero__title");
+          titleMain = "AWS導入支援サービス";
+          titleSub = "";
+          if (!swellH1) {
+            if (!placeholder) return;
+            raw = (placeholder.textContent || "").replace(/\s+/g, "");
+            if (!raw) fillTitle(placeholder, titleMain, titleSub);
+            return;
+          }
+          if (!placeholder) return;
+          if (placeholder === swellH1) return;
+          raw = (swellH1.textContent || "").replace(/\s+/g, " ").trim();
+          parts = raw.split("｜");
+          if (parts.length < 2) parts = raw.split("|");
+          if (parts.length > 1) {
+            titleMain = parts[0].trim();
+            titleSub = parts.slice(1).join("｜").trim();
+          } else if (raw) {
+            titleMain = raw;
+            titleSub = "";
+          }
+          swellH1.className = "aws-hero__title c-pageTitle";
+          swellH1.removeAttribute("data-style");
+          fillTitle(swellH1, titleMain, titleSub);
+          placeholder.parentNode.replaceChild(swellH1, placeholder);
+        })();
+      </script>
+      <div class="aws-actions">
+        <a class="aws-button aws-button--primary" href="https://commoncom.jp/contact/">AWS・保守運用　お問い合わせ</a>
+      </div>
+      <nav class="aws-quicknav" aria-label="ページ内メニュー">
+        <div class="aws-quicknav__panel">
+          <a class="aws-quicknav__item" href="#aws-partner"><span class="aws-quicknav__num">01</span>パートナー</a>
+          <a class="aws-quicknav__item" href="#aws-about"><span class="aws-quicknav__num">02</span>AWSとは</a>
+          <a class="aws-quicknav__item" href="#aws-support"><span class="aws-quicknav__num">03</span>導入支援</a>
+          <a class="aws-quicknav__item" href="#aws-issues"><span class="aws-quicknav__num">04</span>課題</a>
+          <a class="aws-quicknav__item" href="#aws-flow"><span class="aws-quicknav__num">05</span>ご利用の流れ</a>
+          <a class="aws-quicknav__item" href="https://commoncom.jp/contact/"><span class="aws-quicknav__num">06</span>お問い合わせ</a>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <section class="aws-section" id="aws-partner">
+    <div class="aws-container">
+      <header class="aws-sectionhead">
+        <div class="aws-sectionhead__en">PARTNER</div>
+        <h2 class="aws-sectionhead__title">AWSセレクトティアサービスパートナー</h2>
+      </header>
+      <article class="aws-partner">
+        <a class="aws-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+          <img class="aws-partner__logo" src="https://commoncom.jp/wp/wp-content/uploads/2026/03/select_black.png" alt="AWS Select Tier Services Partner" width="120" height="120" />
+        </a>
+        <p class="aws-copy">株式会社コモンコムは、AWSパートナーネットワークにおいて、<br /><span class="aws-partner__mark">AWSセレクトティアサービスパートナー</span>に認定されました。<br />本認定は、AWSサービスを活用したコンサルティングやマネジメント等、<br />クラウド技術分野での高い専門性と実績を持つ企業に対して与えられるもので<br />顧客企業のデジタルトランスフォーメーション（DX）を推進するパートナーとして<br />高い信頼性を獲得していることが証明されました。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="aws-section aws-section--alt" id="aws-about">
+    <div class="aws-container">
+      <div class="aws-grid-2">
+        <article class="aws-card">
+          <h3 class="aws-card__title">AWSとは</h3>
+          <p class="aws-copy">AWSとは、【AmazonWebServices】の略称で、Amazonが提供しているクラウドサービスです。<br />世界のクラウドインフラ市場におけるAWSのシェアは、2025年第3四半期で約30％と業界1位の実績を持っています。</p>
+        </article>
+        <article class="aws-card">
+          <h3 class="aws-card__title">AWSパートナーネットワークとは</h3>
+          <p class="aws-copy">AWSパートナーネットワークは、AWSの技術を活用して顧客向けにソリューションやサービスを構築する企業のためのグローバルコミュニティです。<br />AWSのクラウドサービスを使いこなすための専門知識やノウハウを持つ企業が参加しており、その数は200カ国130,000社を超えます。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="aws-section">
+    <div class="aws-container">
+      <header class="aws-sectionhead">
+        <div class="aws-sectionhead__en">CERTIFICATION</div>
+        <h2 class="aws-sectionhead__title">AWSセレクトティアサービスパートナーの認定について</h2>
+        <p class="aws-sectionhead__text">AWSセレクトティアサービスパートナーは、お客様のクラウド環境における課題に対して、AWSを活用したコンサルティングやマネジメントなどのプロフェッショナルサービスを提供します。<br />具体的な認定基準として、以下の要件を満たす必要があります。</p>
+      </header>
+      <h3 class="aws-card__title">AWS認定取得者数</h3>
+      <div class="aws-certs">
+        <a class="aws-cert aws-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2026/04/1_aws-certified-advanced-networking-specialty.png" alt="AWS Certified Advanced Networking - Specialty" />
+        </a>
+        <a class="aws-cert aws-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2026/04/aws-certified-security-specialty.png" alt="AWS Certified Security - Specialty" />
+        </a>
+        <a class="aws-cert aws-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2026/04/2_aws-certified-solutions-architect-professional.png" alt="AWS Certified Solutions Architect - Professional" />
+        </a>
+        <a class="aws-cert aws-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2026/04/3_aws-certified-solutions-architect-associate.png" alt="AWS Certified Solutions Architect - Associate" />
+        </a>
+        <a class="aws-cert aws-lightbox-trigger" href="#" aria-label="画像を拡大表示">
+          <img src="https://commoncom.jp/wp/wp-content/uploads/2026/04/4_aws-certified-cloud-practitioner.png" alt="AWS Certified Cloud Practitioner" />
+        </a>
+      </div>
+      <p class="aws-copy">AWS認定資格はAWSサービスやソリューションに関する知識やスキルを証明するもので、パートナー企業内の保有者数が一定基準を満たす必要があります。</p>
+      <h3 class="aws-card__title" style="margin-top:32px">AWSの活用実績</h3>
+      <p class="aws-copy" style="margin-top:12px">クラウド環境の構築や移行、最適化などAWSを活用したソリューション実績が一定数必要となります。</p>
+    </div>
+  </section>
+
+  <section class="aws-section aws-section--soft" id="aws-support">
+    <div class="aws-container">
+      <header class="aws-sectionhead">
+        <div class="aws-sectionhead__en">SUPPORT</div>
+        <h2 class="aws-sectionhead__title">コモンコムのAWS導入支援</h2>
+        <p class="aws-sectionhead__text">過去の導入支援実績の一例です。</p>
+      </header>
+      <ul class="aws-list">
+        <li>・新規AWS環境の設計、構築</li>
+        <li>・既存AWS環境の見直し、最適化</li>
+        <li>・AWS利用のためのオンプレミス環境最適化</li>
+        <li>・バックアップや監視業務などの継続サポート</li>
+        <li>・高い可用性やセキュリティ要件への個別対応</li>
+        <li>・オンプレミス環境からAWSへの移行支援</li>
+      </ul>
+      <p class="aws-copy">AWSの活用が広がる中、企業に求められるのは単なるクラウド移行ではなく、業務に適した構成設計、セキュリティ対策、安定性や拡張性を見据えたインフラ整備です。<br />当社の主力製品である物流システム「LOGI-Cube」の環境基盤の他、さまざまなシーンでのAWS導入実績による知見を活かし<br />最新サービスやベストプラクティスを踏まえながら、お客様に最適なクラウド導入・構築・運用支援サービスを提供してまいります。</p>
+      <div class="aws-actions">
+        <a class="aws-button aws-button--solid" href="https://commoncom.jp/contact/">AWS・保守運用　お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="aws-section" id="aws-issues">
+    <div class="aws-container">
+      <header class="aws-sectionhead">
+        <div class="aws-sectionhead__en">ISSUE</div>
+        <h2 class="aws-sectionhead__title">こんな課題はありませんか？</h2>
+      </header>
+      <div class="aws-issues">
+        <article class="aws-issue">
+          <div class="aws-issue__label">課題1</div>
+          <h3 class="aws-issue__title">オンプレミス環境から、クラウドへ移行したいが、不安な部分が多く抵抗がある</h3>
+          <p class="aws-issue__text">セキュリティ面や利用料など不透明な部分が多く、クラウドへの移行に抵抗がある。</p>
+        </article>
+        <article class="aws-issue">
+          <div class="aws-issue__label">課題2</div>
+          <h3 class="aws-issue__title">クラウドを利用してみたいが、自社だけではハードルが高い</h3>
+          <p class="aws-issue__text">自社にクラウド設計・構築・運用が可能なエンジニアがいないため、専門家のアドバイスがほしい。</p>
+        </article>
+        <article class="aws-issue">
+          <div class="aws-issue__label">課題3</div>
+          <h3 class="aws-issue__title">既にクラウドを利用しているが、適切な構成か自信がない</h3>
+          <p class="aws-issue__text">自社または外部ベンダー構築でクラウドを利用しているが、セキュリティ面の問題や最適構成になっているかチェックしたい。</p>
+        </article>
+      </div>
+      <p class="aws-solve">その課題、コモンコムが提供するAWS導入支援サービスで解決できます！</p>
+    </div>
+  </section>
+
+  <section class="aws-section aws-section--alt">
+    <div class="aws-container">
+      <header class="aws-sectionhead">
+        <div class="aws-sectionhead__en">SERVICE</div>
+        <h2 class="aws-sectionhead__title">AWS構築・導入支援サービス</h2>
+        <p class="aws-sectionhead__text">AWSの導入にあたり、要件整理、設計、構築、運用の工程を一貫して考えることが重要になります。<br />弊社は全工程においてサービスの提供が可能であり、お客様に最適なトータルソリューションをワンストップでご提案いたします。<br />また、お客様のご状況に応じて、無理のない導入計画と継続的な運用体制の構築をご支援いたします。</p>
+      </header>
+    </div>
+  </section>
+
+  <section class="aws-section" id="aws-flow">
+    <div class="aws-container">
+      <header class="aws-sectionhead">
+        <div class="aws-sectionhead__en">FLOW</div>
+        <h2 class="aws-sectionhead__title">AWS導入支援サービス ご利用の流れ</h2>
+      </header>
+      <div class="aws-steps">
+        <article class="aws-step">
+          <div class="aws-step__num">STEP<b>01</b></div>
+          <div>
+            <h3 class="aws-step__title">お問い合わせ</h3>
+            <p class="aws-step__text">AWSに関連する案件であれば、どのような内容でもお気軽にお問い合わせください。<br />お問い合わせは<a class="aws-textlink" href="https://commoncom.jp/contact/">こちらへ</a>！</p>
+          </div>
+        </article>
+        <article class="aws-step">
+          <div class="aws-step__num">STEP<b>02</b></div>
+          <div>
+            <h3 class="aws-step__title">ヒアリング・要件整理</h3>
+            <p class="aws-step__text">まずは、現在の状況や今後の計画などの概要をヒアリングいたします。<br />その後、ご予算や導入スケジュール、詳細な要件などお伺いし、方向性や導入支援の範囲を明確にします。</p>
+          </div>
+        </article>
+        <article class="aws-step">
+          <div class="aws-step__num">STEP<b>03</b></div>
+          <div>
+            <h3 class="aws-step__title">ご提案・ご契約</h3>
+            <p class="aws-step__text">ヒアリング内容やシステム要件をもとに、貴社に最適なご提案を行います。</p>
+          </div>
+        </article>
+        <article class="aws-step">
+          <div class="aws-step__num">STEP<b>04</b></div>
+          <div>
+            <h3 class="aws-step__title">設計・構築</h3>
+            <p class="aws-step__text">合意した内容に基づき、AWS環境の設計や構築を行います。<br />AWSが推奨しているベストプラクティス（推奨構成）への準拠、また貴社のご要望を両立できるよう最適な設計を実現します。<br />その後設計内容に沿った作業計画を策定し、実際の構築作業を実施します。</p>
+          </div>
+        </article>
+        <article class="aws-step">
+          <div class="aws-step__num">STEP<b>05</b></div>
+          <div>
+            <h3 class="aws-step__title">運用支援・継続提案</h3>
+            <p class="aws-step__text">導入後も、安定稼働や環境改善を実現するために、継続的なサポートを行います。<br />バックアップ確認やシステム監視などの運用支援、運用状況分析による環境改善やコスト最適化など継続的なご提案を実施します。</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="aws-section aws-section--soft" id="aws-contact">
+    <div class="aws-container">
+      <header class="aws-sectionhead">
+        <div class="aws-sectionhead__en">CONTACT</div>
+        <h2 class="aws-sectionhead__title">お問い合わせ</h2>
+        <p class="aws-sectionhead__text">AWSの導入をご検討中のお客様、既存環境の見直しや運用改善をご希望のお客様は、ぜひ弊社までお気軽にお問い合わせください。<br />弊社は福岡本社をはじめ、複数拠点から全国のお客様をサポートしています。<br />お客様の業務や環境に合わせて、最適なAWS活用をご提案いたします。</p>
+      </header>
+      <p class="aws-phone">電話でのお問い合わせ：092-410-5113<br />※受付時間　平日9:00～18:00</p>
+      <div class="aws-actions" style="justify-content:center">
+        <a class="aws-button aws-button--solid" href="https://commoncom.jp/contact/">AWS・保守運用　お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="aws-cta">
+    <div class="aws-container aws-cta__inner">
+      <div>
+        <h2 class="aws-cta__title">AWS・保守運用　お問い合わせ</h2>
+        <p class="aws-cta__text">電話でのお問い合わせ：092-410-5113　※受付時間　平日9:00～18:00</p>
+      </div>
+      <div class="aws-cta__actions aws-actions">
+        <a class="aws-button aws-button--primary" href="https://commoncom.jp/contact/">AWS・保守運用　お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="aws-lightbox" id="aws-lightbox" aria-hidden="true">
+    <div class="aws-lightbox__dialog" role="dialog" aria-modal="true" aria-label="画像拡大表示">
+      <button class="aws-lightbox__close" type="button" aria-label="閉じる">×</button>
+      <img class="aws-lightbox__image" src="" alt="" />
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById("aws-root");
+      if (!root) return;
+
+      var lightbox = root.querySelector("#aws-lightbox");
+      var lightboxImage = lightbox ? lightbox.querySelector(".aws-lightbox__image") : null;
+      var closeButton = lightbox ? lightbox.querySelector(".aws-lightbox__close") : null;
+
+      function bindLightbox(scope) {
+        if (!lightbox) return;
+        if (!lightboxImage) return;
+        var triggers = scope.querySelectorAll(".aws-lightbox-trigger");
+        triggers.forEach(function (trigger) {
+          if (trigger.dataset.lightboxBound === "true") return;
+          trigger.dataset.lightboxBound = "true";
+          trigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            var img = trigger.querySelector("img");
+            if (!img) return;
+            lightboxImage.src = img.getAttribute("src");
+            lightboxImage.alt = img.alt || "";
+            lightbox.classList.add("is-open");
+            lightbox.setAttribute("aria-hidden", "false");
+            document.documentElement.style.overflow = "hidden";
+            if (closeButton) closeButton.focus();
+          });
+        });
+      }
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove("is-open");
+        lightbox.setAttribute("aria-hidden", "true");
+        if (lightboxImage) lightboxImage.src = "";
+        document.documentElement.style.overflow = "";
+      }
+
+      if (closeButton) closeButton.addEventListener("click", closeLightbox);
+      if (lightbox) {
+        lightbox.addEventListener("click", function (e) {
+          if (e.target === lightbox) closeLightbox();
+        });
+      }
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        if (!lightbox) return;
+        if (!lightbox.classList.contains("is-open")) return;
+        closeLightbox();
+      });
+      bindLightbox(root);
+
+      function headerOffset() {
+        var header = document.querySelector("#header, .l-header, header");
+        return header ? header.offsetHeight + 16 : 72;
+      }
+      function updateScrollMargin() {
+        root.style.setProperty("--aws-scroll-margin", headerOffset() + "px");
+      }
+      function scrollToTarget(target, behavior) {
+        var top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset();
+        window.scrollTo({ top: top, behavior: behavior || "auto" });
+      }
+      function getHashTarget(hash) {
+        var id = (hash || "").replace("#", "");
+        if (!id) return null;
+        return document.getElementById(id);
+      }
+
+      document.addEventListener("click", function (e) {
+        if (e.defaultPrevented) return;
+        if (e.button !== 0) return;
+        if (e.metaKey) return;
+        if (e.ctrlKey) return;
+        if (e.shiftKey) return;
+        if (e.altKey) return;
+        var link = e.target.closest("a");
+        if (!link) return;
+        if (link.getAttribute("target") === "_blank") return;
+        var href = link.getAttribute("href");
+        if (!href) return;
+        if (href.indexOf("#") === -1) return;
+        var url;
+        try { url = new URL(link.href, location.href); } catch (err) { return; }
+        if (url.hash.length < 2) return;
+        var samePath = true;
+        try {
+          samePath = decodeURIComponent(url.pathname) === decodeURIComponent(location.pathname);
+        } catch (err2) {
+          samePath = url.pathname === location.pathname;
+        }
+        if (!samePath) return;
+        var target = getHashTarget(url.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (history.pushState) history.pushState(null, "", url.hash);
+        scrollToTarget(target, "smooth");
+      }, true);
+
+      function syncHashScroll(behavior) {
+        var target = getHashTarget(location.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        scrollToTarget(target, behavior || "auto");
+      }
+      window.addEventListener("hashchange", function () { syncHashScroll("smooth"); });
+      window.addEventListener("resize", updateScrollMargin);
+      updateScrollMargin();
+      function correctHashScroll() {
+        if (!location.hash) return;
+        setTimeout(function () { syncHashScroll("auto"); }, 0);
+        setTimeout(function () { syncHashScroll("auto"); }, 80);
+      }
+      if (document.readyState === "complete") correctHashScroll();
+      else window.addEventListener("load", correctHashScroll);
+    })();
+  </script>
+</div>
+</div></main></div></body></html>

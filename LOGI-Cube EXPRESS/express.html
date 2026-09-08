@@ -1,0 +1,4866 @@
+<!-- @format -->
+
+<meta charset="utf-8" />
+<!--
+  LOGI-Cube EXPRESS LP v2 (リニューアル版) for WordPress / SWELL
+  - 旧 express.html の全面リニューアル：機能の見せ方をタブ+全体像マップに再構成、ヒーローを刷新、デザイントークンを統一
+  - 配色は「ネイビー #0d2534 / ティール #00b794」の2色 + CTA専用オレンジ #f59a1d のみ。kintone系(黄)とはトーン分離
+  - 汎用クラスを使わず lxp- プレフィックスで隔離。すべてのCSSを #lxp-root 配下にスコープ
+  - CONTACT の #lxp-form-slot に、直後の Contact Form 7 ブロックを JS で移動する
+  - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子(&の連続)を使わない
+  - SWELL の h1.c-pageTitle は残し、直書きHTMLでは h1 もタイトル文言も書かない。
+    プレースホルダ p.lxp-hero__title は空にして、JS で SWELL の h1 と差し替える。
+    初期HTMLにタイトルを2つ置くと、JSを実行しないSEOクローラが見出しを二重に拾う
+  - 公開後は SWELL のタイトル / SEO 欄にも次を手入力する（SNSクローラは JS を実行しない）
+    ページタイトル（H1）: 運送管理システム LOGI-Cube EXPRESS｜配車・日報・請求・原価管理をひとつに
+    description: 約300社導入の運送業向け運送管理システム。日計表を基本に配車・日報・請求・車両原価を一元管理し、請求書作成を10日→2日に短縮。デジタコ・会計・給与・kintone連携。資料請求・デモ・無料相談に対応。
+    OGP画像: ヒーロー画像（LOGI-Cube EXPRESS/image/hero-express.png）をメディアへ上げてURLを入れる
+    Twitterカード: summary_large_image
+  - SWELL の遅延読み込み二重出力を避けるため、ファーストビュー画像には skip-lazy を付ける
+  - ヒーローと導入ロゴは WP 余白を打ち消して全幅。ヘッダー＋ヒーロー＋導入ロゴが画面高さいっぱいに収まる
+  - 初回表示のがたつきを避けるため、ヒーロー高さは 100svh からヘッダー・ロゴ帯を引いた CSS を初期値にし、#lxp-root 直後のスクリプトで実測値を先に入れる
+  - タブUIはプログレッシブエンハンスメント：JS無効時は全パネルが縦に並んで表示される（SEO・可読性を確保）
+-->
+<style>
+  body:has(#lxp-root) .l-mainContent__inner > h1.c-pageTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  body:has(#lxp-root) {
+    overflow-x: clip;
+  }
+  body:has(#lxp-root) .l-content,
+  body:has(#lxp-root) .l-mainContent,
+  body:has(#lxp-root) .l-mainContent__inner,
+  body:has(#lxp-root) .p-entryContent,
+  body:has(#lxp-root) .post_content,
+  body:has(#lxp-root) article {
+    overflow: visible !important;
+  }
+  body:has(#lxp-root) .l-content,
+  body:has(#lxp-root) .l-content.l-container,
+  body:has(#lxp-root) .l-mainContent,
+  body:has(#lxp-root) .l-article,
+  body:has(#lxp-root) .l-mainContent__inner,
+  body:has(#lxp-root) .p-entryContent,
+  body:has(#lxp-root) .post_content {
+    padding-top: 0 !important;
+  }
+
+  body #lxp-root,
+  body #lxp-root *,
+  body #lxp-root *::before,
+  body #lxp-root *::after {
+    box-sizing: border-box;
+  }
+
+  body #lxp-root {
+    --lxp-navy: #0d2534;
+    --lxp-navy-2: #123a4a;
+    --lxp-ink: #1c3242;
+    --lxp-muted: #5b7180;
+    --lxp-teal: #00b794;
+    --lxp-teal-dark: #009579;
+    --lxp-orange: #f59a1d;
+    --lxp-orange-dark: #e2890f;
+    --lxp-soft: #f2f8f6;
+    --lxp-line: #dfe9e5;
+    --lxp-white: #ffffff;
+    --lxp-radius: 14px;
+    --lxp-shadow: 0 10px 30px rgba(13, 37, 52, 0.08);
+    --lxp-shadow-lg: 0 24px 60px rgba(13, 37, 52, 0.16);
+    --lxp-scroll-margin: 72px;
+    --lxp-header-h: var(--swl-headerH, 73px);
+    --lxp-logos-h: 148px;
+    --lxp-vw: 100vw;
+    --lxp-hero-h: 520px;
+    --lxp-hero-h: max(
+      360px,
+      calc(100vh - var(--lxp-header-h) - var(--lxp-logos-h))
+    );
+    --lxp-hero-h: max(
+      360px,
+      calc(100svh - var(--lxp-header-h) - var(--lxp-logos-h))
+    );
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: var(--lxp-ink);
+    background: var(--lxp-white);
+    font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+      "Yu Gothic", "Meiryo", sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+    isolation: isolate;
+  }
+
+  body #lxp-root h1,
+  body #lxp-root h2,
+  body #lxp-root h3,
+  body #lxp-root h4,
+  body #lxp-root p,
+  body #lxp-root figure,
+  body #lxp-root figcaption,
+  body #lxp-root ul,
+  body #lxp-root ol,
+  body #lxp-root li,
+  body #lxp-root dl,
+  body #lxp-root dt,
+  body #lxp-root dd,
+  body #lxp-root nav,
+  body #lxp-root article,
+  body #lxp-root header,
+  body #lxp-root section,
+  body #lxp-root details,
+  body #lxp-root summary,
+  body #lxp-root table,
+  body #lxp-root th,
+  body #lxp-root td,
+  body #lxp-root button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    font-family: inherit;
+  }
+
+  body #lxp-root h1::before,
+  body #lxp-root h1::after,
+  body #lxp-root h2::before,
+  body #lxp-root h2::after,
+  body #lxp-root h3::before,
+  body #lxp-root h3::after,
+  body #lxp-root h4::before,
+  body #lxp-root h4::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body #lxp-root ul,
+  body #lxp-root ol {
+    list-style: none;
+  }
+  body #lxp-root a {
+    color: inherit;
+    text-decoration: none;
+  }
+  body #lxp-root img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  body #lxp-root summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  body #lxp-root summary::-webkit-details-marker {
+    display: none;
+  }
+
+  body #lxp-root .lxp-container {
+    width: min(1160px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+  body #lxp-root .lxp-logos + .lxp-container {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  /* ---- 共通：アイコン ---- */
+  body #lxp-root .lxp-icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+  body #lxp-root .lxp-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    border-radius: 12px;
+    background: rgba(0, 183, 148, 0.1);
+    color: var(--lxp-teal-dark);
+  }
+
+  /* ---- 共通：ボタン ---- */
+  body #lxp-root .lxp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  body #lxp-root .lxp-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 54px;
+    padding: 12px 30px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease,
+      background 0.18s ease, color 0.18s ease;
+  }
+  body #lxp-root .lxp-button--primary {
+    background: linear-gradient(
+      135deg,
+      var(--lxp-orange) 0%,
+      var(--lxp-orange-dark) 100%
+    );
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(226, 137, 15, 0.35);
+  }
+  body #lxp-root .lxp-button--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(226, 137, 15, 0.45);
+    color: #fff;
+  }
+  body #lxp-root .lxp-button--secondary {
+    background: var(--lxp-white);
+    color: var(--lxp-teal-dark);
+    border: 2px solid var(--lxp-teal);
+  }
+  body #lxp-root .lxp-button--secondary:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 183, 148, 0.08);
+  }
+  body #lxp-root .lxp-button--ghost {
+    background: var(--lxp-white);
+    color: var(--lxp-teal-dark);
+    border: 2px solid var(--lxp-teal);
+  }
+  body #lxp-root .lxp-button--ghost:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 183, 148, 0.08);
+    color: var(--lxp-teal-dark);
+  }
+
+  /* ---- 共通：セクション ---- */
+  body #lxp-root .lxp-section {
+    padding: 88px 0;
+    scroll-margin-top: var(--lxp-scroll-margin);
+  }
+  body #lxp-root .lxp-section--soft {
+    background: var(--lxp-soft);
+  }
+  body #lxp-root .lxp-section--dark {
+    background: var(--lxp-soft);
+    color: var(--lxp-ink);
+  }
+
+  body #lxp-root .lxp-sectionhead {
+    max-width: 820px;
+    margin: 0 auto 52px;
+    text-align: center;
+  }
+  body #lxp-root .lxp-sectionhead--left {
+    margin-inline: 0;
+    text-align: left;
+  }
+  body #lxp-root .lxp-sectionhead__en {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--lxp-teal-dark);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  body #lxp-root .lxp-sectionhead__en::before {
+    content: "";
+    width: 26px;
+    height: 2px;
+    background: var(--lxp-teal);
+  }
+  body #lxp-root .lxp-sectionhead__en::after {
+    content: "";
+    width: 26px;
+    height: 2px;
+    background: var(--lxp-teal);
+  }
+  body #lxp-root .lxp-sectionhead--left .lxp-sectionhead__en::after {
+    content: none;
+  }
+  body #lxp-root .lxp-sectionhead__title {
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+  }
+  body #lxp-root .lxp-sectionhead__text {
+    margin-top: 18px;
+    font-size: 15.5px;
+    color: var(--lxp-muted);
+    text-align: left;
+  }
+  /* ---- 共通：カード ---- */
+  body #lxp-root .lxp-card {
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 28px 26px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-card__title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 14px 0 8px;
+  }
+  body #lxp-root .lxp-card__text {
+    font-size: 14.5px;
+    color: var(--lxp-muted);
+  }
+
+  /* ---- HERO ---- */
+  body #lxp-root .lxp-hero {
+    width: var(--lxp-vw) !important;
+    max-width: none !important;
+    margin-right: 0 !important;
+    margin-left: calc(50% - var(--lxp-vw) / 2) !important;
+  }
+  body #lxp-root .lxp-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: var(--lxp-hero-h);
+    min-height: 360px;
+    background: radial-gradient(
+        900px 500px at 85% -10%,
+        rgba(0, 183, 148, 0.12),
+        transparent 58%
+      ),
+      radial-gradient(
+        700px 420px at -10% 110%,
+        rgba(0, 149, 121, 0.08),
+        transparent 55%
+      ),
+      linear-gradient(180deg, #ffffff 0%, var(--lxp-soft) 100%);
+    color: var(--lxp-ink);
+    padding: 0;
+  }
+  body #lxp-root .lxp-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+        rgba(13, 37, 52, 0.045) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(13, 37, 52, 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 75%);
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.9),
+      transparent 75%
+    );
+    pointer-events: none;
+  }
+  body #lxp-root .lxp-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 40px 0 24px;
+  }
+  body #lxp-root .lxp-hero__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: 48px;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 0;
+  }
+  body #lxp-root .lxp-hero__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  body #lxp-root .lxp-hero__brand img {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+  body #lxp-root .lxp-hero__brand-name {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--lxp-navy);
+  }
+  body #lxp-root .lxp-hero__brand-name span {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  body #lxp-root .lxp-hero__chips li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 183, 148, 0.35);
+    background: rgba(0, 183, 148, 0.08);
+    color: var(--lxp-teal-dark);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  body #lxp-root .lxp-hero__title,
+  body #lxp-root h1.lxp-hero__title.c-pageTitle {
+    font-weight: 800;
+    color: var(--lxp-navy);
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    font-size: 17px;
+    margin: 0 0 14px;
+  }
+  body #lxp-root h1.lxp-hero__title.c-pageTitle::before,
+  body #lxp-root h1.lxp-hero__title.c-pageTitle::after {
+    content: none !important;
+    display: none !important;
+  }
+  body #lxp-root .lxp-hero__title .lxp-hero__title-sub {
+    display: block;
+    margin-top: 10px;
+    font-size: clamp(30px, 4.6vw, 46px);
+    line-height: 1.32;
+    letter-spacing: 0.02em;
+  }
+  body #lxp-root .lxp-hero__title .lxp-hero__title-sub em {
+    font-style: normal;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-hero__lead {
+    font-size: 15.5px;
+    color: var(--lxp-muted);
+    max-width: 540px;
+    margin-bottom: 28px;
+  }
+  body #lxp-root .lxp-hero__note {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--lxp-muted);
+  }
+
+  body #lxp-root .lxp-hero__visual {
+    position: relative;
+    padding: 8px 0 8px 8px;
+  }
+  body #lxp-root .lxp-hero__visual .lxp-browser img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top left;
+    height: auto;
+  }
+  body #lxp-root .lxp-browser {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #f4f7f6;
+    box-shadow: var(--lxp-shadow-lg);
+    border: 1px solid var(--lxp-line);
+  }
+  body #lxp-root .lxp-browser__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 14px;
+    background: #e7f1ee;
+  }
+  body #lxp-root .lxp-browser__bar span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(13, 37, 52, 0.18);
+  }
+  body #lxp-root .lxp-browser__bar span:first-child {
+    background: var(--lxp-teal);
+  }
+  body #lxp-root .lxp-hero__float {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--lxp-navy);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: var(--lxp-shadow);
+    white-space: nowrap;
+  }
+  body #lxp-root .lxp-hero__float .lxp-icon {
+    width: 17px;
+    height: 17px;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-hero__float--1 {
+    top: -8px;
+    left: -14px;
+  }
+  body #lxp-root .lxp-hero__float--2 {
+    top: 34%;
+    right: -12px;
+  }
+  body #lxp-root .lxp-hero__float--3 {
+    bottom: -10px;
+    left: 10%;
+  }
+
+  body #lxp-root .lxp-hero__stats {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    border-top: 1px solid var(--lxp-line);
+    background: var(--lxp-white);
+  }
+  body #lxp-root .lxp-hero__stats-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  body #lxp-root .lxp-hero__stat {
+    padding: 20px 12px;
+    text-align: center;
+  }
+  body #lxp-root .lxp-hero__stat + .lxp-hero__stat {
+    border-left: 1px solid var(--lxp-line);
+  }
+  body #lxp-root .lxp-hero__stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-hero__stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--lxp-navy);
+    line-height: 1.3;
+  }
+  body #lxp-root .lxp-hero__stat-value em {
+    font-style: normal;
+    color: var(--lxp-teal-dark);
+    font-size: 30px;
+  }
+  body #lxp-root .lxp-hero__stat-value small {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lxp-muted);
+  }
+
+  /* ---- 導入企業ロゴ ---- */
+  body #lxp-root .lxp-logos {
+    position: relative;
+    padding: 0;
+    background: var(--lxp-white);
+  }
+  body #lxp-root .lxp-logos .lxp-logos__inner {
+    min-height: 148px;
+    padding: 18px 0;
+    border-top: 1px solid var(--lxp-line);
+    border-bottom: 1px solid var(--lxp-line);
+  }
+  body #lxp-root .lxp-logos__inner {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    align-items: center;
+    gap: 0;
+  }
+  body #lxp-root .lxp-logos__label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 64px;
+    padding-right: 26px;
+    margin: 0;
+    border-right: 1px solid #dfe9e8;
+    color: var(--lxp-teal-dark);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: left;
+    letter-spacing: 0;
+  }
+  body #lxp-root .lxp-logos__label span {
+    display: block;
+    margin-top: 4px;
+    margin-left: 0;
+    color: var(--lxp-muted);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  body #lxp-root .lxp-logo-marquee {
+    overflow: hidden;
+    min-width: 0;
+    padding-left: 32px;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
+  }
+  body #lxp-root .lxp-logo-marquee.is-dragging {
+    cursor: grabbing;
+  }
+  body #lxp-root .lxp-logo-marquee.is-dragging a {
+    pointer-events: none;
+  }
+  body #lxp-root .lxp-logo-track {
+    display: flex;
+    width: max-content;
+    animation: lxpLogoScroll 90s linear infinite;
+  }
+  body #lxp-root .lxp-logo-track.is-manual {
+    animation: none;
+  }
+  body #lxp-root .lxp-logo-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 56px;
+    padding-right: 56px;
+  }
+  body #lxp-root .lxp-logo-item {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    width: auto;
+  }
+  body #lxp-root .lxp-logo-image {
+    width: auto !important;
+    max-width: 240px !important;
+    height: auto !important;
+    max-height: 64px !important;
+    object-fit: contain;
+  }
+  @keyframes lxpLogoScroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  body #lxp-root .lxp-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---- ページ内ナビ（トップと同じカード型） ---- */
+  body #lxp-root nav.lxp-quicknav {
+    margin: 0 auto;
+  }
+  body #lxp-root .lxp-quicknav__panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--lxp-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #lxp-root .lxp-quicknav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 84px;
+    padding: 12px 8px;
+    border-right: 1px solid var(--lxp-line);
+    border-bottom: 1px solid var(--lxp-line);
+    color: var(--lxp-navy);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+  body #lxp-root .lxp-quicknav__item:nth-child(4n) {
+    border-right: 0;
+  }
+  body #lxp-root .lxp-quicknav__item:nth-last-child(-n + 4) {
+    border-bottom: 0;
+  }
+  body #lxp-root .lxp-quicknav__item:hover {
+    background: var(--lxp-soft);
+  }
+  body #lxp-root .lxp-quicknav__top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 4px;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-quicknav__num {
+    display: block;
+    color: var(--lxp-teal-dark);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  body #lxp-root .lxp-quicknav__top .lxp-icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* ---- ISSUE：課題 ---- */
+  body #lxp-root .lxp-issues {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+  }
+  body #lxp-root .lxp-issue {
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 26px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-issue:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-issue__title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 14px 0 8px;
+  }
+  body #lxp-root .lxp-issue__text {
+    font-size: 13.5px;
+    color: var(--lxp-muted);
+    flex: 1 1 auto;
+  }
+  body #lxp-root .lxp-issue__solution {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(0, 183, 148, 0.1);
+    color: var(--lxp-teal-dark);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  body #lxp-root .lxp-issue__solution::before {
+    content: "▶";
+    font-size: 9px;
+  }
+  body #lxp-root .lxp-issues__answer {
+    margin-top: 44px;
+    text-align: center;
+  }
+  body #lxp-root .lxp-issues__answer-arrow {
+    width: 0;
+    height: 0;
+    margin: 0 auto 22px;
+    border-left: 34px solid transparent;
+    border-right: 34px solid transparent;
+    border-top: 22px solid var(--lxp-teal);
+  }
+  body #lxp-root .lxp-issues__answer-text {
+    font-size: clamp(20px, 3vw, 27px);
+    font-weight: 800;
+    line-height: 1.6;
+  }
+  body #lxp-root .lxp-issues__answer-text em {
+    font-style: normal;
+    color: var(--lxp-teal-dark);
+    background: linear-gradient(transparent 68%, rgba(0, 183, 148, 0.22) 68%);
+    padding: 0 2px;
+  }
+
+  /* ---- SOLUTION：全体像マップ ---- */
+  body #lxp-root .lxp-flowline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  body #lxp-root .lxp-flowline__step {
+    position: relative;
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: 12px;
+    padding: 16px 8px 14px;
+    text-align: center;
+  }
+  body #lxp-root .lxp-flowline__step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -9px;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 9px solid var(--lxp-teal);
+    z-index: 1;
+  }
+  body #lxp-root .lxp-flowline__step .lxp-icon {
+    width: 26px;
+    height: 26px;
+    margin: 0 auto 8px;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-flowline__label {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  body #lxp-root .lxp-flowline__sub {
+    font-size: 11px;
+    color: var(--lxp-muted);
+    margin-top: 2px;
+  }
+
+  body #lxp-root .lxp-map {
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: 18px;
+    padding: 36px clamp(18px, 4vw, 44px) 38px;
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-map__base {
+    display: block;
+    position: relative;
+    border-radius: 14px;
+    background: var(--lxp-soft);
+    color: var(--lxp-ink);
+    border: 1px solid var(--lxp-line);
+    padding: 28px 30px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-map__base:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow-lg);
+    color: var(--lxp-ink);
+  }
+  body #lxp-root .lxp-map__base-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  body #lxp-root .lxp-map__base .lxp-icon-wrap {
+    background: rgba(0, 183, 148, 0.1);
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-map__tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: #4fe0c2;
+    color: var(--lxp-navy);
+    margin-bottom: 6px;
+  }
+  body #lxp-root .lxp-map__base-title {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+  body #lxp-root .lxp-map__base-text {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-map__connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--lxp-muted);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  body #lxp-root .lxp-map__connector::before,
+  body #lxp-root .lxp-map__connector::after {
+    content: "";
+    flex: 1 1 auto;
+    border-top: 2px dashed var(--lxp-line);
+  }
+  body #lxp-root .lxp-map__options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  body #lxp-root .lxp-map__option {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--lxp-line);
+    border-top: 3px solid var(--lxp-teal);
+    border-radius: 12px;
+    padding: 20px 18px;
+    background: var(--lxp-white);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-map__option:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-map__option .lxp-icon-wrap {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    margin-bottom: 12px;
+  }
+  body #lxp-root .lxp-map__option-tag {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--lxp-teal-dark);
+    margin-bottom: 4px;
+  }
+  body #lxp-root .lxp-map__option-title {
+    font-size: 16.5px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  body #lxp-root .lxp-map__option-text {
+    font-size: 12.5px;
+    color: var(--lxp-muted);
+    flex: 1 1 auto;
+  }
+  body #lxp-root .lxp-map__integrations {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--lxp-line);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+  body #lxp-root .lxp-map__integrations-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lxp-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  body #lxp-root .lxp-map__integrations-label .lxp-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-map__integrations li {
+    display: inline-flex;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--lxp-line);
+    background: var(--lxp-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+</style>
+<style>
+  /* ---- FEATURE：機能タブ ---- */
+  body #lxp-root .lxp-tablist {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+  body #lxp-root .lxp-tabs.is-js .lxp-tablist {
+    display: flex;
+  }
+  body #lxp-root .lxp-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--lxp-line);
+    background: var(--lxp-white);
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--lxp-ink);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+  body #lxp-root .lxp-tab .lxp-icon {
+    width: 19px;
+    height: 19px;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-tab small {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(0, 183, 148, 0.1);
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-tab:hover {
+    border-color: var(--lxp-teal);
+  }
+  body #lxp-root .lxp-tab.is-active {
+    background: var(--lxp-navy);
+    border-color: var(--lxp-navy);
+    color: #fff;
+  }
+  body #lxp-root .lxp-tab.is-active .lxp-icon {
+    color: #4fe0c2;
+  }
+  body #lxp-root .lxp-tab.is-active small {
+    background: rgba(79, 224, 194, 0.2);
+    color: #4fe0c2;
+  }
+
+  body #lxp-root .lxp-tabpanel {
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: 18px;
+    padding: clamp(24px, 4vw, 44px);
+    scroll-margin-top: var(--lxp-scroll-margin);
+  }
+  body #lxp-root .lxp-tabpanel + .lxp-tabpanel {
+    margin-top: 28px;
+  }
+  body #lxp-root .lxp-tabs.is-js .lxp-tabpanel {
+    display: none;
+  }
+  body #lxp-root .lxp-tabs.is-js .lxp-tabpanel.is-active {
+    display: block;
+    animation: lxp-fadein 0.3s ease;
+  }
+  body #lxp-root .lxp-tabs.is-js .lxp-tabpanel + .lxp-tabpanel {
+    margin-top: 0;
+  }
+  @keyframes lxp-fadein {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  body #lxp-root .lxp-tabpanel__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(24px, 4vw, 44px);
+    align-items: start;
+  }
+  body #lxp-root .lxp-tabpanel__tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--lxp-navy);
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  body #lxp-root .lxp-tabpanel__tag--option {
+    background: rgba(0, 183, 148, 0.12);
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-tabpanel__title {
+    font-size: clamp(21px, 2.6vw, 26px);
+    font-weight: 800;
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+  body #lxp-root .lxp-tabpanel__text {
+    font-size: 14.5px;
+    color: var(--lxp-muted);
+    margin-bottom: 20px;
+  }
+  body #lxp-root .lxp-checklist li {
+    position: relative;
+    padding: 9px 0 9px 30px;
+    font-size: 14.5px;
+    line-height: 1.65;
+    border-bottom: 1px dashed var(--lxp-line);
+  }
+  body #lxp-root .lxp-checklist li:last-child {
+    border-bottom: 0;
+  }
+  body #lxp-root .lxp-checklist li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 15px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--lxp-teal);
+  }
+  body #lxp-root .lxp-checklist li::after {
+    content: "";
+    position: absolute;
+    left: 6.5px;
+    top: 19.5px;
+    width: 7px;
+    height: 4px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg);
+  }
+  body #lxp-root .lxp-shots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  body #lxp-root .lxp-shot:first-child {
+    grid-column: 1 / -1;
+  }
+  body #lxp-root .lxp-shot:nth-child(2):last-child {
+    grid-column: 1 / -1;
+  }
+  body #lxp-root .lxp-shot img {
+    border-radius: 10px;
+    border: 1px solid var(--lxp-line);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-shot a:hover img {
+    transform: translateY(-2px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-shot figcaption {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--lxp-muted);
+    text-align: center;
+  }
+  body #lxp-root .lxp-shot figcaption::after {
+    content: "（クリックで拡大）";
+    font-size: 10.5px;
+    margin-left: 4px;
+    color: var(--lxp-teal-dark);
+  }
+
+  /* ---- REASON：選ばれる理由 ---- */
+  body #lxp-root .lxp-reason {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    padding: 44px 0;
+  }
+  body #lxp-root .lxp-reason + .lxp-reason {
+    border-top: 1px solid var(--lxp-line);
+  }
+  body #lxp-root .lxp-reason:nth-child(even) .lxp-reason__copy {
+    order: 2;
+  }
+  body #lxp-root .lxp-reason__num {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  body #lxp-root .lxp-reason__num strong {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--lxp-teal);
+    letter-spacing: 0.02em;
+  }
+  body #lxp-root .lxp-reason__num span {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-reason__title {
+    font-size: clamp(20px, 2.6vw, 25px);
+    font-weight: 800;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  body #lxp-root .lxp-reason__text {
+    font-size: 14.5px;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-reason__visual img {
+    border-radius: 12px;
+    border: 1px solid var(--lxp-line);
+    box-shadow: var(--lxp-shadow);
+  }
+
+  /* ---- EFFECT：導入効果 ---- */
+  body #lxp-root .lxp-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+  }
+  body #lxp-root .lxp-stat {
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 28px 20px 24px;
+    text-align: center;
+  }
+  body #lxp-root .lxp-stat .lxp-icon-wrap {
+    margin: 0 auto 14px;
+    background: rgba(0, 183, 148, 0.1);
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-stat__value {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-stat__value small {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--lxp-ink);
+  }
+  body #lxp-root .lxp-stat__fromto {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--lxp-navy);
+  }
+  body #lxp-root .lxp-stat__fromto em {
+    font-style: normal;
+    font-size: 34px;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-stat__fromto span {
+    display: inline-block;
+    margin: 0 4px;
+    color: var(--lxp-muted);
+    font-size: 18px;
+  }
+  body #lxp-root .lxp-stat__label {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--lxp-muted);
+    line-height: 1.6;
+  }
+  body #lxp-root .lxp-stats__note {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--lxp-muted);
+  }
+
+  /* ---- CASE：導入事例 ---- */
+  body #lxp-root .lxp-cases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  body #lxp-root .lxp-case {
+    display: flex;
+    flex-direction: column;
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 28px 26px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-case:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-case__label {
+    align-self: flex-start;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: var(--lxp-navy);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  body #lxp-root .lxp-case__meta {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-case__title {
+    margin: 8px 0 16px;
+    font-size: 16.5px;
+    font-weight: 700;
+    line-height: 1.55;
+  }
+  body #lxp-root .lxp-case dl {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  body #lxp-root .lxp-case dt {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--lxp-teal-dark);
+    margin-bottom: 2px;
+  }
+  body #lxp-root .lxp-case dd {
+    font-size: 13px;
+    color: var(--lxp-muted);
+    line-height: 1.7;
+  }
+  body #lxp-root .lxp-case__more {
+    margin-top: 18px;
+    align-self: flex-start;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--lxp-teal-dark);
+    border-bottom: 2px solid var(--lxp-teal);
+    padding-bottom: 2px;
+  }
+  body #lxp-root .lxp-tablewrap {
+    overflow-x: auto;
+    margin-bottom: 36px;
+    border: 1px solid var(--lxp-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #lxp-root .lxp-table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  body #lxp-root .lxp-table th,
+  body #lxp-root .lxp-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--lxp-line);
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.6;
+  }
+  body #lxp-root .lxp-table th {
+    background: var(--lxp-soft);
+    color: var(--lxp-navy);
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  body #lxp-root .lxp-table td:first-child {
+    color: var(--lxp-navy);
+    font-weight: 700;
+  }
+  body #lxp-root .lxp-table tr:last-child td {
+    border-bottom: 0;
+  }
+  body #lxp-root .lxp-cases__foot {
+    margin-top: 36px;
+    text-align: center;
+  }
+  body #lxp-root .lxp-cases__foot .lxp-button {
+    min-width: 280px;
+  }
+
+  /* ---- FLOW：導入の流れ ---- */
+  body #lxp-root .lxp-flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    counter-reset: lxp-flow;
+  }
+  body #lxp-root .lxp-flow__step {
+    position: relative;
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 28px 22px;
+  }
+  body #lxp-root .lxp-flow__step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 10px solid var(--lxp-teal);
+    z-index: 1;
+  }
+  body #lxp-root .lxp-flow__num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-flow__title {
+    margin: 8px 0 8px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  body #lxp-root .lxp-flow__text {
+    font-size: 13.5px;
+    color: var(--lxp-muted);
+  }
+
+  /* ---- PRICE：料金 ---- */
+  body #lxp-root .lxp-price {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: stretch;
+  }
+  body #lxp-root .lxp-price__factors {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  body #lxp-root .lxp-price__cta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    background: var(--lxp-soft);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 30px 26px;
+    color: var(--lxp-ink);
+    text-align: center;
+  }
+  body #lxp-root .lxp-price__cta .lxp-card__title {
+    color: var(--lxp-navy);
+    margin-top: 0;
+  }
+  body #lxp-root .lxp-price__cta .lxp-card__text {
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-price__cta .lxp-button {
+    width: 100%;
+  }
+
+  /* ---- FAQ ---- */
+  body #lxp-root .lxp-faq {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  body #lxp-root .lxp-faq__item {
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  body #lxp-root .lxp-faq__question {
+    position: relative;
+    padding: 18px 56px 18px 54px;
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  body #lxp-root .lxp-faq__question::before {
+    content: "Q";
+    position: absolute;
+    left: 20px;
+    top: 17px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-faq__question::after {
+    content: "＋";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--lxp-teal-dark);
+    transition: transform 0.2s ease;
+  }
+  body #lxp-root .lxp-faq__item[open] .lxp-faq__question::after {
+    content: "−";
+  }
+  body #lxp-root .lxp-faq__answer {
+    position: relative;
+    padding: 2px 24px 20px 54px;
+    font-size: 14px;
+    color: var(--lxp-muted);
+    line-height: 1.8;
+  }
+  body #lxp-root .lxp-faq__answer::before {
+    content: "A";
+    position: absolute;
+    left: 20px;
+    top: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--lxp-orange);
+  }
+  body #lxp-root .lxp-textlink {
+    color: var(--lxp-teal-dark);
+    text-decoration: underline;
+  }
+
+  /* ---- CTA帯 ---- */
+  body #lxp-root .lxp-cta {
+    position: relative;
+    overflow: hidden;
+    background: var(--lxp-soft);
+    border-block: 1px solid var(--lxp-line);
+    color: var(--lxp-ink);
+    padding: 64px 0;
+  }
+  body #lxp-root .lxp-cta__inner {
+    text-align: center;
+  }
+  body #lxp-root .lxp-cta__title {
+    font-size: clamp(22px, 3.4vw, 32px);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--lxp-navy);
+  }
+  body #lxp-root .lxp-cta__text {
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-cta__actions {
+    margin-top: 28px;
+    justify-content: center;
+  }
+  body #lxp-root .lxp-cta__notes {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    font-size: 12.5px;
+    color: var(--lxp-muted);
+  }
+  body #lxp-root .lxp-cta__notes span::before {
+    content: "✓ ";
+    color: var(--lxp-teal-dark);
+    font-weight: 700;
+  }
+  body #lxp-root .lxp-cta--compact {
+    padding: 48px 0;
+  }
+  body #lxp-root .lxp-cta--compact .lxp-cta__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    text-align: left;
+  }
+  body #lxp-root .lxp-cta--compact .lxp-cta__title {
+    font-size: clamp(19px, 2.6vw, 24px);
+  }
+  body #lxp-root .lxp-cta--compact .lxp-cta__actions {
+    margin-top: 0;
+  }
+
+  /* ---- CONTACT ---- */
+  body #lxp-root .lxp-offers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  body #lxp-root .lxp-offer {
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 28px 24px;
+    text-align: center;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-offer:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-offer .lxp-icon-wrap {
+    margin: 0 auto;
+  }
+  body #lxp-root .lxp-offer__label {
+    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--lxp-teal-dark);
+  }
+  body #lxp-root .lxp-offer__title {
+    margin: 4px 0 8px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  body #lxp-root .lxp-offer__text {
+    font-size: 13.5px;
+    color: var(--lxp-muted);
+    text-align: left;
+  }
+  body #lxp-root .lxp-contact-note {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lxp-muted);
+    text-align: left;
+  }
+  body #lxp-root .lxp-sectionhead .lxp-contact-note {
+    max-width: none;
+  }
+  body #lxp-root .lxp-form-slot {
+    margin-top: 36px;
+  }
+  body #lxp-root .wpcf7-form {
+    padding: 28px 32px 32px;
+    border: 1px solid var(--lxp-line);
+    border-radius: 10px;
+    background: var(--lxp-white);
+  }
+  body #lxp-root .wpcf7-form > p {
+    margin: 0;
+  }
+  body #lxp-root .wpcf7-form > p > b {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-weight: 400;
+  }
+  body #lxp-root .wpcf7-form br {
+    display: none;
+  }
+  body #lxp-root .wpcf7-form > p > b > .wpcf7-submit,
+  body
+    #lxp-root
+    .wpcf7-form
+    > p
+    > b
+    > .wpcf7-form-control-wrap:has(.wpcf7-submit) {
+    margin-top: 8px;
+  }
+  body #lxp-root .wpcf7-form > p:has(> .wpcf7-submit),
+  body #lxp-root .wpcf7-form > p:has(> .wpcf7-form-control-wrap .wpcf7-submit) {
+    margin-top: 12px;
+  }
+  body #lxp-root .wpcf7-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  body #lxp-root .wpcf7-list-item {
+    display: block !important;
+    margin: 0 !important;
+    float: none !important;
+  }
+  body #lxp-root .wpcf7-form label {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    color: var(--lxp-navy);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  body #lxp-root .wpcf7-form label .wpcf7-form-control-wrap {
+    flex: 1 1 100%;
+  }
+  body #lxp-root .wpcf7-form input[type="text"],
+  body #lxp-root .wpcf7-form input[type="email"],
+  body #lxp-root .wpcf7-form input[type="tel"],
+  body #lxp-root .wpcf7-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--lxp-line);
+    border-radius: 6px;
+    background: var(--lxp-white);
+    color: var(--lxp-ink);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 400;
+    box-shadow: none;
+  }
+  body #lxp-root .wpcf7-form textarea {
+    min-height: 120px;
+  }
+  body #lxp-root .wpcf7-submit {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    min-height: 52px;
+    margin-top: 8px;
+    padding: 13px 28px !important;
+    border: 0 !important;
+    border-radius: 8px;
+    color: #fff !important;
+    background: var(--lxp-teal-dark) !important;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    cursor: pointer;
+    box-shadow: none;
+  }
+
+  /* ---- COLUMN ---- */
+  body #lxp-root .lxp-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  body #lxp-root .lxp-column {
+    display: flex;
+    flex-direction: column;
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-column:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-column img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  body #lxp-root .lxp-column__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 20px 22px 22px;
+  }
+  body #lxp-root .lxp-column__meta {
+    font-size: 11.5px;
+    color: var(--lxp-muted);
+    letter-spacing: 0.04em;
+  }
+  body #lxp-root .lxp-column__title {
+    margin: 8px 0 14px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+    flex: 1 1 auto;
+  }
+  body #lxp-root .lxp-column__link {
+    align-self: flex-start;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lxp-teal-dark);
+    border-bottom: 2px solid var(--lxp-teal);
+    padding-bottom: 2px;
+  }
+
+  /* ---- SERIES ---- */
+  body #lxp-root .lxp-siblings {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  body #lxp-root .lxp-sibling {
+    display: flex;
+    flex-direction: column;
+    background: var(--lxp-white);
+    border: 1px solid var(--lxp-line);
+    border-radius: var(--lxp-radius);
+    padding: 28px 26px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lxp-root .lxp-sibling:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lxp-shadow);
+  }
+  body #lxp-root .lxp-sibling__title {
+    margin: 14px 0 8px;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  body #lxp-root .lxp-sibling .lxp-card__text {
+    flex: 1 1 auto;
+  }
+  body #lxp-root .lxp-sibling .lxp-actions {
+    margin-top: 16px;
+  }
+
+  /* ---- ライトボックス ---- */
+  body #lxp-root .lxp-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(8, 22, 31, 0.86);
+  }
+  body #lxp-root .lxp-lightbox.is-open {
+    display: flex;
+  }
+  body #lxp-root .lxp-lightbox__dialog {
+    position: relative;
+    max-width: min(1100px, 96vw);
+    max-height: 92vh;
+  }
+  body #lxp-root .lxp-lightbox__image {
+    max-width: 100%;
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #lxp-root .lxp-lightbox__close {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--lxp-navy);
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ---- レスポンシブ ---- */
+  @media (max-width: 900px) {
+    body #lxp-root {
+      --lxp-logos-h: 132px;
+    }
+    body #lxp-root .lxp-logos__inner {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-logos .lxp-logos__inner {
+      min-height: 132px;
+    }
+    body #lxp-root .lxp-logos__label {
+      min-height: 0;
+      padding-right: 0;
+      padding-bottom: 12px;
+      border-right: 0;
+      border-bottom: 1px solid #dfe9e8;
+    }
+    body #lxp-root .lxp-logo-marquee {
+      padding-left: 0;
+    }
+    body #lxp-root .lxp-logo-group {
+      gap: 40px;
+      padding-right: 40px;
+    }
+    body #lxp-root .lxp-quicknav__panel {
+      grid-template-columns: 1fr 1fr;
+    }
+    body #lxp-root .lxp-quicknav__item:nth-child(4n) {
+      border-right: 1px solid var(--lxp-line);
+    }
+    body #lxp-root .lxp-quicknav__item:nth-last-child(-n + 4) {
+      border-bottom: 1px solid var(--lxp-line);
+    }
+    body #lxp-root .lxp-quicknav__item:nth-child(2n) {
+      border-right: 0;
+    }
+    body #lxp-root .lxp-quicknav__item:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+    body #lxp-root .lxp-logo-item {
+      height: 56px;
+    }
+    body #lxp-root .lxp-logo-image {
+      max-width: 210px !important;
+      max-height: 56px !important;
+    }
+  }
+  @media (max-width: 1023px) {
+    body #lxp-root .lxp-hero {
+      height: auto;
+      min-height: var(--lxp-hero-h);
+    }
+    body #lxp-root .lxp-hero__inner {
+      padding: 32px 0 16px;
+    }
+    body #lxp-root .lxp-hero__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding-bottom: 0;
+    }
+    body #lxp-root .lxp-hero__visual {
+      padding: 0 6px;
+    }
+    body #lxp-root .lxp-hero__float--1 {
+      left: -4px;
+    }
+    body #lxp-root .lxp-hero__float--2 {
+      right: -4px;
+    }
+    body #lxp-root .lxp-map__options {
+      grid-template-columns: 1fr 1fr;
+    }
+    body #lxp-root .lxp-tabpanel__grid {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-cases {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-columns {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-siblings {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-offers {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-price {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-flow {
+      grid-template-columns: 1fr 1fr;
+    }
+    body #lxp-root .lxp-flow__step:nth-child(2)::after {
+      display: none;
+    }
+    body #lxp-root .lxp-flowline {
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      overflow-x: auto;
+    }
+  }
+  @media (max-width: 639px) {
+    body #lxp-root {
+      font-size: 15px;
+      --lxp-logos-h: 148px;
+    }
+    body #lxp-root .lxp-section {
+      padding: 64px 0;
+    }
+    body #lxp-root .lxp-hero {
+      height: auto;
+      min-height: var(--lxp-hero-h);
+    }
+    body #lxp-root .lxp-hero__inner {
+      padding: 28px 0 16px;
+    }
+    body #lxp-root .lxp-hero__stats-inner {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-hero__stat + .lxp-hero__stat {
+      border-left: 0;
+      border-top: 1px solid var(--lxp-line);
+    }
+    body #lxp-root .lxp-hero__float {
+      display: none;
+    }
+    body #lxp-root .lxp-issues {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-map__options {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-price__factors {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-flow {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-flow__step::after {
+      display: none !important;
+    }
+    body #lxp-root .lxp-reason {
+      grid-template-columns: 1fr;
+      padding: 36px 0;
+    }
+    body #lxp-root .lxp-reason:nth-child(even) .lxp-reason__copy {
+      order: 0;
+    }
+    body #lxp-root .lxp-shots {
+      grid-template-columns: 1fr;
+    }
+    body #lxp-root .lxp-actions .lxp-button {
+      width: 100%;
+    }
+    body #lxp-root .lxp-cta--compact .lxp-cta__inner {
+      text-align: center;
+      justify-content: center;
+    }
+    body #lxp-root .lxp-logos .lxp-logos__inner {
+      min-height: 148px;
+    }
+    body #lxp-root .lxp-logos__label {
+      flex-direction: row;
+      gap: 8px;
+      align-items: baseline;
+      font-size: 18px;
+    }
+    body #lxp-root .lxp-logos__label span {
+      margin-top: 0;
+      font-size: 12px;
+    }
+    body #lxp-root .lxp-logo-group {
+      gap: 32px;
+      padding-right: 32px;
+    }
+    body #lxp-root .lxp-logo-item {
+      height: 48px;
+    }
+    body #lxp-root .lxp-logo-image {
+      max-width: 180px !important;
+      max-height: 48px !important;
+    }
+  }
+</style>
+<noscript>
+  <style>
+    body:has(#lxp-root) .l-mainContent__inner > h1.c-pageTitle {
+      position: static !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 0 1em !important;
+      overflow: visible !important;
+      clip: auto !important;
+      white-space: normal !important;
+    }
+  </style>
+</noscript>
+
+<div id="lxp-root">
+  <script>
+    (function () {
+      var root = document.getElementById("lxp-root");
+      var header = document.getElementById("header");
+      var headerH = 73;
+      var logosH = 148;
+      var fold;
+      if (!header) header = document.querySelector(".l-header");
+      if (header) headerH = header.offsetHeight;
+      if (window.innerWidth <= 900) logosH = 132;
+      if (window.innerWidth <= 639) logosH = 148;
+      fold = window.innerHeight - headerH - logosH;
+      if (fold < 360) fold = 360;
+      if (!root) return;
+      root.style.setProperty("--lxp-header-h", headerH + "px");
+      root.style.setProperty("--lxp-logos-h", logosH + "px");
+      root.style.setProperty(
+        "--lxp-vw",
+        document.documentElement.clientWidth + "px",
+      );
+      root.style.setProperty("--lxp-hero-h", Math.round(fold) + "px");
+    })();
+  </script>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="0"
+    height="0"
+    style="position: absolute; overflow: hidden"
+    aria-hidden="true">
+    <symbol
+      id="lxp-i-sheet"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="5" y="3" width="14" height="18" rx="2"></rect>
+      <path d="M8 8h8M8 12h8M8 16h5"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-layers"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M12 3l8 4-8 4-8-4 8-4z"></path>
+      <path d="M4 12l8 4 8-4M4 16l8 4 8-4"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-link"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M9 12h6"></path>
+      <path d="M8 8H7a4 4 0 000 8h1M16 8h1a4 4 0 010 8h-1"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-yen"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M7 5l5 7 5-7M12 12v7M7 14h10M7 18h10"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-clock"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8"></circle>
+      <path d="M12 8v5l3 2"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-file"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"></path>
+      <path d="M14 3v5h5M9 13h6M9 17h4"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-truck"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"></path>
+      <circle cx="7" cy="18" r="1.5"></circle>
+      <circle cx="17" cy="18" r="1.5"></circle>
+    </symbol>
+    <symbol
+      id="lxp-i-clipboard"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="6" y="5" width="12" height="16" rx="2"></rect>
+      <path d="M9 5V4h6v1M9 11h6M9 15h4"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-user"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="8" r="3.5"></circle>
+      <path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-car"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M4 14l1.5-5A2 2 0 017.4 7.5h9.2A2 2 0 0118.5 9l1.5 5"></path>
+      <path d="M4 14h16v4H4z"></path>
+      <circle cx="7.5" cy="18" r="1.2"></circle>
+      <circle cx="16.5" cy="18" r="1.2"></circle>
+    </symbol>
+    <symbol
+      id="lxp-i-chat"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path
+        d="M5 6h14a1 1 0 011 1v8a1 1 0 01-1 1H9l-4 3v-3H5a1 1 0 01-1-1V7a1 1 0 011-1z"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-doc"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="6" y="3" width="12" height="18" rx="2"></rect>
+      <path d="M9 8h6M9 12h6M9 16h3"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-warehouse"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M3 10l9-6 9 6v10H3V10z"></path>
+      <path d="M9 20v-7h6v7"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-ship"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M3 16l2 3h14l2-3H3zM5 16V11h14v5M12 4v7M8 8h8"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-monitor"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+      <path d="M8 20h8M12 16v4"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-calendar"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="4" y="5" width="16" height="15" rx="2"></rect>
+      <path d="M8 3v4M16 3v4M4 10h16"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-screen"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="12" rx="2"></rect>
+      <path d="M8 21h8"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-invoice"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M7 3h10l2 3v15H5V6l2-3z"></path>
+      <path d="M9 11h6M9 15h4"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-leaf"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M5 19c8-1 13-8 14-15-7 1-14 6-14 15z"></path>
+      <path d="M8 16c2-3 5-5 8-7"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-plug"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M9 7V3M15 7V3M8 7h8v5a4 4 0 01-4 4v5M8 12H5M19 12h-3"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-people"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="9" cy="8" r="3"></circle>
+      <path d="M3 19c.8-3 2.8-4.5 6-4.5S14.2 16 15 19"></path>
+      <circle cx="17" cy="9" r="2.4"></circle>
+      <path d="M16.2 14.6c2.4.4 4.2 1.7 4.8 4.4"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-cog"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path
+        d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-office"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M4 20V7l8-3 8 3v13"></path>
+      <path
+        d="M9 20v-6h6v6M9 9h.01M12 9h.01M15 9h.01M9 13h.01M12 13h.01M15 13h.01"></path>
+    </symbol>
+    <symbol
+      id="lxp-i-mail"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="3" y="6" width="18" height="12" rx="2"></rect>
+      <path d="M4 8l8 6 8-6"></path>
+    </symbol>
+  </svg>
+
+  <!-- ============ HERO ============ -->
+  <section class="lxp-hero">
+    <div class="lxp-container lxp-hero__inner">
+      <div class="lxp-hero__grid">
+        <div class="lxp-hero__copy">
+          <div class="lxp-hero__brand">
+            <img
+              class="skip-lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2026/08/logi-cube-logo.png"
+              alt="LOGI-Cubeロゴ"
+              width="44"
+              height="44" />
+            <div class="lxp-hero__brand-name">
+              LOGI-Cube EXPRESS<span>運送業向け 運送管理システム</span>
+            </div>
+          </div>
+          <ul class="lxp-hero__chips">
+            <li>導入実績 約300社</li>
+            <li>運送業に特化</li>
+            <li>デジタコ・会計・給与・kintone連携</li>
+          </ul>
+          <p class="lxp-hero__title"></p>
+          <p class="lxp-hero__lead">
+            日計表管理を基本に、売上・傭車料・請求・支払・車両別収支までを一元管理。紙とExcelに分かれていた運送管理の業務を、ひとつのシステムにまとめます。
+          </p>
+          <div class="lxp-actions">
+            <a
+              class="lxp-button lxp-button--primary"
+              href="https://commoncom.jp/logi-cube-download/"
+              >資料請求（無料）</a
+            >
+            <a class="lxp-button lxp-button--ghost" href="#lxp-contact"
+              >導入を相談する</a
+            >
+          </div>
+          <p class="lxp-hero__note">※ 画面デモ・無料相談にも対応しています。</p>
+        </div>
+        <div class="lxp-hero__visual">
+          <a
+            class="lxp-lightbox-trigger"
+            href="#"
+            aria-label="日計表入力画面を拡大表示">
+            <figure class="lxp-browser">
+              <div class="lxp-browser__bar" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <img
+                class="skip-lazy"
+                src="https://commoncom.jp/wp/wp-content/uploads/2025/10/32bc200cc1e18beeb8ba6a32a1d22c5b.png"
+                alt="運送管理システムLOGI-Cube EXPRESSの日計表入力画面。売上・傭車料・請求・支払を一覧で管理"
+                fetchpriority="high" />
+            </figure>
+          </a>
+          <div class="lxp-hero__float lxp-hero__float--1">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-truck"></use></svg
+            >配車支援
+          </div>
+          <div class="lxp-hero__float lxp-hero__float--2">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-invoice"></use></svg
+            >請求・支払
+          </div>
+          <div class="lxp-hero__float lxp-hero__float--3">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-yen"></use></svg
+            >車両別収支
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lxp-hero__stats">
+      <div class="lxp-container">
+        <div class="lxp-hero__stats-inner">
+          <div class="lxp-hero__stat">
+            <div class="lxp-hero__stat-label">導入実績</div>
+            <div class="lxp-hero__stat-value">約<em>300</em>社</div>
+          </div>
+          <div class="lxp-hero__stat">
+            <div class="lxp-hero__stat-label">請求書作成にかかる日数</div>
+            <div class="lxp-hero__stat-value">
+              10日<small>から</small><em>2</em>日<small>へ短縮</small>
+            </div>
+          </div>
+          <div class="lxp-hero__stat">
+            <div class="lxp-hero__stat-label">システム構成</div>
+            <div class="lxp-hero__stat-value">
+              基本<small>＋</small>選べる<em>4</em>システム
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var swellH1 = document.querySelector("h1.c-pageTitle");
+      var rootEarly = document.getElementById("lxp-root");
+      var placeholder;
+      var titleMain;
+      var titleSub;
+      var raw;
+      var parts;
+      var sub;
+      function fillTitle(target, main, extra) {
+        target.textContent = "";
+        target.appendChild(document.createTextNode(main));
+        if (extra) {
+          sub = document.createElement("span");
+          sub.className = "lxp-hero__title-sub";
+          sub.textContent = extra;
+          target.appendChild(sub);
+        }
+      }
+      if (!rootEarly) return;
+      placeholder = rootEarly.querySelector(".lxp-hero__title");
+      titleMain = "運送管理システム LOGI-Cube EXPRESS";
+      titleSub = "配車・日報・請求・原価管理をひとつに";
+      if (!swellH1) {
+        if (!placeholder) return;
+        raw = (placeholder.textContent || "").replace(/\s+/g, "");
+        if (!raw) fillTitle(placeholder, titleMain, titleSub);
+        return;
+      }
+      if (!placeholder) return;
+      if (placeholder === swellH1) return;
+      raw = (swellH1.textContent || "").replace(/\s+/g, " ").trim();
+      parts = raw.split("｜");
+      if (parts.length < 2) parts = raw.split("|");
+      if (parts.length > 1) {
+        titleMain = parts[0].trim();
+        titleSub = parts.slice(1).join("｜").trim();
+      } else if (raw) {
+        titleMain = raw;
+        titleSub = "";
+      }
+      swellH1.className = "lxp-hero__title c-pageTitle";
+      swellH1.removeAttribute("data-style");
+      fillTitle(swellH1, titleMain, titleSub);
+      placeholder.parentNode.replaceChild(swellH1, placeholder);
+    })();
+  </script>
+
+  <!-- ============ 導入企業ロゴ ============ -->
+  <section class="lxp-logos" aria-label="導入企業様">
+    <div class="lxp-container lxp-logos__inner">
+      <p class="lxp-logos__label">
+        導入企業様<span>（一部ご紹介　50音順）</span>
+      </p>
+      <div class="lxp-logo-marquee">
+        <div class="lxp-logo-track">
+          <div class="lxp-logo-group">
+            <a
+              class="lxp-logo-item"
+              href="http://www.akebonounyu.co.jp/index.php"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/76bda53ce16397e85f72e9afd61f3a30.jpg"
+                alt="曙運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://www.astrax.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/a5beaa59d532a14fdec1409a0ccc6c5a.jpg"
+                alt="アストラックス"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="http://www.arckanazawa.com/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/arc_logo.png"
+                alt="アルク"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://isesakiexpress.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/02dc2de7d618d1fb4c86536ba0e53768.png"
+                alt="ｲｾｻｷｳﾝﾕ"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://kajiwara-sangyo.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/f3d6bb164e0abcaf5a1006f47cb230b6.png"
+                alt="梶原産業"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://kyowa-corp.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/95331ba00e86a0c08b8da3f7e619fb67.png"
+                alt="協和企業"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://kumako-co.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/7d57f90df7a11c6adfdbafe6f357d1d3.png"
+                alt="熊本交通運輸㈱ロゴ"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async">
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://www.kowa-transport.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/f2e3d38f8e673e4e51a3c548974e238b.gif"
+                alt="興和運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://www.logi.sala.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/ce9f7e78abf2e12490d7cabf9d825b45.png"
+                alt="サーラ物流"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async">
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://www.gku.group/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/GKU-logo-approved_edit.jpg"
+                alt="GKU"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://jaminter.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/cca01d5bf94bfc202ac7aa90e42c145e.png"
+                alt="ジャム・インターナショナル"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://johshotransport.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/9c3de8c475c1ef51426541cc21f997bb-scaled.jpg"
+                alt="上昇運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://t-taiseiunyu.com/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/4a332f05ade4ac7bb3c46c472cb5eac8.bmp"
+                alt="大成運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://www.om346.co.jp/company/dainichi/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/f_c_dainichi.jpg"
+                alt="ダイニチ"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://nextgroup.ti-n.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/035a385265e74bd544f6656035551a1c-scaled-e1788166128333.jpg"
+                alt="ネキスト"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://nonoichiunyu.com/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/afc9bcea83a3949d1c536fe05dcc53d8.png"
+                alt="野々市運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://www.hayakawa-st.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/55e81d2df0576bfc508c68ae5c64e18b.png"
+                alt="早川海陸運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://marui-t.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/39bae167329f7bd72b6a6cba0e6e3cf7.png"
+                alt="丸伊運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://www.mitsuwa-unyu.co.jp/index.htm"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/3aa5e56dc32bf15c6ac564d3a93c07ba.jpg"
+                alt="みつわ運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+            <a
+              class="lxp-logo-item"
+              href="https://rikimaru-g.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                class="lxp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/35f7f803049a667cfd5d3f22e3f9b340.png"
+                alt="力丸運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async" />
+            </a>
+          </div>
+        </div>
+        <p class="lxp-visually-hidden">
+          導入企業（一部、50音順）：曙運輸、アストラックス、アルク、ｲｾｻｷｳﾝﾕ、梶原産業、熊本交通運輸、協和企業、興和運輸、サーラ物流、GKU、ジャム・インターナショナル、上昇運輸、大成運輸、ダイニチ、ネキスト、野々市運輸、早川海陸運輸、丸伊運輸、みつわ運輸、力丸運輸
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ページ内ナビ ============ -->
+  <div class="lxp-container">
+    <nav class="lxp-quicknav" aria-label="ページ内メニュー">
+      <div class="lxp-quicknav__panel">
+        <a class="lxp-quicknav__item" href="#lxp-issues"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-clipboard"></use></svg
+            ><span class="lxp-quicknav__num">01</span></span
+          >課題</a
+        >
+        <a class="lxp-quicknav__item" href="#lxp-solution"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-layers"></use></svg
+            ><span class="lxp-quicknav__num">02</span></span
+          >できること</a
+        >
+        <a class="lxp-quicknav__item" href="#lxp-features"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-cog"></use></svg
+            ><span class="lxp-quicknav__num">03</span></span
+          >機能</a
+        >
+        <a class="lxp-quicknav__item" href="#lxp-reasons"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-leaf"></use></svg
+            ><span class="lxp-quicknav__num">04</span></span
+          >選ばれる理由</a
+        >
+        <a class="lxp-quicknav__item" href="#lxp-effects"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-clock"></use></svg
+            ><span class="lxp-quicknav__num">05</span></span
+          >導入効果</a
+        >
+        <a class="lxp-quicknav__item" href="#lxp-cases"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-office"></use></svg
+            ><span class="lxp-quicknav__num">06</span></span
+          >事例</a
+        >
+        <a class="lxp-quicknav__item" href="#lxp-price"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-yen"></use></svg
+            ><span class="lxp-quicknav__num">07</span></span
+          >料金</a
+        >
+        <a class="lxp-quicknav__item" href="#lxp-contact"
+          ><span class="lxp-quicknav__top" aria-hidden="true"
+            ><svg class="lxp-icon" viewBox="0 0 24 24">
+              <use href="#lxp-i-mail"></use></svg
+            ><span class="lxp-quicknav__num">08</span></span
+          >お問い合わせ</a
+        >
+      </div>
+    </nav>
+  </div>
+
+  <!-- ============ ISSUE：課題 ============ -->
+  <section class="lxp-section" id="lxp-issues">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">ISSUE</div>
+        <h2 class="lxp-sectionhead__title">
+          運送管理で、こんなお悩みありませんか？
+        </h2>
+      </header>
+      <div class="lxp-issues">
+        <article class="lxp-issue">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-people"></use></svg
+          ></span>
+          <h3 class="lxp-issue__title">配車が属人化している</h3>
+          <p class="lxp-issue__text">
+            特定の担当者に依存し、引き継ぎや応援が難しい。
+          </p>
+          <a class="lxp-issue__solution" href="#lxp-sys-haisya"
+            >配車支援で解決</a
+          >
+        </article>
+        <article class="lxp-issue">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-file"></use></svg
+          ></span>
+          <h3 class="lxp-issue__title">紙やExcelのまま進まない</h3>
+          <p class="lxp-issue__text">
+            日報入力や転記に時間がかかり、生産性が上がらない。
+          </p>
+          <a class="lxp-issue__solution" href="#lxp-sys-nippo"
+            >日報管理で解決</a
+          >
+        </article>
+        <article class="lxp-issue">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-invoice"></use></svg
+          ></span>
+          <h3 class="lxp-issue__title">請求業務の負荷が大きい</h3>
+          <p class="lxp-issue__text">
+            月末の取りまとめと請求書作成に日数がかかる。
+          </p>
+          <a class="lxp-issue__solution" href="#lxp-sys-nikkei"
+            >日計表管理で解決</a
+          >
+        </article>
+        <article class="lxp-issue">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-yen"></use></svg
+          ></span>
+          <h3 class="lxp-issue__title">車両別の収支が見えない</h3>
+          <p class="lxp-issue__text">
+            原価が見えず、運賃設定や改善の根拠が弱い。
+          </p>
+          <a class="lxp-issue__solution" href="#lxp-sys-nippo"
+            >日報管理で解決</a
+          >
+        </article>
+        <article class="lxp-issue">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-clock"></use></svg
+          ></span>
+          <h3 class="lxp-issue__title">台帳・労務管理が煩雑</h3>
+          <p class="lxp-issue__text">
+            免許・車検・労働時間の管理が紙のままで漏れが怖い。
+          </p>
+          <a class="lxp-issue__solution" href="#lxp-sys-driver"
+            >台帳システムで解決</a
+          >
+        </article>
+      </div>
+      <div class="lxp-issues__answer">
+        <div class="lxp-issues__answer-arrow" aria-hidden="true"></div>
+        <p class="lxp-issues__answer-text">
+          その悩み、運送管理システム<br /><em
+            >「LOGI-Cube EXPRESS」がまとめて解決</em
+          >します。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOLUTION：できること全体像 ============ -->
+  <section class="lxp-section lxp-section--soft" id="lxp-solution">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">SOLUTION</div>
+        <h2 class="lxp-sectionhead__title">
+          運送管理システム「LOGI-Cube EXPRESS」でできること
+        </h2>
+        <p class="lxp-sectionhead__text">
+          LOGI-Cube EXPRESS（ロジキューブ
+          エクスプレス）は、「日計表管理システム」を基本に、業務に合わせて4つのシステムを追加できる運送管理システムです。受注から配車、日報、請求、収支分析まで、運送業務の流れをまるごとカバーします。
+        </p>
+      </header>
+
+      <div class="lxp-flowline" role="list" aria-label="カバーする業務の流れ">
+        <div class="lxp-flowline__step" role="listitem">
+          <svg class="lxp-icon" aria-hidden="true">
+            <use href="#lxp-i-truck"></use>
+          </svg>
+          <div class="lxp-flowline__label">受注・配車</div>
+          <div class="lxp-flowline__sub">配車支援</div>
+        </div>
+        <div class="lxp-flowline__step" role="listitem">
+          <svg class="lxp-icon" aria-hidden="true">
+            <use href="#lxp-i-clipboard"></use>
+          </svg>
+          <div class="lxp-flowline__label">運行・日報</div>
+          <div class="lxp-flowline__sub">日報管理</div>
+        </div>
+        <div class="lxp-flowline__step" role="listitem">
+          <svg class="lxp-icon" aria-hidden="true">
+            <use href="#lxp-i-invoice"></use>
+          </svg>
+          <div class="lxp-flowline__label">請求・入金</div>
+          <div class="lxp-flowline__sub">日計表管理</div>
+        </div>
+        <div class="lxp-flowline__step" role="listitem">
+          <svg class="lxp-icon" aria-hidden="true">
+            <use href="#lxp-i-yen"></use>
+          </svg>
+          <div class="lxp-flowline__label">支払・傭車</div>
+          <div class="lxp-flowline__sub">日計表管理</div>
+        </div>
+        <div class="lxp-flowline__step" role="listitem">
+          <svg class="lxp-icon" aria-hidden="true">
+            <use href="#lxp-i-monitor"></use>
+          </svg>
+          <div class="lxp-flowline__label">収支・分析</div>
+          <div class="lxp-flowline__sub">日報管理</div>
+        </div>
+      </div>
+
+      <div class="lxp-map">
+        <a class="lxp-map__base" href="#lxp-sys-nikkei">
+          <div class="lxp-map__base-head">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-sheet"></use></svg
+            ></span>
+            <div>
+              <span class="lxp-map__tag">基本システム</span>
+              <h3 class="lxp-map__base-title">日計表管理システム</h3>
+            </div>
+          </div>
+          <p class="lxp-map__base-text">
+            売上・傭車料・請求・支払・収支を一元管理。手書き日計表から入力しやすい一覧表形式で、すべてのデータがここに集まります。
+          </p>
+        </a>
+        <div class="lxp-map__connector">業務に合わせて追加できるオプション</div>
+        <div class="lxp-map__options">
+          <a class="lxp-map__option" href="#lxp-sys-nippo">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-clipboard"></use></svg
+            ></span>
+            <div class="lxp-map__option-tag">オプション</div>
+            <h3 class="lxp-map__option-title">日報管理</h3>
+            <p class="lxp-map__option-text">
+              運転日報から実績を自動集計。車両別収支と労務の把握に。
+            </p>
+          </a>
+          <a class="lxp-map__option" href="#lxp-sys-haisya">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-truck"></use></svg
+            ></span>
+            <div class="lxp-map__option-tag">オプション</div>
+            <h3 class="lxp-map__option-title">配車支援</h3>
+            <p class="lxp-map__option-text">
+              クリックだけの配車処理と配車ボードで見える化。日計表へ自動連動。
+            </p>
+          </a>
+          <a class="lxp-map__option" href="#lxp-sys-driver">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-user"></use></svg
+            ></span>
+            <div class="lxp-map__option-tag">オプション / 単独利用可</div>
+            <h3 class="lxp-map__option-title">運転者台帳</h3>
+            <p class="lxp-map__option-text">
+              免許・資格・健診・事故歴を一元管理。更新対象者も自動抽出。
+            </p>
+          </a>
+          <a class="lxp-map__option" href="#lxp-sys-vehicle">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-car"></use></svg
+            ></span>
+            <div class="lxp-map__option-tag">オプション / 単独利用可</div>
+            <h3 class="lxp-map__option-title">車両台帳</h3>
+            <p class="lxp-map__option-text">
+              車検・整備歴・修理歴・リース残高まで車両情報を一元管理。
+            </p>
+          </a>
+        </div>
+        <ul class="lxp-map__integrations">
+          <li
+            class="lxp-map__integrations-label"
+            style="border: 0; background: none; padding: 0">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-plug"></use></svg
+            >外部連携
+          </li>
+          <li>デジタルタコグラフ</li>
+          <li>会計システム</li>
+          <li>給与システム</li>
+          <li>kintone</li>
+          <li>運行指示書作成システム</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURE：機能詳細（タブ） ============ -->
+  <section class="lxp-section" id="lxp-features">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">FEATURE</div>
+        <h2 class="lxp-sectionhead__title">
+          運送管理システム「LOGI-Cube EXPRESS」の機能
+        </h2>
+        <p class="lxp-sectionhead__text">
+          基本の「日計表管理」と4つのオプションシステムの機能を、実際の画面とあわせてご紹介します。運転者台帳・車両台帳は単独でのご利用も可能です。
+        </p>
+      </header>
+      <div class="lxp-tabs" id="lxp-tabs">
+        <div class="lxp-tablist" role="tablist" aria-label="システム別の機能">
+          <button
+            class="lxp-tab is-active"
+            type="button"
+            data-lxp-tab="lxp-sys-nikkei">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-sheet"></use></svg
+            >日計表管理<small>基本</small>
+          </button>
+          <button class="lxp-tab" type="button" data-lxp-tab="lxp-sys-nippo">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-clipboard"></use></svg
+            >日報管理<small>オプション</small>
+          </button>
+          <button class="lxp-tab" type="button" data-lxp-tab="lxp-sys-haisya">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-truck"></use></svg
+            >配車支援<small>オプション</small>
+          </button>
+          <button class="lxp-tab" type="button" data-lxp-tab="lxp-sys-driver">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-user"></use></svg
+            >運転者台帳<small>単独可</small>
+          </button>
+          <button class="lxp-tab" type="button" data-lxp-tab="lxp-sys-vehicle">
+            <svg class="lxp-icon" aria-hidden="true">
+              <use href="#lxp-i-car"></use></svg
+            >車両台帳<small>単独可</small>
+          </button>
+        </div>
+
+        <article class="lxp-tabpanel is-active" id="lxp-sys-nikkei">
+          <div class="lxp-tabpanel__grid">
+            <div>
+              <span class="lxp-tabpanel__tag">基本システム</span>
+              <h3 class="lxp-tabpanel__title">
+                日計表管理システム｜売上・請求・支払を一元管理
+              </h3>
+              <p class="lxp-tabpanel__text">
+                荷主への売上・請求、傭車先への傭車料・支払を、手書き日計表から入力しやすい一覧表形式で管理します。運送管理の「基幹」となるシステムです。
+              </p>
+              <ul class="lxp-checklist">
+                <li>
+                  日次・月次・随時で実績を確認。入金・支払処理で売掛・買掛管理まで対応
+                </li>
+                <li>
+                  荷主・傭車先・発着地のコード検索に加え、過去運賃の検索も可能
+                </li>
+                <li>
+                  請求書様式は荷主ごとに設定可能。処理状況の見える化と誤操作防止機能つき
+                </li>
+                <li>
+                  運賃計算は運賃表・路線タリフに対応。未確定運賃の免税運賃にも対応
+                </li>
+              </ul>
+            </div>
+            <div class="lxp-shots">
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="日計表入力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/32bc200cc1e18beeb8ba6a32a1d22c5b.png"
+                    alt="運送管理システムの日計表入力画面。売上・傭車料を一覧形式で入力" />
+                </a>
+                <figcaption>日計表入力画面</figcaption>
+              </figure>
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="請求書サンプルを拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/14c1c15e021585a45b90b3b64dcdc0cf.jpg.webp"
+                    alt="運送管理システムから出力した請求書サンプル" />
+                </a>
+                <figcaption>請求書</figcaption>
+              </figure>
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="請求処理画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/3b06e22b645462aa8ad53bdbae823c62.png"
+                    alt="請求処理の状況を見える化した請求処理画面" />
+                </a>
+                <figcaption>請求処理画面</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="lxp-tabpanel" id="lxp-sys-nippo">
+          <div class="lxp-tabpanel__grid">
+            <div>
+              <span class="lxp-tabpanel__tag lxp-tabpanel__tag--option"
+                >オプション</span
+              >
+              <h3 class="lxp-tabpanel__title">
+                日報管理システム｜実績集計と車両別収支の見える化
+              </h3>
+              <p class="lxp-tabpanel__text">
+                運転日報と経費の入力から、運転者別実績・車両別収支を自動集計。原価管理と労務把握の土台をつくります。
+              </p>
+              <ul class="lxp-checklist">
+                <li>
+                  運転者管理は稼働時間集計・個人別売上集計に対応。労務の把握に活用可能
+                </li>
+                <li>車両管理は実績管理・燃費計算に対応</li>
+                <li>車両別の経費入力で、車両別収支をリアルタイムに把握</li>
+                <li>
+                  車両別収支表は直接費・間接費・運行三費・月推移で集計可能
+                </li>
+              </ul>
+            </div>
+            <div class="lxp-shots">
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="運転日報入力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/d0b1bd7b77e8bbf927b7ce3b07f7cd9a.png"
+                    alt="運送管理システムの運転日報入力画面" />
+                </a>
+                <figcaption>運転日報入力画面</figcaption>
+              </figure>
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="車両別収支表を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/3fe07adf8084ce5be0f323ee5303d954.jpg.webp"
+                    alt="直接費・間接費・運行三費で集計した車両別収支表" />
+                </a>
+                <figcaption>車両別収支表</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="lxp-tabpanel" id="lxp-sys-haisya">
+          <div class="lxp-tabpanel__grid">
+            <div>
+              <span class="lxp-tabpanel__tag lxp-tabpanel__tag--option"
+                >オプション</span
+              >
+              <h3 class="lxp-tabpanel__title">
+                配車支援システム｜クリックだけの配車と見える化
+              </h3>
+              <p class="lxp-tabpanel__text">
+                受注から配車、運転者への指示、傭車先への依頼までを支援。配車業務の属人化を解消し、省力化と見える化を進めます。
+              </p>
+              <ul class="lxp-checklist">
+                <li>配車処理は荷物と車両をクリックするだけの簡単操作</li>
+                <li>配車状況は「配車ボード」で一目で見える化</li>
+                <li>
+                  作業指示書（ドライバー向け）・作業依頼書（傭車先向け）・運送引受書（荷主向け）を印字可能
+                </li>
+                <li>
+                  配車内容はそのまま日計表管理システムへ連動し、請求書に反映
+                </li>
+                <li>点呼記録簿の出力にも対応</li>
+              </ul>
+            </div>
+            <div class="lxp-shots">
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="配車入力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/ec61f5755893f86950e2edc664dc8d50.jpg.webp"
+                    alt="クリック操作で配車できる配車入力画面" />
+                </a>
+                <figcaption>配車入力画面</figcaption>
+              </figure>
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="配車ボードを拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/fff806943694db62c66cee71a5284316.jpg.webp"
+                    alt="配車状況を見える化する配車ボード" />
+                </a>
+                <figcaption>配車ボード</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="lxp-tabpanel" id="lxp-sys-driver">
+          <div class="lxp-tabpanel__grid">
+            <div>
+              <span class="lxp-tabpanel__tag lxp-tabpanel__tag--option"
+                >オプション / 単独利用可</span
+              >
+              <h3 class="lxp-tabpanel__title">
+                運転者台帳システム｜免許・資格・健診を一元管理
+              </h3>
+              <p class="lxp-tabpanel__text">
+                運転者の基本情報から資格・適性診断・健康診断・事故歴までの履歴を一元管理。法定台帳の整備と労務管理を支えます。
+              </p>
+              <ul class="lxp-checklist">
+                <li>
+                  基本情報・資格情報・適性診断履歴・健康診断・事故歴などの履歴を管理
+                </li>
+                <li>免許更新対象者リストや年齢・勤続年数を自動計算</li>
+                <li>どの免許・資格を誰が持っているか、すぐに検索可能</li>
+                <li>制服や靴のサイズも登録可能</li>
+              </ul>
+            </div>
+            <div class="lxp-shots">
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="運転者台帳問合せ画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/express_system04_01.png"
+                    alt="運転者台帳システムの問合せ画面" />
+                </a>
+                <figcaption>運転者台帳問合せ画面</figcaption>
+              </figure>
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="運転者台帳を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/b3f0a18ed8d11b482b7db5ab808ed379.jpg.webp"
+                    alt="出力した運転者台帳のサンプル" />
+                </a>
+                <figcaption>運転者台帳</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="lxp-tabpanel" id="lxp-sys-vehicle">
+          <div class="lxp-tabpanel__grid">
+            <div>
+              <span class="lxp-tabpanel__tag lxp-tabpanel__tag--option"
+                >オプション / 単独利用可</span
+              >
+              <h3 class="lxp-tabpanel__title">
+                車両台帳システム｜車検・整備歴・リース残高まで管理
+              </h3>
+              <p class="lxp-tabpanel__text">
+                車両台帳・車両カルテ・購入情報で車両情報を一元管理。車検や整備の漏れを防ぎ、車両資産の全体像を掴めます。
+              </p>
+              <ul class="lxp-checklist">
+                <li>車両台帳では車検情報に加えて写真も登録可能</li>
+                <li>車両カルテで整備歴・修理歴・事故歴を管理</li>
+                <li>購入情報では購入先に加えて割賦・リース残高も管理</li>
+              </ul>
+            </div>
+            <div class="lxp-shots">
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="車両台帳登録画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/express_system05_01.png"
+                    alt="車両台帳システムの登録画面" />
+                </a>
+                <figcaption>車両台帳登録画面</figcaption>
+              </figure>
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="車両カルテを拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/d3ad155824a48cc8076ec3316209a9e5.jpg.webp"
+                    alt="整備歴・修理歴を管理する車両カルテ" />
+                </a>
+                <figcaption>車両カルテ</figcaption>
+              </figure>
+              <figure class="lxp-shot">
+                <a
+                  class="lxp-lightbox-trigger"
+                  href="#"
+                  aria-label="車両台帳を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/express_system05_03.png"
+                    alt="出力した車両台帳のサンプル" />
+                </a>
+                <figcaption>車両台帳</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA（中間） ============ -->
+  <section class="lxp-cta lxp-cta--compact" aria-label="無料相談のご案内">
+    <div class="lxp-container lxp-cta__inner">
+      <div>
+        <p class="lxp-cta__title">
+          どの機能が必要か、まずは無料相談で整理できます。
+        </p>
+        <p class="lxp-cta__text">
+          いまの業務の流れを伺い、日計表管理を基本にどこから整えるかをご提案します。
+        </p>
+      </div>
+      <div class="lxp-cta__actions lxp-actions">
+        <a
+          class="lxp-button lxp-button--ghost"
+          href="https://commoncom.jp/logi-cube-download/"
+          >資料請求（無料）</a
+        >
+        <a class="lxp-button lxp-button--primary" href="#lxp-contact"
+          >導入を相談する</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REASON：選ばれる理由 ============ -->
+  <section class="lxp-section" id="lxp-reasons">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">REASON</div>
+        <h2 class="lxp-sectionhead__title">
+          運送管理システム「LOGI-Cube EXPRESS」が選ばれる理由
+        </h2>
+      </header>
+      <article class="lxp-reason">
+        <div class="lxp-reason__copy">
+          <div class="lxp-reason__num">
+            <strong>01</strong><span>POINT</span>
+          </div>
+          <h3 class="lxp-reason__title">
+            画面が分かり易いから、スピーディーな入力ができる。
+          </h3>
+          <p class="lxp-reason__text">
+            「分かり易く」を考え、ワイドに画面設計しボタンも大きくしました。画面右部分にはお客様独自のガイダンスを登録できるので、操作に慣れていない導入初期には力強い味方となります。
+          </p>
+        </div>
+        <div class="lxp-reason__visual">
+          <a
+            class="lxp-lightbox-trigger"
+            href="#"
+            aria-label="入力画面を拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/32bc200cc1e18beeb8ba6a32a1d22c5b.png"
+              alt="ワイド設計で分かりやすい運送管理システムの入力画面" />
+          </a>
+        </div>
+      </article>
+      <article class="lxp-reason">
+        <div class="lxp-reason__copy">
+          <div class="lxp-reason__num">
+            <strong>02</strong><span>POINT</span>
+          </div>
+          <h3 class="lxp-reason__title">
+            多様な運賃管理で、請求も支払も正確に。
+          </h3>
+          <p class="lxp-reason__text">
+            請求項目（傭車料項目）は自由に登録でき、業務に合った請求書を出力できます。請求書作成の処理状況は見える化され、内容訂正後の発行漏れを防ぐアラート機能とともに、正確で素早い請求書作成をサポートします。
+          </p>
+        </div>
+        <div class="lxp-reason__visual">
+          <a
+            class="lxp-lightbox-trigger"
+            href="#"
+            aria-label="請求・支払管理の画面を拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/3b06e22b645462aa8ad53bdbae823c62.png"
+              alt="処理状況を見える化した請求・支払管理の画面" />
+          </a>
+        </div>
+      </article>
+      <article class="lxp-reason">
+        <div class="lxp-reason__copy">
+          <div class="lxp-reason__num">
+            <strong>03</strong><span>POINT</span>
+          </div>
+          <h3 class="lxp-reason__title">収支把握から、経営の見える化へ。</h3>
+          <p class="lxp-reason__text">
+            売上実績や稼働状況は、車両毎・運転者毎に集計、出力できます。車両別収支では直接費・間接費・運行三費で集計でき、どの車両が儲かっているかが数字で見えます。
+          </p>
+        </div>
+        <div class="lxp-reason__visual">
+          <a
+            class="lxp-lightbox-trigger"
+            href="#"
+            aria-label="車両別収支表を拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/3fe07adf8084ce5be0f323ee5303d954.jpg.webp"
+              alt="経営の見える化につながる車両別収支表" />
+          </a>
+        </div>
+      </article>
+      <article class="lxp-reason">
+        <div class="lxp-reason__copy">
+          <div class="lxp-reason__num">
+            <strong>04</strong><span>POINT</span>
+          </div>
+          <h3 class="lxp-reason__title">
+            外部システム連携で、さらなる効率化を。
+          </h3>
+          <p class="lxp-reason__text">
+            デジタルタコグラフや運行指示書作成システムとのスムーズなデータ連携で、一連の業務を簡略化できます。会計システム・給与システム・kintoneとの連携にも対応します。
+          </p>
+        </div>
+        <div class="lxp-reason__visual">
+          <a
+            class="lxp-lightbox-trigger"
+            href="#"
+            aria-label="外部システム連携のイメージを拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/express_point04.png"
+              alt="デジタコ・会計・給与システムとの外部連携イメージ" />
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ EFFECT：導入効果 ============ -->
+  <section class="lxp-section lxp-section--soft" id="lxp-effects">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">EFFECT</div>
+        <h2 class="lxp-sectionhead__title">
+          数字で見る、運送管理システムの導入効果
+        </h2>
+      </header>
+      <div class="lxp-stats">
+        <article class="lxp-stat">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-invoice"></use></svg
+          ></span>
+          <div class="lxp-stat__fromto">10日<span>→</span><em>2日</em></div>
+          <p class="lxp-stat__label">請求書作成を短縮（80%削減）</p>
+        </article>
+        <article class="lxp-stat">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-truck"></use></svg
+          ></span>
+          <div class="lxp-stat__value">10<small>%</small></div>
+          <p class="lxp-stat__label">車両の空きを削減</p>
+        </article>
+        <article class="lxp-stat">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-calendar"></use></svg
+          ></span>
+          <div class="lxp-stat__value">10<small>日前倒し</small></div>
+          <p class="lxp-stat__label">会議資料の作成を前倒し</p>
+        </article>
+        <article class="lxp-stat">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-leaf"></use></svg
+          ></span>
+          <div class="lxp-stat__value">20<small>%</small></div>
+          <p class="lxp-stat__label">コピー用紙の使用量を削減</p>
+        </article>
+      </div>
+      <p class="lxp-stats__note">
+        ※
+        導入企業様の事例に基づく数値です。効果は導入内容・運用により異なります。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CASE：導入事例 ============ -->
+  <section class="lxp-section" id="lxp-cases">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">CASE</div>
+        <h2 class="lxp-sectionhead__title">運送事業者の導入事例</h2>
+        <p class="lxp-sectionhead__text">
+          運送事業者様では約300社の導入事例があります。
+        </p>
+      </header>
+      <div class="lxp-tablewrap">
+        <table class="lxp-table">
+          <caption class="lxp-visually-hidden">
+            LOGI-Cube EXPRESSの導入事例（業態・地域・規模・構築ポイント）
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">業態</th>
+              <th scope="col">地域（本社所在地）</th>
+              <th scope="col">規模（車両台数）</th>
+              <th scope="col">システムの構築ポイント</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>コンビニ配送</td>
+              <td>東京</td>
+              <td>800台</td>
+              <td>ルート配送・店舗配送</td>
+            </tr>
+            <tr>
+              <td>複数拠点管理（10拠点）</td>
+              <td>愛知</td>
+              <td>500台</td>
+              <td>グループ物流部門</td>
+            </tr>
+            <tr>
+              <td>青果配送</td>
+              <td>熊本</td>
+              <td>500台</td>
+              <td>正確な運賃算出</td>
+            </tr>
+            <tr>
+              <td>海上コンテナ輸送</td>
+              <td>神奈川</td>
+              <td>300台</td>
+              <td>作業管理・コンテナ管理</td>
+            </tr>
+            <tr>
+              <td>共同配送</td>
+              <td>福岡</td>
+              <td>200台</td>
+              <td>方面別配車</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lxp-cases">
+        <article class="lxp-case">
+          <span class="lxp-case__label">大規模｜800台・20拠点以上</span>
+          <p class="lxp-case__meta">事例No.02｜運送</p>
+          <h3 class="lxp-case__title">
+            全拠点へ展開し、請求と車両・運転者を一元管理
+          </h3>
+          <dl>
+            <div>
+              <dt>導入前の課題</dt>
+              <dd>
+                各拠点から紙で情報を集め、手作業で転記して請求書を作成。発行に最大10日かかり、拠点の実績は月末まで見えにくい状態でした。
+              </dd>
+            </div>
+            <div>
+              <dt>導入後の効果</dt>
+              <dd>
+                手作業がなくなり、約2日で請求書を発送。売上や労働時間をリアルタイムで把握し、車両カルテや事故管理も一元化しています。
+              </dd>
+            </div>
+            <div>
+              <dt>利用システム</dt>
+              <dd>日計表管理、車両台帳、運転者台帳</dd>
+            </div>
+          </dl>
+          <a
+            class="lxp-case__more"
+            href="https://commoncom.jp/jireishuu/%e4%ba%8b%e4%be%8bno-02%e3%80%90%e9%81%8b%e9%80%81%e3%80%91%e3%81%99%e3%81%90%e3%82%8c%e3%81%9f%e7%b5%b1%e7%8e%87%e5%8a%9b%e3%81%a8%e7%b4%a0%e6%97%a9%e3%81%84%e6%84%8f%e6%80%9d%e6%b1%ba%e5%ae%9a/"
+            >事例の詳細を見る</a
+          >
+        </article>
+        <article class="lxp-case">
+          <span class="lxp-case__label">中規模｜10拠点</span>
+          <p class="lxp-case__meta">事例No.01｜運送・他システムからの入替</p>
+          <h3 class="lxp-case__title">
+            バラバラだったシステムを統合し、日次集計を短縮
+          </h3>
+          <dl>
+            <div>
+              <dt>導入前の課題</dt>
+              <dd>
+                3つの異なるシステムで業務しており、本社はフォーマットの違う資料から実績を集計。日次報告のための集計時間が増え続けていました。
+              </dd>
+            </div>
+            <div>
+              <dt>導入後の効果</dt>
+              <dd>
+                収益基準を統一し、日次の実績集計をシステム化。本社の集計作業が大幅に減り、作業進捗の可視化で電話連絡や待ち時間も減りました。
+              </dd>
+            </div>
+            <div>
+              <dt>利用システム</dt>
+              <dd>LOGI-Cube EXPRESS（10拠点へ導入）</dd>
+            </div>
+          </dl>
+          <a
+            class="lxp-case__more"
+            href="https://commoncom.jp/jireishuu/%e4%ba%8b%e4%be%8bno-01%e3%80%90%e9%81%8b%e9%80%81%e3%80%91%e6%8b%a0%e7%82%b9%e3%81%94%e3%81%a8%e3%81%ab%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e3%81%8c%e3%83%90%e3%83%a9%e3%83%90%e3%83%a9%e3%80%82/"
+            >事例の詳細を見る</a
+          >
+        </article>
+        <article class="lxp-case">
+          <span class="lxp-case__label">小〜中規模｜Excel管理から</span>
+          <p class="lxp-case__meta">事例No.10｜運送・新規導入</p>
+          <h3 class="lxp-case__title">
+            拠点独自のExcelをやめ、月次締の負荷を大きく削減
+          </h3>
+          <dl>
+            <div>
+              <dt>導入前の課題</dt>
+              <dd>
+                取扱量が増え、各拠点のExcel転記が許容量を超えかけていました。拠点ごとに管理資料が違い、本社から拠点情報が見えない状態でした。
+              </dd>
+            </div>
+            <div>
+              <dt>導入後の効果</dt>
+              <dd>
+                全拠点へシステムを導入し、業務を標準化。拠点データをリアルタイムで確認できるようになり、月次処理の時間を大きく減らしました。
+              </dd>
+            </div>
+            <div>
+              <dt>利用システム</dt>
+              <dd>
+                運送管理システム（メニュー間のデータ連携、月次資料の半自動化）
+              </dd>
+            </div>
+          </dl>
+          <a
+            class="lxp-case__more"
+            href="https://commoncom.jp/jireishuu/%e4%ba%8b%e4%be%8bno-10%e3%80%90%e9%81%8b%e9%80%81%e3%80%91excel%e7%ae%a1%e7%90%86%e3%81%8b%e3%82%89%e3%81%ae%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e5%8c%96%e3%81%af%e9%9b%a3%e3%81%97%e3%81%84%ef%bc%9f/"
+            >事例の詳細を見る</a
+          >
+        </article>
+      </div>
+      <p class="lxp-cases__foot">
+        <a
+          class="lxp-button lxp-button--secondary"
+          href="https://commoncom.jp/jirei/"
+          >導入事例集をもっと見る</a
+        >
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ FLOW：導入の流れ ============ -->
+  <section class="lxp-section lxp-section--soft" id="lxp-flow">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">FLOW</div>
+        <h2 class="lxp-sectionhead__title">導入の流れ</h2>
+        <p class="lxp-sectionhead__text">
+          まずは業務の流れを伺い、必要な機能を整理してから設定と運用開始へ進みます。段階的な導入にも対応しています。
+        </p>
+      </header>
+      <ol class="lxp-flow">
+        <li class="lxp-flow__step">
+          <div class="lxp-flow__num">STEP 01</div>
+          <h3 class="lxp-flow__title">ヒアリング</h3>
+          <p class="lxp-flow__text">
+            いまの配車・日報・請求の流れと、現場の課題を伺います。
+          </p>
+        </li>
+        <li class="lxp-flow__step">
+          <div class="lxp-flow__num">STEP 02</div>
+          <h3 class="lxp-flow__title">ご提案</h3>
+          <p class="lxp-flow__text">
+            日計表管理を基本に、必要なオプションと進め方をご提案します。
+          </p>
+        </li>
+        <li class="lxp-flow__step">
+          <div class="lxp-flow__num">STEP 03</div>
+          <h3 class="lxp-flow__title">導入設定</h3>
+          <p class="lxp-flow__text">
+            画面・帳票・外部連携など、運用に合わせた設定を行います。
+          </p>
+        </li>
+        <li class="lxp-flow__step">
+          <div class="lxp-flow__num">STEP 04</div>
+          <h3 class="lxp-flow__title">運用開始</h3>
+          <p class="lxp-flow__text">
+            操作に慣れてもらうところまで、導入後の運用をご支援します。
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ PRICE：料金 ============ -->
+  <section class="lxp-section" id="lxp-price">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">PRICE</div>
+        <h2 class="lxp-sectionhead__title">料金の考え方</h2>
+        <p class="lxp-sectionhead__text">
+          LOGI-Cube
+          EXPRESSの料金は、使う機能・拠点・利用者数・外部連携・カスタマイズの範囲で変わるため、導入内容を伺ったうえで個別にお見積りします。
+        </p>
+      </header>
+      <div class="lxp-price">
+        <div class="lxp-price__factors">
+          <article class="lxp-card">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-layers"></use></svg
+            ></span>
+            <h3 class="lxp-card__title">使う機能</h3>
+            <p class="lxp-card__text">
+              日計表管理を基本に、日報・配車・車両台帳・運転者台帳を組み合わせます。
+            </p>
+          </article>
+          <article class="lxp-card">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-office"></use></svg
+            ></span>
+            <h3 class="lxp-card__title">拠点・利用者</h3>
+            <p class="lxp-card__text">
+              利用する拠点数や、入力・閲覧する利用者の範囲で構成が変わります。
+            </p>
+          </article>
+          <article class="lxp-card">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-link"></use></svg
+            ></span>
+            <h3 class="lxp-card__title">外部連携</h3>
+            <p class="lxp-card__text">
+              デジタコ、会計、給与など、つなぐシステムによって作業範囲が変わります。
+            </p>
+          </article>
+          <article class="lxp-card">
+            <span class="lxp-icon-wrap" aria-hidden="true"
+              ><svg class="lxp-icon"><use href="#lxp-i-cog"></use></svg
+            ></span>
+            <h3 class="lxp-card__title">カスタマイズ</h3>
+            <p class="lxp-card__text">
+              請求書フォーマットや分析資料など、業務に合わせた変更の有無で見積が変わります。
+            </p>
+          </article>
+        </div>
+        <aside class="lxp-price__cta">
+          <h3 class="lxp-card__title">導入費用を相談する</h3>
+          <p class="lxp-card__text">
+            機能の組み合わせと拠点数を伺い、お見積りします。無料相談で範囲を整理できます。
+          </p>
+          <a class="lxp-button lxp-button--primary" href="#lxp-contact"
+            >無料で見積り相談</a
+          >
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="lxp-section lxp-section--soft" id="lxp-faq">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">FAQ</div>
+        <h2 class="lxp-sectionhead__title">
+          運送管理システムに関するよくあるご質問
+        </h2>
+      </header>
+      <div class="lxp-faq">
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            導入期間はどのくらいですか？
+          </summary>
+          <p class="lxp-faq__answer">
+            機能の範囲や拠点数により異なります。段階的な導入にも対応しています。導入事例では、20以上の拠点への展開を打ち合わせ開始から9ヶ月で本格稼働したケースがあります。
+          </p>
+        </details>
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            既存データの移行はできますか？
+          </summary>
+          <p class="lxp-faq__answer">
+            他システムからの入替や、Excel管理からの新規導入の事例があります。内容を伺ったうえで、進め方をご提案します。
+          </p>
+        </details>
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            システムの変更（カスタマイズ）は可能ですか？
+          </summary>
+          <p class="lxp-faq__answer">
+            可能です。請求書フォーマットの変更、売上分析資料出力などの事例があります。
+          </p>
+        </details>
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            車載器など他システムとのデータ連携は可能ですか？
+          </summary>
+          <p class="lxp-faq__answer">
+            以下のデータ連携実績があります。<br />・デジタコデータの取り込み<br />・会計システムへの連携（売上、傭車料、入金、支払、各種データ）<br />・給与システムへの連携（運転者実績、手当（歩合）、各種データ）
+          </p>
+        </details>
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            車両別の収支は管理できますか？
+          </summary>
+          <p class="lxp-faq__answer">
+            日報管理オプションを導入することで、車両別収支を細かく管理できます。車番別の収支と月別推移を確認できます。管理項目や入力方法（売上の按分方法など）は、お客様の管理内容をヒアリングして的確にご提案します。
+          </p>
+        </details>
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            配車情報から指示書を印字できますか？
+          </summary>
+          <p class="lxp-faq__answer">
+            配車支援システムを導入することで各種指示書を印字できます。作業指示書（ドライバー向け）、作業依頼書（傭車先向け）、運送引受書（荷主向け）に対応します。
+          </p>
+        </details>
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            導入後のサポートはありますか？
+          </summary>
+          <p class="lxp-faq__answer">
+            導入後の運用についてもご相談ください。まずは無料相談で、必要な範囲を整理します。
+          </p>
+        </details>
+        <details class="lxp-faq__item">
+          <summary class="lxp-faq__question">
+            システムの動作環境を教えてもらえますか？
+          </summary>
+          <p class="lxp-faq__answer">
+            LOGI-Cubeの<a class="lxp-textlink" href="https://commoncom.jp/spec/"
+              >システム要件ページ</a
+            >で、対応環境を確認できます。
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA（最終） ============ -->
+  <section class="lxp-cta lxp-cta--final">
+    <div class="lxp-container lxp-cta__inner">
+      <h2 class="lxp-cta__title">運送管理の課題、まとめてご相談ください。</h2>
+      <p class="lxp-cta__text">
+        資料請求、デモ、導入相談のいずれからでも進められます。
+      </p>
+      <div class="lxp-cta__actions lxp-actions">
+        <a
+          class="lxp-button lxp-button--ghost"
+          href="https://commoncom.jp/logi-cube-download/"
+          >資料請求（無料）</a
+        >
+        <a
+          class="lxp-button lxp-button--ghost"
+          href="#lxp-contact"
+          data-lxp-inquiry="デモ依頼"
+          >デモを依頼する</a
+        >
+        <a class="lxp-button lxp-button--primary" href="#lxp-contact"
+          >導入を相談する</a
+        >
+      </div>
+      <p class="lxp-cta__notes">
+        <span>無料相談に対応</span><span>資料請求・デモ可</span
+        ><span>導入内容に応じた個別見積</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="lxp-section" id="lxp-contact">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">CONTACT</div>
+        <h2 class="lxp-sectionhead__title">お問い合わせ・無料相談</h2>
+        <p class="lxp-sectionhead__text">
+          配車、日報、請求、原価管理、外部連携までご相談ください。資料請求とデモ依頼もこちらからできます。
+        </p>
+        <p class="lxp-contact-note">
+          ※
+          サービスに関するお問い合わせ以外（営業目的など）のご連絡はお断りしております。
+        </p>
+      </header>
+      <div class="lxp-offers">
+        <article class="lxp-offer">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-doc"></use></svg
+          ></span>
+          <div class="lxp-offer__label">DOCUMENT</div>
+          <h3 class="lxp-offer__title">資料請求</h3>
+          <p class="lxp-offer__text">
+            LOGI-Cubeの概要資料をお送りします。社内検討用としてもお気軽にご請求ください。
+          </p>
+        </article>
+        <article class="lxp-offer">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-screen"></use></svg
+          ></span>
+          <div class="lxp-offer__label">DEMO</div>
+          <h3 class="lxp-offer__title">デモ依頼</h3>
+          <p class="lxp-offer__text">
+            実際の画面を見ながら、配車・日報・請求の流れをご案内します。
+          </p>
+        </article>
+        <article class="lxp-offer">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-chat"></use></svg
+          ></span>
+          <div class="lxp-offer__label">CONSULT</div>
+          <h3 class="lxp-offer__title">導入相談</h3>
+          <p class="lxp-offer__text">
+            いまの業務の流れとお悩みを伺い、日計表を基本にどこから整えるかを整理します。
+          </p>
+        </article>
+      </div>
+      <div id="lxp-form-slot" class="lxp-form-slot"></div>
+    </div>
+  </section>
+
+  <!-- ============ KINTONE連携 ============ -->
+  <section class="lxp-section lxp-section--soft" id="lxp-kintone">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">KINTONE</div>
+        <h2 class="lxp-sectionhead__title">
+          運送管理システムはkintoneと連携可能
+        </h2>
+        <p class="lxp-sectionhead__text">
+          LOGI-Cube
+          EXPRESSは、kintoneと連携することで現場入力と管理業務をシームレスにつなぎます。kintoneで入力したデータをLOGI-Cubeに取り込み、LOGI-Cubeで集計した情報をkintone側で閲覧・共有する双方向連携が可能です。
+        </p>
+      </header>
+      <div class="lxp-actions" style="justify-content: center">
+        <a
+          class="lxp-button lxp-button--secondary"
+          href="https://commoncom.jp/dx/"
+          >DX推進サポートを見る</a
+        >
+        <a
+          class="lxp-button lxp-button--secondary"
+          href="https://commoncom.jp/vehicleledger/"
+          >車両台帳パッケージ</a
+        >
+        <a
+          class="lxp-button lxp-button--secondary"
+          href="https://commoncom.jp/%e9%81%8b%e8%bb%a2%e8%80%85%e5%8f%b0%e5%b8%b3%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8-for-kintone/"
+          >運転者台帳パッケージ</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COLUMN：関連コラム ============ -->
+  <section class="lxp-section" id="lxp-columns">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">COLUMN</div>
+        <h2 class="lxp-sectionhead__title">運送業に関するコラム</h2>
+      </header>
+      <div class="lxp-columns">
+        <a
+          class="lxp-column"
+          href="https://commoncom.jp/column/logistics-laws-guide/">
+          <img
+            loading="lazy"
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/05/image9.jpg"
+            alt="運送業の法律一覧に関するコラム" />
+          <div class="lxp-column__body">
+            <div class="lxp-column__meta">EXPRESS｜2026年5月15日</div>
+            <h3 class="lxp-column__title">
+              運送業の法律一覧と重要ポイント｜違反事例・罰則・法改正についても解説
+            </h3>
+            <span class="lxp-column__link">記事を読む</span>
+          </div>
+        </a>
+        <a
+          class="lxp-column"
+          href="https://commoncom.jp/column/%e4%b8%8b%e8%ab%8b%e6%b3%95%e3%81%a7%e9%81%8b%e9%80%81%e5%a7%94%e8%a8%97%e3%81%af%e3%81%a9%e3%81%86%e5%a4%89%e3%82%8f%e3%82%8b%ef%bc%9f%e7%89%b9%e5%ae%9a%e9%81%8b%e9%80%81%e5%a7%94%e8%a8%97%e3%81%ae/">
+          <img
+            loading="lazy"
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/04/image1.jpg"
+            alt="下請法と運送委託に関するコラム" />
+          <div class="lxp-column__body">
+            <div class="lxp-column__meta">EXPRESS｜2026年5月1日</div>
+            <h3 class="lxp-column__title">
+              下請法で運送委託はどう変わる？特定運送委託の条件と実務対応を解説
+            </h3>
+            <span class="lxp-column__link">記事を読む</span>
+          </div>
+        </a>
+        <a
+          class="lxp-column"
+          href="https://commoncom.jp/column/truck-transport-act-amendment/">
+          <img
+            loading="lazy"
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/03/image9.jpg"
+            alt="貨物自動車運送事業法改正に関するコラム" />
+          <div class="lxp-column__body">
+            <div class="lxp-column__meta">EXPRESS｜2026年4月24日</div>
+            <h3 class="lxp-column__title">
+              貨物自動車運送事業法改正とは？最新ポイントと運送業への影響・対策を徹底解説
+            </h3>
+            <span class="lxp-column__link">記事を読む</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERIES：関連システム ============ -->
+  <section class="lxp-section lxp-section--soft" id="lxp-series">
+    <div class="lxp-container">
+      <header class="lxp-sectionhead">
+        <div class="lxp-sectionhead__en">SERIES</div>
+        <h2 class="lxp-sectionhead__title">関連する物流システム</h2>
+      </header>
+      <div class="lxp-siblings">
+        <article class="lxp-sibling">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-warehouse"></use></svg
+          ></span>
+          <h3 class="lxp-sibling__title">
+            倉庫管理システム「LOGI-Cube STORAGE」
+          </h3>
+          <p class="lxp-card__text">
+            入出庫管理、在庫の即時把握、保管料計算。EXPRESSと連携できます。
+          </p>
+          <div class="lxp-actions">
+            <a
+              class="lxp-button lxp-button--secondary"
+              href="https://commoncom.jp/logi-cube/storage/"
+              >STORAGEを見る</a
+            >
+          </div>
+        </article>
+        <article class="lxp-sibling">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-ship"></use></svg
+          ></span>
+          <h3 class="lxp-sibling__title">
+            輸出入管理システム「LOGI-Cube PORT」
+          </h3>
+          <p class="lxp-card__text">
+            受注、債権、手配、下払、実績管理まで。輸出入業務をシンプルにします。
+          </p>
+          <div class="lxp-actions">
+            <a
+              class="lxp-button lxp-button--secondary"
+              href="https://commoncom.jp/logi-cube/port/"
+              >PORTを見る</a
+            >
+          </div>
+        </article>
+        <article class="lxp-sibling">
+          <span class="lxp-icon-wrap" aria-hidden="true"
+            ><svg class="lxp-icon"><use href="#lxp-i-monitor"></use></svg
+          ></span>
+          <h3 class="lxp-sibling__title">LOGI-Cubeシステム要件</h3>
+          <p class="lxp-card__text">
+            動作環境はシステム要件のページで確認できます。
+          </p>
+          <div class="lxp-actions">
+            <a
+              class="lxp-button lxp-button--secondary"
+              href="https://commoncom.jp/spec/"
+              >動作環境を見る</a
+            >
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="lxp-lightbox" id="lxp-lightbox" aria-hidden="true">
+    <div
+      class="lxp-lightbox__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="画像拡大表示">
+      <button class="lxp-lightbox__close" type="button" aria-label="閉じる">
+        ×
+      </button>
+      <img class="lxp-lightbox__image" src="" alt="" />
+    </div>
+  </div>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "LOGI-Cube EXPRESS",
+      "alternateName": "ロジキューブ エクスプレス",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Windows",
+      "description": "運送業者向けの運送管理システム。日計表管理を基本に、配車・日報・請求・支払・車両別原価管理を一元化。デジタコ・会計・給与・kintoneと連携可能。約300社の導入実績があります。",
+      "url": "https://commoncom.jp/logi-cube/express/",
+      "image": "https://commoncom.jp/wp/wp-content/uploads/2026/09/hero-express.png",
+      "featureList": [
+        "日計表管理（売上・傭車料・請求・支払・売掛買掛管理）",
+        "日報管理（運転者別実績・車両別収支・燃費計算）",
+        "配車支援（配車ボード・作業指示書・点呼記録簿）",
+        "運転者台帳（免許・資格・健康診断・事故歴管理）",
+        "車両台帳（車検・整備歴・修理歴・リース残高管理）",
+        "外部連携（デジタルタコグラフ・会計・給与・kintone）"
+      ],
+      "provider": {
+        "@type": "Organization",
+        "name": "コモンコム",
+        "url": "https://commoncom.jp/"
+      },
+      "offers": {
+        "@type": "Offer",
+        "availability": "https://schema.org/InStock",
+        "description": "無料相談・資料請求・デモに対応。導入内容に応じた個別見積。"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "導入期間はどのくらいですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "機能の範囲や拠点数により異なります。段階的な導入にも対応しています。導入事例では、20以上の拠点への展開を打ち合わせ開始から9ヶ月で本格稼働したケースがあります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "既存データの移行はできますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "他システムからの入替や、Excel管理からの新規導入の事例があります。内容を伺ったうえで、進め方をご提案します。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "システムの変更（カスタマイズ）は可能ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可能です。請求書フォーマットの変更や売上分析資料出力などの事例があります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "車載器など他システムとのデータ連携は可能ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "デジタコデータの取り込み、会計システムへの連携（売上、傭車料、入金、支払）、給与システムへの連携（運転者実績、手当）の実績があります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "車両別の収支は管理できますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "日報管理オプションで車両別収支を管理できます。車番別の収支と月別推移を確認できます。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "配車情報から指示書を印字できますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "配車支援システムで作業指示書、作業依頼書、運送引受書を印字できます。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "導入後のサポートはありますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "導入後の運用についてもご相談ください。まずは無料相談で、必要な範囲を整理します。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "システムの動作環境を教えてもらえますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "LOGI-Cubeのシステム要件ページで対応環境を確認できます。https://commoncom.jp/spec/"
+          }
+        }
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "ホーム",
+          "item": "https://commoncom.jp/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "LOGI-Cube",
+          "item": "https://commoncom.jp/logi-cube/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "LOGI-Cube EXPRESS",
+          "item": "https://commoncom.jp/logi-cube/express/"
+        }
+      ]
+    }
+  </script>
+  <script>
+    (function () {
+      var root = document.getElementById("lxp-root");
+      if (!root) return;
+
+      /* ---- 導入企業ロゴ（トップページと同一の無限スクロール＋ドラッグ） ---- */
+      function cloneLogoMarquee() {
+        var track = root.querySelector(".lxp-logo-track");
+        if (!track) return;
+        if (track.querySelector(".lxp-logo-group--clone")) return;
+        var group = track.querySelector(".lxp-logo-group");
+        if (!group) return;
+        var clone = group.cloneNode(true);
+        clone.className = group.className + " lxp-logo-group--clone";
+        clone.setAttribute("aria-hidden", "true");
+        var links = clone.querySelectorAll("a");
+        var i;
+        var span;
+        var link;
+        for (i = 0; i < links.length; i++) {
+          link = links[i];
+          span = document.createElement("span");
+          span.className = link.className;
+          while (link.firstChild) span.appendChild(link.firstChild);
+          if (link.parentNode) link.parentNode.replaceChild(span, link);
+        }
+        var imgs = clone.querySelectorAll("img");
+        for (i = 0; i < imgs.length; i++) {
+          imgs[i].alt = "";
+          imgs[i].setAttribute("loading", "lazy");
+        }
+        track.appendChild(clone);
+      }
+      function enableLogoMarqueeDrag() {
+        var marquee = root.querySelector(".lxp-logo-marquee");
+        var track = root.querySelector(".lxp-logo-track");
+        var group;
+        var offset = 0;
+        var holding = false;
+        var dragged = false;
+        var startX = 0;
+        var startOffset = 0;
+        var lastTime = 0;
+        var pointerId = null;
+        var loopMs = 90000;
+        var dragPx = 10;
+        var imgs;
+        var i;
+        if (!marquee) return;
+        if (!track) return;
+        group = track.querySelector(".lxp-logo-group");
+        if (!group) return;
+        if (track.classList) track.classList.add("is-manual");
+        imgs = marquee.querySelectorAll("img");
+        for (i = 0; i < imgs.length; i++) {
+          imgs[i].setAttribute("draggable", "false");
+        }
+        function groupWidth() {
+          return group.offsetWidth;
+        }
+        function wrap(value) {
+          var width = groupWidth();
+          if (width <= 0) return value;
+          value = value % width;
+          if (value > 0) value -= width;
+          return value;
+        }
+        function apply() {
+          track.style.transform = "translate3d(" + offset + "px, 0, 0)";
+        }
+        function samePointer(e) {
+          if (pointerId === null) return true;
+          return e.pointerId === pointerId;
+        }
+        function onPointerDown(e) {
+          if (e.pointerType === "mouse") {
+            if (e.button !== 0) return;
+          }
+          holding = true;
+          dragged = false;
+          startX = e.clientX;
+          startOffset = offset;
+          pointerId = e.pointerId;
+        }
+        function beginDrag(e) {
+          dragged = true;
+          if (marquee.classList) marquee.classList.add("is-dragging");
+          if (marquee.setPointerCapture) {
+            try {
+              marquee.setPointerCapture(e.pointerId);
+            } catch (err) {}
+          }
+        }
+        function onPointerMove(e) {
+          var dx;
+          if (!holding) return;
+          if (!samePointer(e)) return;
+          dx = e.clientX - startX;
+          if (!dragged) {
+            if (dx <= dragPx) {
+              if (dx >= -dragPx) return;
+            }
+            beginDrag(e);
+          }
+          offset = wrap(startOffset + dx);
+          apply();
+        }
+        function endDrag(e) {
+          if (!holding) return;
+          if (!samePointer(e)) return;
+          holding = false;
+          pointerId = null;
+          if (marquee.classList) marquee.classList.remove("is-dragging");
+          if (marquee.releasePointerCapture) {
+            try {
+              marquee.releasePointerCapture(e.pointerId);
+            } catch (err2) {}
+          }
+        }
+        function onClick(e) {
+          if (!dragged) return;
+          e.preventDefault();
+          e.stopPropagation();
+          dragged = false;
+        }
+        function tick(now) {
+          var width;
+          var dt;
+          if (!lastTime) lastTime = now;
+          dt = now - lastTime;
+          lastTime = now;
+          if (!holding) {
+            width = groupWidth();
+            if (width > 0) {
+              if (dt > 0) {
+                if (dt < 80) {
+                  offset = wrap(offset - (width * dt) / loopMs);
+                  apply();
+                }
+              }
+            }
+          }
+          window.requestAnimationFrame(tick);
+        }
+        marquee.addEventListener("pointerdown", onPointerDown);
+        document.addEventListener("pointermove", onPointerMove);
+        document.addEventListener("pointerup", endDrag);
+        document.addEventListener("pointercancel", endDrag);
+        marquee.addEventListener("click", onClick, true);
+        marquee.addEventListener("dragstart", function (e) {
+          e.preventDefault();
+        });
+        apply();
+        window.requestAnimationFrame(tick);
+      }
+      cloneLogoMarquee();
+      enableLogoMarqueeDrag();
+
+      /* ---- 機能タブ（プログレッシブエンハンスメント） ---- */
+      var tabsWrap = root.querySelector("#lxp-tabs");
+      var tabButtons = [];
+      function activateTab(id) {
+        if (!tabsWrap) return false;
+        var panels = tabsWrap.querySelectorAll(".lxp-tabpanel");
+        var found = false;
+        panels.forEach(function (p) {
+          if (p.id === id) found = true;
+        });
+        if (!found) return false;
+        panels.forEach(function (p) {
+          if (p.id === id) p.classList.add("is-active");
+          else p.classList.remove("is-active");
+        });
+        tabButtons.forEach(function (b) {
+          if (b.getAttribute("data-lxp-tab") === id)
+            b.classList.add("is-active");
+          else b.classList.remove("is-active");
+        });
+        return true;
+      }
+      if (tabsWrap) {
+        tabsWrap.classList.add("is-js");
+        tabButtons = Array.prototype.slice.call(
+          tabsWrap.querySelectorAll(".lxp-tab"),
+        );
+        tabButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            activateTab(btn.getAttribute("data-lxp-tab"));
+          });
+        });
+      }
+
+      /* ---- ライトボックス ---- */
+      var lightbox = root.querySelector("#lxp-lightbox");
+      var lightboxImage = lightbox
+        ? lightbox.querySelector(".lxp-lightbox__image")
+        : null;
+      var closeButton = lightbox
+        ? lightbox.querySelector(".lxp-lightbox__close")
+        : null;
+
+      function bindLightbox(scope) {
+        if (!lightbox) return;
+        if (!lightboxImage) return;
+        var triggers = scope.querySelectorAll(".lxp-lightbox-trigger");
+        triggers.forEach(function (trigger) {
+          if (trigger.dataset.lightboxBound === "true") return;
+          trigger.dataset.lightboxBound = "true";
+          trigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            var img = trigger.querySelector("img");
+            if (!img) return;
+            lightboxImage.src = img.getAttribute("src");
+            lightboxImage.alt = img.alt || "";
+            lightbox.classList.add("is-open");
+            lightbox.setAttribute("aria-hidden", "false");
+            document.documentElement.style.overflow = "hidden";
+            if (closeButton) closeButton.focus();
+          });
+        });
+      }
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove("is-open");
+        lightbox.setAttribute("aria-hidden", "true");
+        if (lightboxImage) lightboxImage.src = "";
+        document.documentElement.style.overflow = "";
+      }
+
+      if (closeButton) closeButton.addEventListener("click", closeLightbox);
+      if (lightbox) {
+        lightbox.addEventListener("click", function (e) {
+          if (e.target === lightbox) closeLightbox();
+        });
+      }
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        if (!lightbox) return;
+        if (!lightbox.classList.contains("is-open")) return;
+        closeLightbox();
+      });
+      bindLightbox(root);
+
+      /* ---- お問い合わせ種別の事前チェック ---- */
+      var pendingInquiry = "";
+      function applyInquiry(value, reset) {
+        if (reset) pendingInquiry = value || "";
+        else if (value) pendingInquiry = value;
+        var form = root.querySelector(".wpcf7-form");
+        if (!form) form = document.querySelector(".wpcf7-form");
+        if (!form) return;
+        var inputs = form.querySelectorAll('input[type="checkbox"]');
+        inputs.forEach(function (input) {
+          if (input.name) {
+            if (input.name.indexOf("_") === 0) return;
+          }
+          input.checked = false;
+          if (pendingInquiry) {
+            if (input.value === pendingInquiry) input.checked = true;
+          }
+        });
+      }
+
+      function inquiryFromLink(link) {
+        var specified = link.getAttribute("data-lxp-inquiry");
+        if (specified) return specified;
+        var text = (link.textContent || "").replace(/\s+/g, "");
+        if (text.indexOf("資料") !== -1) return "資料請求";
+        if (text.indexOf("デモ") !== -1) return "デモ依頼";
+        return "";
+      }
+
+      /* ---- スムーススクロール（固定ヘッダー分を補正） ---- */
+      function headerEl() {
+        var header = document.querySelector("#header");
+        if (header) return header;
+        header = document.querySelector(".l-header");
+        if (header) return header;
+        var headers = document.querySelectorAll("header");
+        var i;
+        for (i = 0; i < headers.length; i++) {
+          if (!root.contains(headers[i])) return headers[i];
+        }
+        return null;
+      }
+      function overlayHeaderEl() {
+        var fix = document.getElementById("fix_header");
+        var header;
+        var style;
+        if (fix) {
+          style = getComputedStyle(fix);
+          if (style.display !== "none") {
+            if (style.position === "fixed") return fix;
+            if (style.position === "sticky") return fix;
+          }
+        }
+        header = headerEl();
+        if (header) {
+          style = getComputedStyle(header);
+          if (style.position === "fixed") return header;
+          if (style.position === "sticky") return header;
+        }
+        return null;
+      }
+      function headerOffset() {
+        var extra = 16;
+        var adminH = 0;
+        var admin = document.getElementById("wpadminbar");
+        var overlay;
+        var swell;
+        var header;
+        var style;
+        if (admin) {
+          style = getComputedStyle(admin);
+          if (style.display !== "none") {
+            if (style.position === "fixed")
+              adminH = admin.getBoundingClientRect().height;
+            else if (style.position === "sticky")
+              adminH = admin.getBoundingClientRect().height;
+          }
+        }
+        overlay = overlayHeaderEl();
+        if (overlay)
+          return adminH + overlay.getBoundingClientRect().height + extra;
+        swell = parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--swl-offset_y",
+          ),
+        );
+        if (!isNaN(swell)) {
+          if (swell > 0) return adminH + swell + extra;
+        }
+        header = headerEl();
+        if (header) return adminH + header.offsetHeight + extra;
+        return adminH + 72;
+      }
+      function updateFirstFold() {
+        var header = headerEl();
+        var logos = root.querySelector(".lxp-logos");
+        var headerH = 0;
+        var logosH = 0;
+        var fold;
+        var vw;
+        var hh;
+        var headerVar;
+        var logosVar;
+        if (header) headerH = header.offsetHeight;
+        if (logos) logosH = logos.offsetHeight;
+        fold = window.innerHeight - headerH - logosH;
+        if (fold < 360) fold = 360;
+        vw = document.documentElement.clientWidth + "px";
+        hh = Math.round(fold) + "px";
+        headerVar = Math.round(headerH) + "px";
+        logosVar = Math.round(logosH) + "px";
+        var currentH = parseFloat(root.style.getPropertyValue("--lxp-hero-h"));
+        var delta;
+        if (!isNaN(currentH)) {
+          delta = currentH - fold;
+          if (delta < 0) delta = -delta;
+          if (delta < 8) hh = Math.round(currentH) + "px";
+        }
+        if (root.style.getPropertyValue("--lxp-vw") === vw) {
+          if (root.style.getPropertyValue("--lxp-hero-h") === hh) {
+            if (root.style.getPropertyValue("--lxp-header-h") === headerVar) {
+              if (root.style.getPropertyValue("--lxp-logos-h") === logosVar)
+                return;
+            }
+          }
+        }
+        root.style.setProperty("--lxp-header-h", headerVar);
+        root.style.setProperty("--lxp-logos-h", logosVar);
+        root.style.setProperty("--lxp-vw", vw);
+        root.style.setProperty("--lxp-hero-h", hh);
+      }
+      function updateScrollMargin() {
+        root.style.setProperty("--lxp-scroll-margin", headerOffset() + "px");
+        updateFirstFold();
+      }
+      function scrollToTarget(target, behavior) {
+        var top =
+          target.getBoundingClientRect().top +
+          window.pageYOffset -
+          headerOffset();
+        window.scrollTo({ top: top, behavior: behavior || "auto" });
+      }
+      function getHashTarget(hash) {
+        var id = (hash || "").replace("#", "");
+        if (!id) return null;
+        return document.getElementById(id);
+      }
+      function prepareTarget(target) {
+        if (!target.classList) return;
+        if (target.classList.contains("lxp-tabpanel")) activateTab(target.id);
+      }
+      function scrollTargetFor(target) {
+        var features;
+        if (!target) return target;
+        if (!target.classList) return target;
+        if (!target.classList.contains("lxp-tabpanel")) return target;
+        features = root.querySelector("#lxp-features");
+        if (features) return features;
+        return target;
+      }
+      function goToTarget(target, behavior) {
+        var dest = scrollTargetFor(target);
+        function run() {
+          scrollToTarget(dest, behavior);
+        }
+        if (window.requestAnimationFrame) requestAnimationFrame(run);
+        else run();
+      }
+
+      document.addEventListener(
+        "click",
+        function (e) {
+          if (e.defaultPrevented) return;
+          if (e.button !== 0) return;
+          if (e.metaKey) return;
+          if (e.ctrlKey) return;
+          if (e.shiftKey) return;
+          if (e.altKey) return;
+          var link = e.target.closest("a");
+          if (!link) return;
+          if (link.getAttribute("target") === "_blank") return;
+          var href = link.getAttribute("href");
+          if (!href) return;
+          if (href.indexOf("#") === -1) return;
+          var url;
+          try {
+            url = new URL(link.href, location.href);
+          } catch (err) {
+            return;
+          }
+          if (url.hash.length < 2) return;
+          var samePath = true;
+          try {
+            samePath =
+              decodeURIComponent(url.pathname) ===
+              decodeURIComponent(location.pathname);
+          } catch (err2) {
+            samePath = url.pathname === location.pathname;
+          }
+          if (!samePath) return;
+          var target = getHashTarget(url.hash);
+          if (!target) return;
+          if (!root.contains(target)) return;
+          e.preventDefault();
+          e.stopPropagation();
+          if (url.hash === "#lxp-contact")
+            applyInquiry(inquiryFromLink(link), true);
+          prepareTarget(target);
+          if (history.pushState) history.pushState(null, "", url.hash);
+          goToTarget(target, "smooth");
+        },
+        true,
+      );
+
+      function syncHashScroll(behavior) {
+        var target = getHashTarget(location.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        prepareTarget(target);
+        goToTarget(target, behavior || "auto");
+      }
+      window.addEventListener("hashchange", function () {
+        syncHashScroll("smooth");
+      });
+      window.addEventListener("resize", updateScrollMargin);
+      window.addEventListener("load", updateFirstFold);
+      updateScrollMargin();
+      if (window.ResizeObserver) {
+        var foldObserver = new ResizeObserver(function () {
+          updateFirstFold();
+        });
+        var logosEl = root.querySelector(".lxp-logos");
+        var siteHeader = headerEl();
+        if (logosEl) foldObserver.observe(logosEl);
+        if (siteHeader) foldObserver.observe(siteHeader);
+      }
+      function correctHashScroll() {
+        if (!location.hash) return;
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 0);
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 80);
+      }
+      if (document.readyState === "complete") correctHashScroll();
+      else window.addEventListener("load", correctHashScroll);
+
+      /* ---- Contact Form 7 ブロックを CONTACT セクションへ移動 ---- */
+      function findContactFormNode() {
+        var scope = root.parentElement || document;
+        var wraps = scope.querySelectorAll(
+          ".wp-block-contact-form-7-contact-form-selector",
+        );
+        var i;
+        for (i = 0; i < wraps.length; i++) {
+          if (!root.contains(wraps[i])) return wraps[i];
+        }
+        var forms = scope.querySelectorAll(".wpcf7");
+        for (i = 0; i < forms.length; i++) {
+          if (!root.contains(forms[i])) return forms[i];
+        }
+        var wrap = document.querySelector(
+          ".wp-block-contact-form-7-contact-form-selector",
+        );
+        if (wrap) return wrap;
+        return document.querySelector(".wpcf7");
+      }
+      function mountContactForm() {
+        var slot = root.querySelector("#lxp-form-slot");
+        if (!slot) return false;
+        if (slot.querySelector(".wpcf7")) {
+          applyInquiry("", false);
+          return true;
+        }
+        var node = findContactFormNode();
+        if (!node) return false;
+        if (root.contains(node)) return false;
+        slot.appendChild(node);
+        applyInquiry("", false);
+        return true;
+      }
+      var formObserver = new MutationObserver(function () {
+        if (mountContactForm()) formObserver.disconnect();
+      });
+      formObserver.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", mountContactForm);
+      } else {
+        mountContactForm();
+      }
+      window.addEventListener("load", function () {
+        mountContactForm();
+        setTimeout(function () {
+          formObserver.disconnect();
+        }, 2000);
+      });
+    })();
+  </script>
+</div>

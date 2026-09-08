@@ -1,0 +1,2829 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>H1 preview - pageTitle</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .l-mainContent__inner { padding: 16px; }
+  h1.c-pageTitle[data-style="b_bottom"] {
+    font-size: 24px;
+    border-bottom: 2px solid #c8c4bc;
+    padding: 14px 18px;
+    margin: 0 0 12px;
+  }
+</style>
+</head>
+<body>
+<div class="l-mainContent__inner">
+<h1 class="c-pageTitle" data-style="b_bottom">運送・倉庫システムといえばクラウド対応「LOGI-Cube」</h1>
+<!-- @format -->
+
+<meta charset="utf-8" />
+<!--
+    トップページ partial for WordPress / SWELL
+    - visual identity: teal #00B794 / navy #1F3440
+    - 汎用クラスを使わず chp- プレフィックスで隔離
+    - すべてのCSSを #chp-root 配下にスコープ
+    - CONTACT の #chp-form-slot に、直後の Contact Form 7 ブロックを JS で移動する
+    - SWELL の h1 は残し、直書きHTMLでは h1 もタイトル文言も書かない。
+      プレースホルダ p.chp-hero__title は空にして、h1.c-pageTitle があるときだけ JS で差し替える。
+      フロントページでは SWELL がヘッダーロゴを h1.c-headLogo にするため、それは動かさない。
+      初期HTMLにタイトルを2つ置くと、JSを実行しないSEOクローラが見出しを二重に拾う
+    - 構造化データは WP が ld+json を除去する場合があるため JS で head へ挿入する
+    - ヒーローと導入ロゴは WP 余白を打ち消して全幅。それより下は既存コンテナ幅のまま
+    - ヘッダー＋ヒーロー＋導入ロゴが画面高さいっぱいに収まる
+    - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子を使わない
+    WordPress:
+    1. トップ固定ページをカスタムHTMLで開き、本HTMLを貼る
+    2. 直後に Contact Form 7 ブロックを置く
+    3. タイトル／メタディスクリプションは現行のまま（SEO上維持）
+    4. SWELLメインビジュアルと投稿スライダーは本パーツ側で非表示にする
+    5. サイトヘッダーのロゴはスクロール前に消えるため、通常ヘッダーへ戻す
+  -->
+<style>
+  body:has(#chp-root) .p-mainVisual,
+  body:has(#chp-root) #cc-logo-showcase-injected,
+  body:has(#chp-root) .l-mainContent .p-postList {
+    display: none !important;
+  }
+  body:has(#chp-root) .l-mainContent__inner > h1.c-pageTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  body:has(#chp-root) {
+    overflow-x: clip;
+  }
+  body:has(#chp-root) .l-content,
+  body:has(#chp-root) .l-mainContent,
+  body:has(#chp-root) .l-mainContent__inner,
+  body:has(#chp-root) .p-entryContent,
+  body:has(#chp-root) .post_content,
+  body:has(#chp-root) article {
+    overflow: visible !important;
+  }
+  body:has(#chp-root) .l-content,
+  body:has(#chp-root) .l-content.l-container,
+  body:has(#chp-root) .l-mainContent,
+  body:has(#chp-root) .l-article,
+  body:has(#chp-root) .l-mainContent__inner,
+  body:has(#chp-root) .p-entryContent,
+  body:has(#chp-root) .post_content {
+    padding-top: 0 !important;
+  }
+
+  body #chp-root,
+  body #chp-root *,
+  body #chp-root *::before,
+  body #chp-root *::after {
+    box-sizing: border-box;
+  }
+
+  body #chp-root {
+    --chp-navy: #1f3440;
+    --chp-main: #00b794;
+    --chp-main-dark: #009e80;
+    --chp-soft: #f5fbf9;
+    --chp-line: #dce9e6;
+    --chp-text: #1f3440;
+    --chp-muted: #5f737d;
+    --chp-white: #ffffff;
+    --chp-bg: #f4f8f7;
+    --chp-dark: #16303a;
+    --chp-shadow: 0 14px 36px rgba(31, 52, 64, 0.1);
+    --chp-scroll-margin: 72px;
+    --chp-vw: 100vw;
+    --chp-hero-h: 520px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: var(--chp-text);
+    background: var(--chp-white);
+    font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+      "Yu Gothic", "Meiryo", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    letter-spacing: 0.02em;
+    isolation: isolate;
+  }
+
+  body #chp-root h1,
+  body #chp-root h2,
+  body #chp-root h3,
+  body #chp-root p,
+  body #chp-root figure,
+  body #chp-root figcaption,
+  body #chp-root ul,
+  body #chp-root li,
+  body #chp-root nav,
+  body #chp-root article,
+  body #chp-root header,
+  body #chp-root section,
+  body #chp-root time {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  body #chp-root h1::before,
+  body #chp-root h1::after,
+  body #chp-root h2::before,
+  body #chp-root h2::after,
+  body #chp-root h3::before,
+  body #chp-root h3::after {
+    content: none !important;
+    display: none !important;
+  }
+  body #chp-root ul {
+    list-style: none;
+  }
+  body #chp-root a {
+    color: inherit;
+    text-decoration: none;
+  }
+  body #chp-root img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  body #chp-root .chp-container {
+    width: min(1160px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+  body #chp-root .chp-logos + .chp-container {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+  body #chp-root .chp-section {
+    padding: 72px 0;
+  }
+  body #chp-root #chp-news {
+    padding-top: 48px;
+  }
+  body #chp-root #chp-about .chp-sectionhead {
+    margin-bottom: 0;
+  }
+  body #chp-root .chp-section[id],
+  body #chp-root .chp-cta {
+    scroll-margin-top: var(--chp-scroll-margin);
+  }
+  body #chp-root .chp-section--alt {
+    background: var(--chp-bg);
+  }
+  body #chp-root .chp-section--soft {
+    background: var(--chp-soft);
+  }
+
+  body #chp-root .chp-sectionhead {
+    margin-bottom: 32px;
+  }
+  body #chp-root .chp-sectionhead--center {
+    text-align: center;
+  }
+  body #chp-root .chp-sectionhead--center .chp-sectionhead__text {
+    max-width: 40em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  body #chp-root .chp-sectionhead__en {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: var(--chp-main-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+  body #chp-root .chp-sectionhead--center .chp-sectionhead__en {
+    justify-content: center;
+  }
+  body #chp-root .chp-icon {
+    display: block;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    overflow: visible;
+    stroke: currentColor;
+    fill: none;
+  }
+  body #chp-root .chp-sectionhead__title {
+    color: var(--chp-navy);
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 800;
+    line-height: 1.4;
+  }
+  body #chp-root .chp-sectionhead__text {
+    margin-top: 14px;
+    color: var(--chp-muted);
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  body #chp-root .chp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  body #chp-root .chp-sectionhead--center + .chp-actions {
+    justify-content: center;
+  }
+  body #chp-root .chp-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 180px;
+    min-height: 52px;
+    padding: 13px 24px !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    text-align: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  body #chp-root .chp-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+  body #chp-root .chp-button--primary {
+    color: #fff !important;
+    background: var(--chp-main-dark) !important;
+  }
+  body #chp-root .chp-button--secondary {
+    color: var(--chp-navy) !important;
+    border-color: var(--chp-line) !important;
+    background: #fff !important;
+  }
+
+  body #chp-root .chp-hero,
+  body #chp-root .chp-logos {
+    width: var(--chp-vw) !important;
+    max-width: none !important;
+    margin-right: 0 !important;
+    margin-left: calc(50% - var(--chp-vw) / 2) !important;
+  }
+  body #chp-root .chp-hero {
+    position: relative;
+    height: var(--chp-hero-h);
+    min-height: 360px;
+    color: #fff;
+    background: #0b1c28;
+  }
+  body #chp-root .chp-hero__media {
+    position: absolute;
+    inset: 0;
+  }
+  body #chp-root .chp-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  body #chp-root .chp-hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(11, 28, 40, 0.78) 0%,
+      rgba(11, 28, 40, 0.42) 58%,
+      rgba(11, 28, 40, 0.28) 100%
+    );
+  }
+  body #chp-root .chp-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 0;
+    padding: 40px 0;
+  }
+  body #chp-root .chp-hero__eyebrow {
+    color: #8fe8d6;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+  }
+  body #chp-root .chp-hero__title,
+  body #chp-root h1.chp-hero__title.c-pageTitle {
+    max-width: 18em;
+    margin-top: 14px;
+    color: #fff;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    line-height: 1.35;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+  }
+  body #chp-root h1.chp-hero__title.c-pageTitle {
+    display: block !important;
+    width: auto;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+  body #chp-root h1.chp-hero__title.c-pageTitle::before,
+  body #chp-root h1.chp-hero__title.c-pageTitle::after {
+    content: none !important;
+    display: none !important;
+  }
+  body #chp-root .chp-hero__title-sub {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.55em;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  body #chp-root .chp-hero__lead {
+    max-width: 36em;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 700;
+    line-height: 1.7;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+  }
+  body #chp-root .chp-hero .chp-actions {
+    margin-top: 32px;
+  }
+  body #chp-root .chp-hero .chp-button--primary {
+    background: var(--chp-main) !important;
+  }
+  body #chp-root .chp-hero .chp-button--secondary {
+    color: var(--chp-navy) !important;
+    border-color: #fff !important;
+    background: #fff !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  }
+  body #chp-root .chp-hero .chp-button--secondary:hover {
+    opacity: 1;
+    background: #f5fbf9 !important;
+  }
+
+  body #chp-root .chp-logos {
+    position: relative;
+    padding: 0;
+    border-bottom: 1px solid var(--chp-line);
+    background: #fff;
+  }
+  body #chp-root .chp-logos .chp-logos__inner {
+    width: min(100% - 48px, 1800px);
+    max-width: none;
+    min-height: 148px;
+    padding: 18px 0;
+  }
+  body #chp-root .chp-logos__inner {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    align-items: center;
+    gap: 0;
+  }
+  body #chp-root .chp-logos__label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 64px;
+    padding-right: 26px;
+    border-right: 1px solid #dfe9e8;
+    color: var(--chp-main-dark);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+  body #chp-root .chp-logos__label span {
+    display: block;
+    margin-top: 4px;
+    color: var(--chp-muted);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  body #chp-root .chp-logo-marquee {
+    overflow: hidden;
+    min-width: 0;
+    padding-left: 32px;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
+  }
+  body #chp-root .chp-logo-marquee.is-dragging {
+    cursor: grabbing;
+  }
+  body #chp-root .chp-logo-marquee.is-dragging a {
+    pointer-events: none;
+  }
+  body #chp-root .chp-logo-track {
+    display: flex;
+    width: max-content;
+    animation: chpLogoScroll 90s linear infinite;
+  }
+  body #chp-root .chp-logo-track.is-manual {
+    animation: none;
+  }
+  body #chp-root .chp-logo-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 56px;
+    padding-right: 56px;
+  }
+  body #chp-root .chp-logo-item {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+  }
+  body #chp-root .chp-logo-image {
+    width: auto !important;
+    max-width: 240px !important;
+    height: auto !important;
+    max-height: 64px !important;
+    object-fit: contain;
+  }
+  @keyframes chpLogoScroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  body #chp-root nav.chp-quicknav {
+    margin: 0 auto;
+  }
+  body #chp-root .chp-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  body #chp-root .chp-quicknav__panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--chp-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #chp-root .chp-quicknav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 84px;
+    padding: 12px 8px;
+    border-right: 1px solid var(--chp-line);
+    border-bottom: 1px solid var(--chp-line);
+    color: var(--chp-navy);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+  body #chp-root .chp-quicknav__item:nth-child(4n) {
+    border-right: 0;
+  }
+  body #chp-root .chp-quicknav__item:nth-last-child(-n + 4) {
+    border-bottom: 0;
+  }
+  body #chp-root .chp-quicknav__item:hover {
+    background: var(--chp-soft);
+  }
+  body #chp-root .chp-quicknav__top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 4px;
+    color: var(--chp-main-dark);
+  }
+  body #chp-root .chp-quicknav__num {
+    display: block;
+    color: var(--chp-main-dark);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  body #chp-root .chp-quicknav__top .chp-icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  body #chp-root .chp-news {
+    display: grid;
+    gap: 0;
+    border: 1px solid var(--chp-line);
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+  }
+  body #chp-root .chp-news__item {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    padding: 16px 24px;
+    border-top: 1px solid var(--chp-line);
+  }
+  body #chp-root .chp-news__item:first-child {
+    border-top: 0;
+  }
+  body #chp-root .chp-news__item:hover {
+    background: var(--chp-soft);
+  }
+  body #chp-root .chp-news__label {
+    color: var(--chp-main-dark);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+  body #chp-root .chp-news__title {
+    color: var(--chp-navy);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.7;
+  }
+
+  body #chp-root .chp-products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  body #chp-root .chp-products--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  body #chp-root .chp-product {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--chp-line);
+    border-radius: 10px;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  body #chp-root .chp-product:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--chp-shadow);
+  }
+  body #chp-root .chp-product img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center;
+    background: var(--chp-soft);
+  }
+  body #chp-root #chp-products .chp-product img {
+    aspect-ratio: 2.1 / 1;
+    object-fit: cover;
+    object-position: center;
+  }
+  body #chp-root .chp-product:has(.chp-product__badge) {
+    overflow: visible;
+    z-index: 1;
+  }
+  body #chp-root .chp-product__media {
+    position: relative;
+    overflow: visible;
+  }
+  body #chp-root .chp-product__media > img:not(.chp-product__badge) {
+    border-radius: 10px 10px 0 0;
+  }
+  body #chp-root .chp-product__badge {
+    position: absolute;
+    top: -17px;
+    left: -20px;
+    z-index: 2;
+    width: 72px !important;
+    max-width: 34% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 50%;
+    pointer-events: none;
+    background: none;
+  }
+  body #chp-root #chp-products .chp-product__body {
+    border-top: 1px dashed var(--chp-line);
+  }
+  body #chp-root .chp-product__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 18px 22px;
+  }
+  body #chp-root .chp-product__en {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--chp-main-dark);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  body #chp-root .chp-product__en .chp-icon {
+    width: 14px;
+    height: 14px;
+  }
+  body #chp-root .chp-product__title {
+    color: var(--chp-navy);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  body #chp-root .chp-product__text {
+    color: var(--chp-muted);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.8;
+  }
+  body #chp-root .chp-product__link {
+    margin-top: auto;
+    padding-top: 8px;
+    color: var(--chp-main-dark);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  body #chp-root .chp-pickups {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  body #chp-root .chp-pickups--ranked {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  body #chp-root .chp-pickups--single {
+    grid-template-columns: 1fr;
+    max-width: none;
+    margin-inline: 0;
+  }
+  body #chp-root .chp-pickup {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--chp-line);
+    border-radius: 10px;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  body #chp-root .chp-pickup:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--chp-shadow);
+  }
+  body #chp-root .chp-pickup img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #eef3f3;
+  }
+  body #chp-root .chp-pickup--feature {
+    max-width: 720px;
+  }
+  body #chp-root .chp-pickup--quiet,
+  body #chp-root .chp-section--quiet .chp-pickup {
+    flex-direction: row;
+    align-items: center;
+    border-radius: 8px;
+  }
+  body #chp-root .chp-pickup--quiet:hover,
+  body #chp-root .chp-section--quiet .chp-pickup:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--chp-soft);
+  }
+  body #chp-root .chp-pickup--quiet img,
+  body #chp-root .chp-section--quiet .chp-pickup img {
+    width: 148px;
+    flex: 0 0 148px;
+    aspect-ratio: 16 / 10;
+  }
+  body #chp-root .chp-pickup__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 18px 22px;
+  }
+  body #chp-root .chp-pickup--quiet .chp-pickup__body,
+  body #chp-root .chp-section--quiet .chp-pickup__body {
+    padding: 14px 18px;
+    gap: 4px;
+  }
+  body #chp-root .chp-pickup__title {
+    color: var(--chp-navy);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  body #chp-root .chp-pickup--quiet .chp-pickup__title,
+  body #chp-root .chp-section--quiet .chp-pickup__title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  body #chp-root .chp-pickup__link {
+    margin-top: auto;
+    color: var(--chp-main-dark);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  body #chp-root .chp-pickup--quiet .chp-pickup__link,
+  body #chp-root .chp-section--quiet .chp-pickup__link {
+    margin-top: 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  body #chp-root .chp-section--quiet {
+    padding: 48px 0;
+  }
+  body #chp-root .chp-section--quiet .chp-pickups {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  body #chp-root .chp-section--quiet .chp-sectionhead {
+    margin-bottom: 18px;
+  }
+  body #chp-root .chp-section--quiet .chp-sectionhead__en {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  body #chp-root .chp-section--quiet .chp-sectionhead__title {
+    font-size: clamp(20px, 2.4vw, 24px);
+  }
+
+  body #chp-root .chp-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  body #chp-root .chp-column {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--chp-line);
+    border-radius: 10px;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  body #chp-root .chp-column:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--chp-shadow);
+  }
+  body #chp-root .chp-column img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #eef3f3;
+  }
+  body #chp-root .chp-column__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 18px 18px;
+  }
+  body #chp-root .chp-column__meta {
+    color: var(--chp-main-dark);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  body #chp-root .chp-column__title {
+    color: var(--chp-navy);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.55;
+  }
+
+  body #chp-root .chp-form-slot {
+    margin-top: 36px;
+  }
+  body #chp-root .wpcf7-form {
+    padding: 28px 32px 32px;
+    border: 1px solid var(--chp-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #chp-root .wpcf7-form > p {
+    margin: 0;
+  }
+  body #chp-root .wpcf7-form > p > b {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-weight: 400;
+  }
+  body #chp-root .wpcf7-form br {
+    display: none;
+  }
+  body #chp-root .wpcf7-form > p > b > .wpcf7-submit,
+  body
+    #chp-root
+    .wpcf7-form
+    > p
+    > b
+    > .wpcf7-form-control-wrap:has(.wpcf7-submit) {
+    margin-top: 8px;
+  }
+  body #chp-root .wpcf7-form > p:has(> .wpcf7-submit),
+  body #chp-root .wpcf7-form > p:has(> .wpcf7-form-control-wrap .wpcf7-submit) {
+    margin-top: 12px;
+  }
+  body #chp-root .wpcf7-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  body #chp-root .wpcf7-list-item {
+    display: block !important;
+    margin: 0 !important;
+    float: none !important;
+  }
+  body #chp-root .wpcf7-form label {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    color: var(--chp-navy);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  body #chp-root .wpcf7-form label .wpcf7-form-control-wrap {
+    flex: 1 1 100%;
+  }
+  body #chp-root .wpcf7-form input[type="text"],
+  body #chp-root .wpcf7-form input[type="email"],
+  body #chp-root .wpcf7-form input[type="tel"],
+  body #chp-root .wpcf7-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--chp-line);
+    border-radius: 6px;
+  }
+  body #chp-root .wpcf7-form textarea {
+    min-height: 120px;
+  }
+  body #chp-root .wpcf7-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    min-height: 52px;
+    margin-top: 8px;
+    padding: 13px 28px;
+    border: 0;
+    border-radius: 8px;
+    color: #fff;
+    background: var(--chp-main-dark);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  body #chp-root .chp-cta {
+    padding: 56px 0;
+    color: #fff;
+    background: var(--chp-dark);
+  }
+  body #chp-root .chp-cta__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  body #chp-root .chp-cta__title {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.6;
+  }
+  body #chp-root .chp-cta .chp-button--primary {
+    background: var(--chp-main) !important;
+  }
+
+  body #chp-root .chp-note {
+    margin-top: 12px;
+    color: var(--chp-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 1100px) {
+    body #chp-root .chp-columns {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 900px) {
+    body #chp-root .chp-products,
+    body #chp-root .chp-products--2,
+    body #chp-root .chp-pickups,
+    body #chp-root .chp-pickups--single,
+    body #chp-root .chp-cta__inner,
+    body #chp-root .chp-logos__inner {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    body #chp-root .chp-pickups--single {
+      max-width: none;
+    }
+    body #chp-root .chp-quicknav__panel {
+      grid-template-columns: 1fr 1fr;
+    }
+    body #chp-root .chp-quicknav__item:nth-child(4n) {
+      border-right: 1px solid var(--chp-line);
+    }
+    body #chp-root .chp-quicknav__item:nth-last-child(-n + 4) {
+      border-bottom: 1px solid var(--chp-line);
+    }
+    body #chp-root .chp-quicknav__item:nth-child(2n) {
+      border-right: 0;
+    }
+    body #chp-root .chp-quicknav__item:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+    body #chp-root .chp-hero__inner {
+      padding: 32px 0;
+    }
+    body #chp-root .chp-news__item {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    body #chp-root .chp-logos .chp-logos__inner {
+      min-height: 132px;
+    }
+    body #chp-root .chp-logos__label {
+      min-height: 0;
+      padding-right: 0;
+      padding-bottom: 12px;
+      border-right: 0;
+      border-bottom: 1px solid #dfe9e8;
+    }
+    body #chp-root .chp-logo-marquee {
+      padding-left: 0;
+    }
+    body #chp-root .chp-logo-group {
+      gap: 40px;
+      padding-right: 40px;
+    }
+    body #chp-root .chp-logo-item {
+      height: 56px;
+    }
+    body #chp-root .chp-logo-image {
+      max-width: 210px !important;
+      max-height: 56px !important;
+    }
+  }
+  @media (max-width: 640px) {
+    body #chp-root .chp-container {
+      width: min(100% - 28px, 1160px);
+    }
+    body #chp-root .chp-section {
+      padding: 64px 0;
+    }
+    body #chp-root .chp-columns {
+      grid-template-columns: 1fr;
+    }
+    body #chp-root .chp-actions,
+    body #chp-root .chp-cta__actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    body #chp-root .chp-button {
+      width: 100%;
+    }
+    body #chp-root .chp-hero__inner {
+      padding: 28px 0;
+    }
+    body #chp-root .chp-logos .chp-logos__inner {
+      width: calc(100% - 28px);
+      min-height: 148px;
+    }
+    body #chp-root .chp-logos__label {
+      flex-direction: row;
+      gap: 8px;
+      align-items: baseline;
+      font-size: 18px;
+    }
+    body #chp-root .chp-logos__label span {
+      margin-top: 0;
+      font-size: 12px;
+    }
+    body #chp-root .chp-logo-group {
+      gap: 32px;
+      padding-right: 32px;
+    }
+    body #chp-root .chp-logo-item {
+      height: 48px;
+    }
+    body #chp-root .chp-logo-image {
+      max-width: 180px !important;
+      max-height: 48px !important;
+    }
+    body #chp-root .chp-pickup--quiet,
+    body #chp-root .chp-section--quiet .chp-pickup {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    body #chp-root .chp-pickup--quiet img,
+    body #chp-root .chp-section--quiet .chp-pickup img {
+      width: 100%;
+      flex: none;
+    }
+    body #chp-root .chp-pickup--feature {
+      max-width: none;
+    }
+  }
+</style>
+<noscript>
+  <style>
+    body:has(#chp-root) .l-mainContent__inner > h1.c-pageTitle {
+      position: static !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 0 1em !important;
+      overflow: visible !important;
+      clip: auto !important;
+      white-space: normal !important;
+    }
+  </style>
+</noscript>
+
+<div id="chp-root">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    style="position: absolute; width: 0; height: 0; overflow: hidden"
+    aria-hidden="true">
+    <symbol
+      id="chp-i-news"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M4 5h12v14H6a2 2 0 0 1-2-2V5z" />
+      <path d="M16 8h4v9a2 2 0 0 1-2 2h-2" />
+      <path d="M8 9h5M8 13h5M8 17h3" />
+    </symbol>
+    <symbol
+      id="chp-i-cube"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
+      <path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" />
+    </symbol>
+    <symbol
+      id="chp-i-grid"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="4" y="4" width="6" height="6" rx="1" />
+      <rect x="14" y="4" width="6" height="6" rx="1" />
+      <rect x="4" y="14" width="6" height="6" rx="1" />
+      <rect x="14" y="14" width="6" height="6" rx="1" />
+    </symbol>
+    <symbol
+      id="chp-i-network"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="5" cy="12" r="2" />
+      <circle cx="19" cy="5" r="2" />
+      <circle cx="19" cy="19" r="2" />
+      <path d="M7 12h4M15.5 6.2l-3.2 4.1M15.5 17.8l-3.2-4.1" />
+    </symbol>
+    <symbol
+      id="chp-i-users"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 19c.6-3 2.8-5 6-5s5.4 2 6 5" />
+      <circle cx="17" cy="9" r="2.5" />
+      <path d="M21 19c-.4-2.2-1.8-3.8-4-4.5" />
+    </symbol>
+    <symbol
+      id="chp-i-calendar"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="4" y="5" width="16" height="15" rx="2" />
+      <path d="M8 3v4M16 3v4M4 10h16" />
+    </symbol>
+    <symbol
+      id="chp-i-file"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+      <path d="M14 3v6h6M9 13h6M9 17h4" />
+    </symbol>
+    <symbol
+      id="chp-i-mail"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="3" y="6" width="18" height="12" rx="2" />
+      <path d="M4 8l8 6 8-6" />
+    </symbol>
+    <symbol
+      id="chp-i-case"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="4" y="7" width="16" height="13" rx="2" />
+      <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M8 13h8M8 16h5" />
+    </symbol>
+    <symbol
+      id="chp-i-play"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M10 9l6 3-6 3V9z" />
+    </symbol>
+    <symbol
+      id="chp-i-cloud"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path
+        d="M7 18h10a4 4 0 0 0 .6-8 5.5 5.5 0 0 0-10.4-1.6A3.5 3.5 0 0 0 7 18z" />
+    </symbol>
+  </svg>
+
+  <section class="chp-hero chp-fullbleed">
+    <div class="chp-hero__media" aria-hidden="true">
+      <img
+        src="https://commoncom.jp/wp/wp-content/uploads/2025/10/pixta_66099554_M.jpg.webp"
+        srcset="
+          https://commoncom.jp/wp/wp-content/uploads/2025/10/pixta_66099554_M.jpg.webp          2000w,
+          https://commoncom.jp/wp/wp-content/uploads/2025/10/pixta_66099554_M.jpg-1536x849.webp 1536w,
+          https://commoncom.jp/wp/wp-content/uploads/2025/10/pixta_66099554_M.jpg-1024x566.webp 1024w,
+          https://commoncom.jp/wp/wp-content/uploads/2025/10/pixta_66099554_M.jpg-768x424.webp   768w
+        "
+        sizes="100vw"
+        width="2000"
+        height="1105"
+        alt=""
+        decoding="async"
+        fetchpriority="high" />
+    </div>
+    <div class="chp-container chp-hero__inner">
+      <div>
+        <p class="chp-hero__eyebrow">COMMONCOM / LOGI-Cube</p>
+        <p class="chp-hero__title"></p>
+        <script>
+          (function () {
+            var swellH1 = document.querySelector("h1.c-pageTitle");
+            var rootEarly = document.getElementById("chp-root");
+            var placeholder;
+            var titleMain;
+            var titleSub;
+            var raw;
+            var parts;
+            var sub;
+            function fillTitle(target, main, extra) {
+              target.textContent = "";
+              target.appendChild(document.createTextNode(main));
+              if (extra) {
+                sub = document.createElement("span");
+                sub.className = "chp-hero__title-sub";
+                sub.textContent = extra;
+                target.appendChild(sub);
+              }
+            }
+            if (!rootEarly) return;
+            placeholder = rootEarly.querySelector(".chp-hero__title");
+            titleMain = "運送・倉庫システムといえばクラウド対応「LOGI-Cube」";
+            titleSub = "";
+            if (!swellH1) {
+              if (!placeholder) return;
+              raw = (placeholder.textContent || "").replace(/\s+/g, "");
+              if (!raw) fillTitle(placeholder, titleMain, titleSub);
+              return;
+            }
+            if (!placeholder) return;
+            if (placeholder === swellH1) return;
+            raw = (swellH1.textContent || "").replace(/\s+/g, " ").trim();
+            parts = raw.split("｜");
+            if (parts.length < 2) parts = raw.split("|");
+            if (parts.length > 1) {
+              titleMain = parts[0].trim();
+              titleSub = parts.slice(1).join("｜").trim();
+            } else if (raw) {
+              titleMain = raw;
+              titleSub = "";
+            }
+            swellH1.className = "chp-hero__title c-pageTitle";
+            swellH1.removeAttribute("data-style");
+            fillTitle(swellH1, titleMain, titleSub);
+            placeholder.parentNode.replaceChild(swellH1, placeholder);
+          })();
+        </script>
+        <p class="chp-hero__lead">
+          IT支援でDX推進へ 物流事業者様と強固なパートナーシップを構築します
+        </p>
+        <div class="chp-actions">
+          <a
+            class="chp-button chp-button--primary"
+            href="https://commoncom.jp/contact/"
+            >今すぐ無料で相談する</a
+          >
+          <a
+            class="chp-button chp-button--secondary"
+            href="#chp-contact"
+            data-chp-inquiry="資料請求"
+            >資料請求</a
+          >
+          <a
+            class="chp-button chp-button--secondary"
+            href="#chp-contact"
+            data-chp-inquiry="デモ依頼"
+            >デモ依頼</a
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-logos chp-fullbleed" aria-label="導入企業様">
+    <div class="chp-container chp-logos__inner">
+      <p class="chp-logos__label">
+        導入企業様<span>（一部ご紹介　50音順）</span>
+      </p>
+      <div class="chp-logo-marquee">
+        <div class="chp-logo-track">
+          <div class="chp-logo-group">
+            <a
+              class="chp-logo-item"
+              href="http://www.akebonounyu.co.jp/index.php"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/76bda53ce16397e85f72e9afd61f3a30.jpg"
+                alt="曙運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://www.astrax.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/a5beaa59d532a14fdec1409a0ccc6c5a.jpg"
+                alt="アストラックス"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="http://www.arckanazawa.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/arc_logo.png"
+                alt="アルク"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://isesakiexpress.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/02dc2de7d618d1fb4c86536ba0e53768.png"
+                alt="ｲｾｻｷｳﾝﾕ"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://kajiwara-sangyo.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/f3d6bb164e0abcaf5a1006f47cb230b6.png"
+                alt="梶原産業"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://kyowa-corp.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/95331ba00e86a0c08b8da3f7e619fb67.png"
+                alt="協和企業"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://www.kowa-transport.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/f2e3d38f8e673e4e51a3c548974e238b.gif"
+                alt="興和運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://www.gku.group/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/GKU-logo-approved_edit.jpg"
+                alt="GKU"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://jaminter.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/cca01d5bf94bfc202ac7aa90e42c145e.png"
+                alt="ジャム・インターナショナル"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://johshotransport.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/9c3de8c475c1ef51426541cc21f997bb-scaled.jpg"
+                alt="上昇運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://t-taiseiunyu.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/4a332f05ade4ac7bb3c46c472cb5eac8.bmp"
+                alt="大成運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://www.om346.co.jp/company/dainichi/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/f_c_dainichi.jpg"
+                alt="ダイニチ"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://nextgroup.ti-n.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/035a385265e74bd544f6656035551a1c-scaled-e1788166128333.jpg"
+                alt="ネキスト"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://nonoichiunyu.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/afc9bcea83a3949d1c536fe05dcc53d8.png"
+                alt="野々市運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://www.hayakawa-st.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/55e81d2df0576bfc508c68ae5c64e18b.png"
+                alt="早川海陸運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://marui-t.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/39bae167329f7bd72b6a6cba0e6e3cf7.png"
+                alt="丸伊運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://www.mitsuwa-unyu.co.jp/index.htm"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/08/3aa5e56dc32bf15c6ac564d3a93c07ba.jpg"
+                alt="みつわ運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+            <a
+              class="chp-logo-item"
+              href="https://rikimaru-g.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><img
+                class="chp-logo-image"
+                src="https://commoncom.jp/wp/wp-content/uploads/2026/09/35f7f803049a667cfd5d3f22e3f9b340.png"
+                alt="力丸運輸"
+                width="160"
+                height="48"
+                loading="lazy"
+                decoding="async"
+            /></a>
+          </div>
+        </div>
+        <p class="chp-visually-hidden">
+          導入企業（一部、50音順）：曙運輸、アストラックス、アルク、梶原産業、協和企業、興和運輸、GKU、ジャム・インターナショナル、上昇運輸、大成運輸、ダイニチ、ネキスト、野々市運輸、早川海陸運輸、丸伊運輸、みつわ運輸、力丸運輸
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="chp-container">
+    <nav class="chp-quicknav" aria-label="ページ内メニュー">
+      <div class="chp-quicknav__panel">
+        <a class="chp-quicknav__item" href="#chp-news"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use href="#chp-i-news" xlink:href="#chp-i-news"></use></svg
+            ><span class="chp-quicknav__num">01</span></span
+          >NEWS</a
+        >
+        <a class="chp-quicknav__item" href="#chp-products"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use href="#chp-i-cube" xlink:href="#chp-i-cube"></use></svg
+            ><span class="chp-quicknav__num">02</span></span
+          >LOGI-Cube</a
+        >
+        <a class="chp-quicknav__item" href="#chp-kintone"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use href="#chp-i-grid" xlink:href="#chp-i-grid"></use></svg
+            ><span class="chp-quicknav__num">03</span></span
+          >kintone</a
+        >
+        <a class="chp-quicknav__item" href="#chp-network"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use href="#chp-i-network" xlink:href="#chp-i-network"></use></svg
+            ><span class="chp-quicknav__num">04</span></span
+          >ネットワーク</a
+        >
+        <a class="chp-quicknav__item" href="#chp-recruit"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use href="#chp-i-users" xlink:href="#chp-i-users"></use></svg
+            ><span class="chp-quicknav__num">05</span></span
+          >採用</a
+        >
+        <a class="chp-quicknav__item" href="#chp-events"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use
+                href="#chp-i-calendar"
+                xlink:href="#chp-i-calendar"></use></svg
+            ><span class="chp-quicknav__num">06</span></span
+          >展示会</a
+        >
+        <a class="chp-quicknav__item" href="#chp-columns"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use href="#chp-i-file" xlink:href="#chp-i-file"></use></svg
+            ><span class="chp-quicknav__num">07</span></span
+          >LOGIコラム</a
+        >
+        <a class="chp-quicknav__item" href="#chp-contact"
+          ><span class="chp-quicknav__top" aria-hidden="true"
+            ><svg class="chp-icon" viewBox="0 0 24 24">
+              <use href="#chp-i-mail" xlink:href="#chp-i-mail"></use></svg
+            ><span class="chp-quicknav__num">08</span></span
+          >お問い合わせ</a
+        >
+      </div>
+    </nav>
+  </div>
+
+  <section class="chp-section chp-section--soft" id="chp-about">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-case" xlink:href="#chp-i-case"></use></svg
+          >ABOUT
+        </div>
+        <h2 class="chp-sectionhead__title">会社概要</h2>
+        <p class="chp-sectionhead__text">
+          株式会社コモンコムは1992年創立。物流企業向けに、LOGI-Cube・kintone・ネットワーク・AWSを一貫して支援しています。
+        </p>
+      </header>
+      <div class="chp-actions">
+        <a
+          class="chp-button chp-button--secondary"
+          href="https://commoncom.jp/about/"
+          >会社概要を見る</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section" id="chp-news">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-news" xlink:href="#chp-i-news"></use></svg
+          >NEWS
+        </div>
+        <h2 class="chp-sectionhead__title">NEWS</h2>
+      </header>
+      <div class="chp-news">
+        <a
+          class="chp-news__item"
+          href="https://commoncom.jp/%e3%81%8a%e7%9f%a5%e3%82%89%e3%81%9b/%e3%82%a2%e3%83%93%e3%82%b9%e3%83%91%e7%a6%8f%e5%b2%a1%e3%81%a8%e3%82%b9%e3%83%9d%e3%83%b3%e3%82%b5%e3%83%bc%e5%a5%91%e7%b4%84%e3%82%92%e7%b7%a0%e7%b5%90%e3%82%92%e3%81%97%e3%81%be%e3%81%97%e3%81%9f/">
+          <div class="chp-news__label">お知らせ</div>
+          <h3 class="chp-news__title">
+            アビスパ福岡とのスポンサー契約締結について　こちら
+          </h3>
+        </a>
+        <a
+          class="chp-news__item"
+          href="https://commoncom.jp/%e4%bb%a4%e5%92%8c8%e5%b9%b4-%e7%86%8a%e6%9c%ac%e5%9c%b0%e9%9c%87%e3%81%a7%e8%a2%ab%e7%81%bd%e3%81%95%e3%82%8c%e3%81%9f%e7%9a%86%e6%a7%98%e3%81%b8/">
+          <div class="chp-news__label">お知らせ</div>
+          <h3 class="chp-news__title">令和8年 熊本地震で被災された皆様へ</h3>
+        </a>
+        <a
+          class="chp-news__item"
+          href="https://commoncom.jp/%e5%b1%95%e7%a4%ba%e4%bc%9a%e3%82%bb%e3%83%9f%e3%83%8a%e3%83%bc%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/">
+          <div class="chp-news__label">展示会</div>
+          <h3 class="chp-news__title">
+            展示会＆セミナー開催予定です。（埼玉 9/10・新潟 9/16)　こちら
+          </h3>
+        </a>
+        <a
+          class="chp-news__item"
+          href="https://commoncom.jp/column/logistics-special-designation/">
+          <div class="chp-news__label">コラム</div>
+          <h3 class="chp-news__title">
+            2026年7月　「物流特殊指定とは？」　コラムをアップしました！　こちら
+          </h3>
+        </a>
+        <a
+          class="chp-news__item"
+          href="https://commoncom.jp/column/in-house-logistics/">
+          <div class="chp-news__label">コラム</div>
+          <h3 class="chp-news__title">
+            2026年7月　「物流内製化とは？」　コラムをアップしました！　こちら
+          </h3>
+        </a>
+        <a
+          class="chp-news__item"
+          href="https://commoncom.jp/column/truck-driver-labor-management/">
+          <div class="chp-news__label">コラム</div>
+          <h3 class="chp-news__title">
+            2026年6月　「トラックドライバーの労務管理とは？」　コラムをアップしました！　こちら
+          </h3>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section chp-section--soft" id="chp-products">
+    <div class="chp-container">
+      <header class="chp-sectionhead chp-sectionhead--center">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-cube" xlink:href="#chp-i-cube"></use></svg
+          >PRODUCTS
+        </div>
+        <h2 class="chp-sectionhead__title">
+          運送・倉庫・輸出入の管理システム LOGI-Cube シリーズ
+        </h2>
+      </header>
+      <div class="chp-actions" style="margin-top: 0; margin-bottom: 32px">
+        <a
+          class="chp-button chp-button--secondary"
+          href="https://commoncom.jp/logi-cube/"
+          ><svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-cube" xlink:href="#chp-i-cube"></use></svg
+          >詳細はこちら</a
+        >
+      </div>
+      <div class="chp-products">
+        <a class="chp-product" href="https://commoncom.jp/logi-cube/express/">
+          <div class="chp-product__media">
+            <img
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/2da0762b2e2845a8640cb19990c15f8c-3.png"
+              alt="運送管理システム「LOGI-Cube EXPRESS」"
+              width="1228"
+              height="840"
+              loading="lazy"
+              decoding="async" />
+            <img
+              class="chp-product__badge"
+              src="https://commoncom.jp/wp/wp-content/uploads/2026/04/logi-cube-badge-cropped.png"
+              alt="実運送体制管理簿 対応済"
+              width="251"
+              height="239"
+              loading="lazy"
+              decoding="async" />
+          </div>
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#chp-i-cube" xlink:href="#chp-i-cube"></use></svg
+              >LOGI-Cube EXPRESS
+            </div>
+            <h3 class="chp-product__title">
+              運送管理システム LOGI-Cube EXPRESS
+            </h3>
+            <p class="chp-product__text">
+              運送業者様向けの運送管理システムです。日計表管理を基本に、日報管理、配車支援、運転者台帳、車両台帳をオプションで追加できます。デジタコや会計・給与システムとも連携し、現場の実績をまとめて把握できます。
+            </p>
+            <span class="chp-product__link">詳細はこちら</span>
+          </div>
+        </a>
+        <a class="chp-product" href="https://commoncom.jp/logi-cube/storage/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/9e586a280ecf7ff7f84d4b5f3cc9b563-1.png"
+            alt="倉庫管理システム「LOGI-Cube STORAGE」"
+            width="1228"
+            height="840"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#chp-i-cube" xlink:href="#chp-i-cube"></use></svg
+              >LOGI-Cube STORAGE
+            </div>
+            <h3 class="chp-product__title">
+              倉庫管理システム LOGI-Cube STORAGE
+            </h3>
+            <p class="chp-product__text">
+              倉庫業者様向けの倉庫管理システムです。入出庫管理、在庫の即時把握、保管料計算を行えます。LOGI-Cube
+              EXPRESSと連携すると、運送と倉庫を一体で運用できます。
+            </p>
+            <span class="chp-product__link">詳細はこちら</span>
+          </div>
+        </a>
+        <a class="chp-product" href="https://commoncom.jp/logi-cube/port/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/f3d0cc9835f856221baa44776f1cbf76-1.png"
+            alt="輸出入管理システム「LOGI-Cube PORT」"
+            width="1228"
+            height="840"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#chp-i-cube" xlink:href="#chp-i-cube"></use></svg
+              >LOGI-Cube PORT
+            </div>
+            <h3 class="chp-product__title">
+              輸出入管理システム LOGI-Cube PORT
+            </h3>
+            <p class="chp-product__text">
+              通関・フォワーダー業者様・海貨・海運業者様向けの輸出入管理システムです。煩雑な輸出入業務をシンプルにし、早く正確な遂行を支援します。受注、債権、手配、下払、実績をまとめて管理できます。
+            </p>
+            <span class="chp-product__link">詳細はこちら</span>
+          </div>
+        </a>
+      </div>
+      <div class="chp-actions" style="justify-content: center">
+        <a
+          class="chp-button chp-button--primary"
+          href="https://commoncom.jp/contact/"
+          ><svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-mail" xlink:href="#chp-i-mail"></use></svg
+          >今すぐ無料で相談する</a
+        >
+        <a
+          class="chp-button chp-button--secondary"
+          href="#chp-contact"
+          data-chp-inquiry="資料請求"
+          ><svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-file" xlink:href="#chp-i-file"></use></svg
+          >資料請求</a
+        >
+        <a
+          class="chp-button chp-button--secondary"
+          href="#chp-contact"
+          data-chp-inquiry="デモ依頼"
+          ><svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-play" xlink:href="#chp-i-play"></use></svg
+          >デモ依頼</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section" id="chp-kintone">
+    <div class="chp-container">
+      <header class="chp-sectionhead chp-sectionhead--center">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-grid" xlink:href="#chp-i-grid"></use></svg
+          >KINTONE
+        </div>
+        <h2 class="chp-sectionhead__title">
+          車両・運転者を管理する kintoneパッケージ
+        </h2>
+      </header>
+      <div class="chp-products chp-products--2">
+        <a class="chp-product" href="https://commoncom.jp/vehicleledger/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/08/hero-vehicle-ledger.jpg"
+            alt="車両台帳パッケージ for kintone"
+            width="1200"
+            height="675"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#chp-i-grid" xlink:href="#chp-i-grid"></use></svg
+              >kintone
+            </div>
+            <h3 class="chp-product__title">車両台帳パッケージ for kintone</h3>
+            <p class="chp-product__text">
+              運送・物流向けの車両管理システムです。Excelや紙の車両台帳をkintoneにまとめ、車検・点検・整備・帳票・期限アラートを一元管理します。更新・検索・共有の手間を減らせます。
+            </p>
+            <span class="chp-product__link">詳細はこちら</span>
+          </div>
+        </a>
+        <a
+          class="chp-product"
+          href="https://commoncom.jp/%e9%81%8b%e8%bb%a2%e8%80%85%e5%8f%b0%e5%b8%b3%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8-for-kintone/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/08/hero-driver-ledger.png"
+            alt="運転者台帳パッケージ for kintone"
+            width="1200"
+            height="675"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#chp-i-grid" xlink:href="#chp-i-grid"></use></svg
+              >kintone
+            </div>
+            <h3 class="chp-product__title">運転者台帳パッケージ for kintone</h3>
+            <p class="chp-product__text">
+              運送会社の運転者情報をkintoneで管理するパッケージです。紙やExcelに散らばった免許・適性診断などの情報を一つに集め、最新状況の把握と共有を容易にします。車両台帳パッケージとも連携できます。
+            </p>
+            <span class="chp-product__link">詳細はこちら</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section chp-section--soft" id="chp-network">
+    <div class="chp-container">
+      <header class="chp-sectionhead chp-sectionhead--center">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-network" xlink:href="#chp-i-network"></use></svg
+          >NETWORK / SECURITY
+        </div>
+        <h2 class="chp-sectionhead__title">
+          物流現場のネットワーク・セキュリティ対策
+        </h2>
+        <p class="chp-sectionhead__text">
+          通信の不安定さや外部からの脅威——物流現場の“つながり”は、積極的に守るべき企業資産です。<br />コモンコムは、現場起点でネットワークとセキュリティの安心を設計します。
+        </p>
+      </header>
+      <div class="chp-products chp-products--2">
+        <a
+          class="chp-product"
+          href="https://commoncom.jp/%e3%83%8d%e3%83%83%e3%83%88%e3%83%af%e3%83%bc%e3%82%af%e3%83%bb%e3%82%bb%e3%82%ad%e3%83%a5%e3%83%aa%e3%83%86%e3%82%a3%e5%af%be%e7%ad%96/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/3952901_s.jpg"
+            alt="ネットワーク・セキュリティ対策"
+            width="640"
+            height="427"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use
+                  href="#chp-i-network"
+                  xlink:href="#chp-i-network"></use></svg
+              >NETWORK
+            </div>
+            <h3 class="chp-product__title">ネットワーク・セキュリティ対策</h3>
+            <p class="chp-product__text">
+              物流現場の通信環境を守るサービスです。通信の不安定さや外部脅威から、現場のつながりを守ります。現場起点でネットワーク設計とセキュリティ対策を行います。
+            </p>
+            <span class="chp-product__link">セキュリティ対策はこちら</span>
+          </div>
+        </a>
+        <a class="chp-product" href="https://commoncom.jp/aws/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/03/pixta_98555520_M-1024x576.jpg"
+            alt="AWS導入支援サービス"
+            width="1024"
+            height="576"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#chp-i-cloud" xlink:href="#chp-i-cloud"></use></svg
+              >AWS
+            </div>
+            <h3 class="chp-product__title">AWS導入支援サービス</h3>
+            <p class="chp-product__text">
+              物流企業向けのAWS導入支援です。要件整理から設計・構築・運用まで一貫して支援します。ご状況に応じて、無理のない導入計画と継続的な運用体制の構築をご提案します。
+            </p>
+            <span class="chp-product__link">AWSはこちら</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section" id="chp-cases">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-case" xlink:href="#chp-i-case"></use></svg
+          >CASE
+        </div>
+        <h2 class="chp-sectionhead__title">物流システム導入事例</h2>
+      </header>
+      <div class="chp-products chp-products--2">
+        <a class="chp-product" href="https://commoncom.jp/jirei/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/25399648_s.jpg.webp"
+            alt="導入事例、集めました"
+            width="640"
+            height="427"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-product__body">
+            <div class="chp-product__en">
+              <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#chp-i-case" xlink:href="#chp-i-case"></use></svg
+              >CASE
+            </div>
+            <h3 class="chp-product__title">導入事例、集めました</h3>
+            <p class="chp-product__text">
+              運送・倉庫・通関など、物流現場ごとの導入事例です。課題の違いに合わせた支援の進め方を、事例集から確認できます。
+            </p>
+            <span class="chp-product__link">⇛事例を見る(KAIZEN)</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section chp-section--quiet" id="chp-video">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-play" xlink:href="#chp-i-play"></use></svg
+          >VIDEO
+        </div>
+        <h2 class="chp-sectionhead__title">動画</h2>
+      </header>
+      <div class="chp-pickups chp-pickups--single">
+        <a
+          class="chp-pickup chp-pickup--quiet"
+          href="https://www.youtube.com/channel/UCYgzZZNG1v6l-cI6EQJdsbw"
+          target="_blank"
+          rel="noopener noreferrer">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/26856870_s.jpg.webp"
+            alt="LOGI-Cubeの動画、あります"
+            width="640"
+            height="440"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-pickup__body">
+            <h3 class="chp-pickup__title">LOGI-Cubeの動画、あります</h3>
+            <span class="chp-pickup__link"
+              >⇒動画を見る（コモンコムチャンネル）</span
+            >
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section chp-section--quiet" id="chp-recruit">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-users" xlink:href="#chp-i-users"></use></svg
+          >RECRUIT
+        </div>
+        <h2 class="chp-sectionhead__title">採用</h2>
+      </header>
+      <div class="chp-pickups chp-pickups--single">
+        <a class="chp-pickup" href="https://commoncom.jp/%e6%8e%a1%e7%94%a8/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/image1-1.jpg-2.webp"
+            alt="新卒募集中です"
+            width="640"
+            height="478"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-pickup__body">
+            <h3 class="chp-pickup__title">新卒募集中です</h3>
+            <span class="chp-pickup__link">⇛どんな職場か見てみる</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section chp-section--quiet" id="chp-events">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-calendar" xlink:href="#chp-i-calendar"></use></svg
+          >EVENT
+        </div>
+        <h2 class="chp-sectionhead__title">展示会＆セミナー</h2>
+      </header>
+      <div class="chp-pickups">
+        <a
+          class="chp-pickup"
+          href="https://evort.jp/commoncom"
+          target="_blank"
+          rel="noopener noreferrer">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/28401418_s.jpg.webp"
+            alt="オンライン展示会にも出展しています"
+            width="640"
+            height="427"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-pickup__body">
+            <h3 class="chp-pickup__title">
+              オンライン展示会にも出展しています
+            </h3>
+            <span class="chp-pickup__link">⇛展示会をのぞいてみる</span>
+          </div>
+        </a>
+        <a
+          class="chp-pickup"
+          href="https://commoncom.jp/%e5%b1%95%e7%a4%ba%e4%bc%9a%e3%82%bb%e3%83%9f%e3%83%8a%e3%83%bc%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2025/10/d53e5269c9322e4dfba1d426b77ecbb5-300x200.jpg.webp"
+            alt="リアル展示会も開催しています"
+            width="300"
+            height="200"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-pickup__body">
+            <h3 class="chp-pickup__title">リアル展示会も開催しています</h3>
+            <span class="chp-pickup__link"
+              >⇛体感したい(日程をチェックする)</span
+            >
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section" id="chp-columns">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-file" xlink:href="#chp-i-file"></use></svg
+          >COLUMN
+        </div>
+        <h2 class="chp-sectionhead__title">物流の法令・労務コラム</h2>
+      </header>
+      <div class="chp-columns">
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/logistics-special-designation/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/07/34458399_s.jpg"
+            alt="物流特殊指定とは？対象・禁止行為・違反事例と企業の対応を解説"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-07-27">2026年7月27日</time>
+            </div>
+            <h3 class="chp-column__title">
+              物流特殊指定とは？対象・禁止行為・違反事例と企業の対応を解説
+            </h3>
+          </div>
+        </a>
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/in-house-logistics/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/07/image7.jpg"
+            alt="物流内製化とは？メリット・デメリット・進め方と効果が出やすい企業を解説"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-07-17">2026年7月17日</time>
+            </div>
+            <h3 class="chp-column__title">
+              物流内製化とは？メリット・デメリット・進め方と効果が出やすい企業を解説
+            </h3>
+          </div>
+        </a>
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/truck-driver-labor-management/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/06/image1.jpg"
+            alt="トラックドライバーの労務管理とは？法令遵守と物流2026年問題への対応ポイントを解説"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-06-24">2026年6月24日</time>
+            </div>
+            <h3 class="chp-column__title">
+              トラックドライバーの労務管理とは？法令遵守と物流2026年問題への対応ポイントを解説
+            </h3>
+          </div>
+        </a>
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/operation-management-if-it-exceeds-15-hours/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/06/image2-1.jpg"
+            alt="運行管理で15時間超えた場合はどうなる？基本ルールを確認しよう"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-06-16">2026年6月16日</time>
+            </div>
+            <h3 class="chp-column__title">
+              運行管理で15時間超えた場合はどうなる？基本ルールを確認しよう
+            </h3>
+          </div>
+        </a>
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/fuel-surcharge-system/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/05/image4-2.jpg"
+            alt="燃料サーチャージ制度とは？仕組み・計算方法・導入背景をわかりやすく解説"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-06-03">2026年6月3日</time>
+            </div>
+            <h3 class="chp-column__title">
+              燃料サーチャージ制度とは？仕組み・計算方法・導入背景をわかりやすく解説
+            </h3>
+          </div>
+        </a>
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/workplace-certification-system-for-a-comfortable-working-environment/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/05/image7-1.jpg"
+            alt="働きやすい職場認証制度とは？取得メリット・認証基準・申請方法をわかりやすく解説"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-05-22">2026年5月22日</time>
+            </div>
+            <h3 class="chp-column__title">
+              働きやすい職場認証制度とは？取得メリット・認証基準・申請方法をわかりやすく解説
+            </h3>
+          </div>
+        </a>
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/logistics-laws-guide/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/05/image9.jpg"
+            alt="運送業の法律一覧と重要ポイント｜違反事例・罰則・法改正についても解説"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-05-15">2026年5月15日</time>
+            </div>
+            <h3 class="chp-column__title">
+              運送業の法律一覧と重要ポイント｜違反事例・罰則・法改正についても解説
+            </h3>
+          </div>
+        </a>
+        <a
+          class="chp-column"
+          href="https://commoncom.jp/column/%e4%b8%8b%e8%ab%8b%e6%b3%95%e3%81%a7%e9%81%8b%e9%80%81%e5%a7%94%e8%a8%97%e3%81%af%e3%81%a9%e3%81%86%e5%a4%89%e3%82%8f%e3%82%8b%ef%bc%9f%e7%89%b9%e5%ae%9a%e9%81%8b%e9%80%81%e5%a7%94%e8%a8%97%e3%81%ae/">
+          <img
+            src="https://commoncom.jp/wp/wp-content/uploads/2026/04/image1.jpg"
+            alt="下請法で運送委託はどう変わる？特定運送委託の条件と実務対応を解説"
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async" />
+          <div class="chp-column__body">
+            <div class="chp-column__meta">
+              <time datetime="2026-05-01">2026年5月1日</time>
+            </div>
+            <h3 class="chp-column__title">
+              下請法で運送委託はどう変わる？特定運送委託の条件と実務対応を解説
+            </h3>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-cta">
+    <div class="chp-container chp-cta__inner">
+      <h2 class="chp-cta__title">
+        多数の導入事例からご相談にお応えします。<br />まずはお気軽にご相談ください！<br />お客様の声でLOGI-Cubeは常に進化し続けています。
+      </h2>
+      <div class="chp-cta__actions chp-actions" style="margin-top: 0">
+        <a class="chp-button chp-button--primary" href="#chp-contact"
+          ><svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-mail" xlink:href="#chp-i-mail"></use></svg
+          >お問い合わせ</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <section class="chp-section" id="chp-contact">
+    <div class="chp-container">
+      <header class="chp-sectionhead">
+        <div class="chp-sectionhead__en">
+          <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#chp-i-mail" xlink:href="#chp-i-mail"></use></svg
+          >CONTACT
+        </div>
+        <h2 class="chp-sectionhead__title">お問い合わせフォーム</h2>
+        <p class="chp-note">
+          ※
+          サービスに関するお問い合わせ以外（営業目的など）のご連絡はお断りしております。
+        </p>
+      </header>
+      <div id="chp-form-slot" class="chp-form-slot"></div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var root = document.getElementById("chp-root");
+      if (!root) return;
+
+      var heroTitleText = "運送・倉庫システムといえばクラウド対応「LOGI-Cube」";
+
+      function injectJsonLd() {
+        var orgId = "https://commoncom.jp/#organization";
+        var siteId = "https://commoncom.jp/#website";
+        var pageUrl = "https://commoncom.jp/";
+        var data = {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": orgId,
+              name: "株式会社コモンコム",
+              alternateName: "コモンコム",
+              url: pageUrl,
+              foundingDate: "1992-09",
+              description:
+                "物流企業向けシステム開発と販売を行うソフトメーカー。運送・倉庫・輸出入管理システム LOGI-Cube、kintone、AWS、ネットワーク・セキュリティを提供。",
+              address: {
+                "@type": "PostalAddress",
+                addressCountry: "JP",
+                addressRegion: "福岡県",
+                addressLocality: "福岡市東区",
+                streetAddress: "千早5-13-38 ルリアン香椎参道6階",
+              },
+              telephone: "092-410-5113",
+            },
+            {
+              "@type": "WebSite",
+              "@id": siteId,
+              url: pageUrl,
+              name: heroTitleText,
+              publisher: { "@id": orgId },
+              inLanguage: "ja",
+            },
+            {
+              "@type": "WebPage",
+              "@id": pageUrl,
+              url: pageUrl,
+              name: heroTitleText,
+              description:
+                "IT支援でDX推進へ 物流事業者様と強固なパートナーシップを構築します",
+              isPartOf: { "@id": siteId },
+              about: { "@id": orgId },
+              inLanguage: "ja",
+            },
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "ホーム",
+                  item: pageUrl,
+                },
+              ],
+            },
+            {
+              "@type": "ItemList",
+              name: "運送・倉庫・輸出入の管理システム LOGI-Cube シリーズ",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "LOGI-Cube EXPRESS",
+                  description: "運送業者様向け 運送管理システム",
+                  url: "https://commoncom.jp/logi-cube/express/",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "LOGI-Cube STORAGE",
+                  description: "倉庫業者様向け 倉庫管理システム",
+                  url: "https://commoncom.jp/logi-cube/storage/",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: "LOGI-Cube PORT",
+                  description:
+                    "通関・フォワーダー業者様・海貨・海運業者様向け 輸出入管理システム",
+                  url: "https://commoncom.jp/logi-cube/port/",
+                },
+              ],
+            },
+          ],
+        };
+        var el = document.createElement("script");
+        el.type = "application/ld+json";
+        el.setAttribute("data-chp-ld", "1");
+        el.text = JSON.stringify(data);
+        document.head.appendChild(el);
+      }
+
+      injectJsonLd();
+
+      function removeInjectedLogos() {
+        var injected = document.getElementById("cc-logo-showcase-injected");
+        if (!injected) return;
+        if (injected.parentNode) injected.parentNode.removeChild(injected);
+      }
+      function cloneLogoMarquee() {
+        var track = root.querySelector(".chp-logo-track");
+        if (!track) return;
+        if (track.querySelector(".chp-logo-group--clone")) return;
+        var group = track.querySelector(".chp-logo-group");
+        if (!group) return;
+        var clone = group.cloneNode(true);
+        clone.className = group.className + " chp-logo-group--clone";
+        clone.setAttribute("aria-hidden", "true");
+        var links = clone.querySelectorAll("a");
+        var i;
+        var span;
+        var link;
+        for (i = 0; i < links.length; i++) {
+          link = links[i];
+          span = document.createElement("span");
+          span.className = link.className;
+          while (link.firstChild) span.appendChild(link.firstChild);
+          if (link.parentNode) link.parentNode.replaceChild(span, link);
+        }
+        var imgs = clone.querySelectorAll("img");
+        for (i = 0; i < imgs.length; i++) {
+          imgs[i].alt = "";
+          imgs[i].setAttribute("loading", "lazy");
+        }
+        track.appendChild(clone);
+      }
+      function enableLogoMarqueeDrag() {
+        var marquee = root.querySelector(".chp-logo-marquee");
+        var track = root.querySelector(".chp-logo-track");
+        var group;
+        var offset = 0;
+        var holding = false;
+        var dragged = false;
+        var startX = 0;
+        var startOffset = 0;
+        var lastTime = 0;
+        var pointerId = null;
+        var loopMs = 90000;
+        var dragPx = 10;
+        var imgs;
+        var i;
+        if (!marquee) return;
+        if (!track) return;
+        group = track.querySelector(".chp-logo-group");
+        if (!group) return;
+        if (track.classList) track.classList.add("is-manual");
+        imgs = marquee.querySelectorAll("img");
+        for (i = 0; i < imgs.length; i++) {
+          imgs[i].setAttribute("draggable", "false");
+        }
+        function groupWidth() {
+          return group.offsetWidth;
+        }
+        function wrap(value) {
+          var width = groupWidth();
+          if (width <= 0) return value;
+          value = value % width;
+          if (value > 0) value -= width;
+          return value;
+        }
+        function apply() {
+          track.style.transform = "translate3d(" + offset + "px, 0, 0)";
+        }
+        function samePointer(e) {
+          if (pointerId === null) return true;
+          return e.pointerId === pointerId;
+        }
+        function onPointerDown(e) {
+          if (e.pointerType === "mouse") {
+            if (e.button !== 0) return;
+          }
+          holding = true;
+          dragged = false;
+          startX = e.clientX;
+          startOffset = offset;
+          pointerId = e.pointerId;
+        }
+        function beginDrag(e) {
+          dragged = true;
+          if (marquee.classList) marquee.classList.add("is-dragging");
+          if (marquee.setPointerCapture) {
+            try {
+              marquee.setPointerCapture(e.pointerId);
+            } catch (err) {}
+          }
+        }
+        function onPointerMove(e) {
+          var dx;
+          if (!holding) return;
+          if (!samePointer(e)) return;
+          dx = e.clientX - startX;
+          if (!dragged) {
+            if (dx <= dragPx) {
+              if (dx >= -dragPx) return;
+            }
+            beginDrag(e);
+          }
+          offset = wrap(startOffset + dx);
+          apply();
+        }
+        function endDrag(e) {
+          if (!holding) return;
+          if (!samePointer(e)) return;
+          holding = false;
+          pointerId = null;
+          if (marquee.classList) marquee.classList.remove("is-dragging");
+          if (marquee.releasePointerCapture) {
+            try {
+              marquee.releasePointerCapture(e.pointerId);
+            } catch (err2) {}
+          }
+        }
+        function onClick(e) {
+          if (!dragged) return;
+          e.preventDefault();
+          e.stopPropagation();
+          dragged = false;
+        }
+        function tick(now) {
+          var width;
+          var dt;
+          if (!lastTime) lastTime = now;
+          dt = now - lastTime;
+          lastTime = now;
+          if (!holding) {
+            width = groupWidth();
+            if (width > 0) {
+              if (dt > 0) {
+                if (dt < 80) {
+                  offset = wrap(offset - (width * dt) / loopMs);
+                  apply();
+                }
+              }
+            }
+          }
+          window.requestAnimationFrame(tick);
+        }
+        marquee.addEventListener("pointerdown", onPointerDown);
+        document.addEventListener("pointermove", onPointerMove);
+        document.addEventListener("pointerup", endDrag);
+        document.addEventListener("pointercancel", endDrag);
+        marquee.addEventListener("click", onClick, true);
+        marquee.addEventListener("dragstart", function (e) {
+          e.preventDefault();
+        });
+        apply();
+        window.requestAnimationFrame(tick);
+      }
+      removeInjectedLogos();
+      cloneLogoMarquee();
+      enableLogoMarqueeDrag();
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", removeInjectedLogos);
+      }
+
+      function headerEl() {
+        var header = document.querySelector("#header");
+        if (header) return header;
+        header = document.querySelector(".l-header");
+        if (header) return header;
+        var headers = document.querySelectorAll("header");
+        var i;
+        for (i = 0; i < headers.length; i++) {
+          if (!root.contains(headers[i])) return headers[i];
+        }
+        return null;
+      }
+      function headerOffset() {
+        var header = headerEl();
+        if (header) return header.offsetHeight + 16;
+        return 72;
+      }
+      function updateFirstFold() {
+        var header = headerEl();
+        var logos = root.querySelector(".chp-logos");
+        var headerH = 0;
+        var logosH = 0;
+        if (header) headerH = header.offsetHeight;
+        if (logos) logosH = logos.offsetHeight;
+        var fold = window.innerHeight - headerH - logosH;
+        if (fold < 360) fold = 360;
+        root.style.setProperty(
+          "--chp-vw",
+          document.documentElement.clientWidth + "px",
+        );
+        root.style.setProperty("--chp-hero-h", fold + "px");
+      }
+      function restoreSiteHeaderLogo() {
+        var slot = document.querySelector("#header .l-header__logo");
+        var src;
+        var header;
+        if (!slot) return;
+        if (slot.querySelector(".c-headLogo")) return;
+        src = document.querySelector(
+          "#fix_header .l-fixHeader__logo .c-headLogo",
+        );
+        if (!src) src = document.querySelector("#fix_header .c-headLogo");
+        if (!src) return;
+        slot.appendChild(src.cloneNode(true));
+        header = document.querySelector("#header");
+        if (header) {
+          document.documentElement.style.setProperty(
+            "--swl-headerH",
+            header.offsetHeight + "px",
+          );
+        }
+        updateFirstFold();
+      }
+      function watchSiteHeaderLogo() {
+        var slot = document.querySelector("#header .l-header__logo");
+        restoreSiteHeaderLogo();
+        if (!slot) return;
+        if (!window.MutationObserver) return;
+        var obs = new MutationObserver(function () {
+          restoreSiteHeaderLogo();
+        });
+        obs.observe(slot, { childList: true });
+      }
+      function updateScrollMargin() {
+        root.style.setProperty("--chp-scroll-margin", headerOffset() + "px");
+        updateFirstFold();
+      }
+      function scrollToTarget(target, behavior) {
+        var top =
+          target.getBoundingClientRect().top +
+          window.pageYOffset -
+          headerOffset();
+        window.scrollTo({ top: top, behavior: behavior || "auto" });
+      }
+      function getHashTarget(hash) {
+        var id = (hash || "").replace("#", "");
+        if (!id) return null;
+        return document.getElementById(id);
+      }
+
+      document.addEventListener(
+        "click",
+        function (e) {
+          if (e.defaultPrevented) return;
+          if (e.button !== 0) return;
+          if (e.metaKey) return;
+          if (e.ctrlKey) return;
+          if (e.shiftKey) return;
+          if (e.altKey) return;
+          var link = e.target.closest("a");
+          if (!link) return;
+          if (link.getAttribute("target") === "_blank") return;
+          var href = link.getAttribute("href");
+          if (!href) return;
+          if (href.indexOf("#") === -1) return;
+          var url;
+          try {
+            url = new URL(link.href, location.href);
+          } catch (err) {
+            return;
+          }
+          if (url.hash.length < 2) return;
+          var samePath = true;
+          try {
+            samePath =
+              decodeURIComponent(url.pathname) ===
+              decodeURIComponent(location.pathname);
+          } catch (err2) {
+            samePath = url.pathname === location.pathname;
+          }
+          if (!samePath) return;
+          var target = getHashTarget(url.hash);
+          if (!target) return;
+          if (!root.contains(target)) return;
+          e.preventDefault();
+          e.stopPropagation();
+          var inquiry = link.getAttribute("data-chp-inquiry");
+          if (inquiry) applyInquiry(inquiry, true);
+          if (history.pushState) history.pushState(null, "", url.hash);
+          scrollToTarget(target, "smooth");
+        },
+        true,
+      );
+
+      function syncHashScroll(behavior) {
+        var target = getHashTarget(location.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        scrollToTarget(target, behavior || "auto");
+      }
+      window.addEventListener("hashchange", function () {
+        syncHashScroll("smooth");
+      });
+      window.addEventListener("resize", updateScrollMargin);
+      window.addEventListener("load", function () {
+        restoreSiteHeaderLogo();
+        updateFirstFold();
+      });
+      watchSiteHeaderLogo();
+      setTimeout(restoreSiteHeaderLogo, 0);
+      setTimeout(restoreSiteHeaderLogo, 100);
+      setTimeout(restoreSiteHeaderLogo, 400);
+      updateScrollMargin();
+      if (window.ResizeObserver) {
+        var foldObserver = new ResizeObserver(function () {
+          updateFirstFold();
+        });
+        var logos = root.querySelector(".chp-logos");
+        var header = headerEl();
+        if (logos) foldObserver.observe(logos);
+        if (header) foldObserver.observe(header);
+      }
+      function correctHashScroll() {
+        if (!location.hash) return;
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 0);
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 80);
+      }
+      if (document.readyState === "complete") correctHashScroll();
+      else window.addEventListener("load", correctHashScroll);
+
+      var pendingInquiry = "";
+      function applyInquiry(value, reset) {
+        if (reset) pendingInquiry = value || "";
+        else if (value) pendingInquiry = value;
+        var form = root.querySelector(".wpcf7-form");
+        if (!form) form = document.querySelector(".wpcf7-form");
+        if (!form) return;
+        var inputs = form.querySelectorAll('input[type="checkbox"]');
+        var i;
+        var input;
+        for (i = 0; i < inputs.length; i++) {
+          input = inputs[i];
+          if (input.name) {
+            if (input.name.indexOf("_") === 0) continue;
+          }
+          input.checked = false;
+          if (pendingInquiry) {
+            if (input.value === pendingInquiry) input.checked = true;
+          }
+        }
+      }
+
+      function findContactFormNode() {
+        var scope = root.parentElement || document;
+        var wraps = scope.querySelectorAll(
+          ".wp-block-contact-form-7-contact-form-selector",
+        );
+        var i;
+        for (i = 0; i < wraps.length; i++) {
+          if (!root.contains(wraps[i])) return wraps[i];
+        }
+        var forms = scope.querySelectorAll(".wpcf7");
+        for (i = 0; i < forms.length; i++) {
+          if (!root.contains(forms[i])) return forms[i];
+        }
+        var wrap = document.querySelector(
+          ".wp-block-contact-form-7-contact-form-selector",
+        );
+        if (wrap) return wrap;
+        return document.querySelector(".wpcf7");
+      }
+      function mountContactForm() {
+        var slot = root.querySelector("#chp-form-slot");
+        if (!slot) return false;
+        if (slot.querySelector(".wpcf7")) {
+          applyInquiry("", false);
+          return true;
+        }
+        var node = findContactFormNode();
+        if (!node) return false;
+        if (root.contains(node)) return false;
+        slot.appendChild(node);
+        applyInquiry("", false);
+        return true;
+      }
+      var formObserver = new MutationObserver(function () {
+        if (mountContactForm()) formObserver.disconnect();
+      });
+      formObserver.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", mountContactForm);
+      } else {
+        mountContactForm();
+      }
+      window.addEventListener("load", function () {
+        mountContactForm();
+        setTimeout(function () {
+          formObserver.disconnect();
+        }, 2000);
+      });
+    })();
+  </script>
+</div>
+</div></body></html>
