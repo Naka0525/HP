@@ -1,0 +1,3216 @@
+<!-- @format -->
+
+<meta charset="utf-8" />
+<!--
+  LOGI-Cube PORT LP (リニューアル版) for WordPress / SWELL
+  - 目的：LOGI-Cube EXPRESS（LOGI-Cube EXPRESS/express.html）・LOGI-Cube STORAGE（LOGI-Cube STORAGE/storage.html）と見た目をそろえる。
+    掲載内容は現行ページ https://commoncom.jp/logi-cube/port/ の文言・画像・動画・FAQ・関連コラムをそのまま使い、見せ方だけを EXPRESS / STORAGE に合わせて再構成
+  - 配色・余白・角丸・ボタン・見出しなどのデザイントークンは EXPRESS / STORAGE と同一
+    （ネイビー #0d2534 / ティール #00b794 / CTA専用オレンジ #f59a1d）
+  - 汎用クラスを使わず lpt- プレフィックスで隔離。すべてのCSSを #lpt-root 配下にスコープ
+    （EXPRESS の lxp-、STORAGE の lst- と名前を分け、万一同じページに並んでも干渉しないようにする）
+  - 現行ページの「受注管理」「手配管理」「債権管理」「下払管理」「実績管理」の5機能は、EXPRESS と同じ機能タブで見せる
+    （タブUIはプログレッシブエンハンスメント：JS無効時は全パネルが縦に並んで表示される）
+  - EXPRESS にある「導入企業ロゴの自動スクロール」「お問い合わせフォーム埋め込み」は持たない
+    （STORAGE と同じく、現行ページどおりお問い合わせページへリンク）
+  - 関連コラムは自動更新にする。WordPress でこのHTMLブロックの直後に SWELL「投稿リスト」ブロックを置き、
+    JS で COLUMN セクションの枠（#lpt-columns-slot）へ移す。ブロックの設定は次のとおり
+    カテゴリー: PORT（ID 20） / 表示件数: 3 / 並び順: 新着順 / 表示タイプ: カード
+    （グループなどで囲まず、HTMLブロックのすぐ後ろに置く。コラムに「PORT」カテゴリーを付けると自動で表示される）
+  - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子(&の連続)を使わない
+  - SWELL の h1.c-pageTitle は残し、直書きHTMLでは h1 もタイトル文言も書かない。
+    プレースホルダ p.lpt-hero__title は空にして、JS で SWELL の h1 と差し替える。
+    初期HTMLにタイトルを2つ置くと、JSを実行しないSEOクローラが見出しを二重に拾う
+  - SWELL のページタイトルは「｜」で区切ると、前半が小見出し・後半が大見出しとしてヒーローに表示される。
+    現行タイトル「輸出入管理システム「PORT」」には「｜」が無く、大見出しが出ないため、公開時に次へ変更する
+  - 公開後は SWELL のタイトル / SEO 欄にも次を手入力する（SNSクローラは JS を実行しない）
+    ページタイトル（H1）: 輸出入管理システム LOGI-Cube PORT｜受注から実績管理まで、輸出入業務をシンプルに
+    description: 通関・フォワーダー・海貨・海運業者向けの輸出入管理システム。受注・手配・債権・下払・実績管理に対応し、SHIPPING INSTRUCTION・B/L・A/N・DELIVERY ORDER などの書類発行、請求書・立替請求書の発行、仕訳連携が可能です。
+    OGP画像: 製品画像（port_product.png）など、メディア内の画像URLを入れる
+    Twitterカード: summary_large_image
+  - SWELL の遅延読み込み二重出力を避けるため、ファーストビュー画像には skip-lazy を付ける
+  - ヒーローは WP 余白を打ち消して全幅。ヘッダー＋ヒーローが画面高さいっぱいに収まる
+    （STORAGE と同じくロゴ帯が無いので、ヘッダー分だけを引く）
+  - 初回表示のがたつきを避けるため、ヒーロー高さは 100svh からヘッダーを引いた CSS を初期値にし、#lpt-root 直後のスクリプトで実測値を先に入れる
+-->
+<style>
+  /* SWELL 標準のページタイトルは画面外へ隠す（JS でヒーロー内へ移動して表示する） */
+  body:has(#lpt-root) .l-mainContent__inner > h1.c-pageTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  body:has(#lpt-root) {
+    overflow-x: clip;
+  }
+  body:has(#lpt-root) .l-content,
+  body:has(#lpt-root) .l-mainContent,
+  body:has(#lpt-root) .l-mainContent__inner,
+  body:has(#lpt-root) .p-entryContent,
+  body:has(#lpt-root) .post_content,
+  body:has(#lpt-root) article {
+    overflow: visible !important;
+  }
+  body:has(#lpt-root) .l-content,
+  body:has(#lpt-root) .l-content.l-container,
+  body:has(#lpt-root) .l-mainContent,
+  body:has(#lpt-root) .l-article,
+  body:has(#lpt-root) .l-mainContent__inner,
+  body:has(#lpt-root) .p-entryContent,
+  body:has(#lpt-root) .post_content {
+    padding-top: 0 !important;
+  }
+
+  body #lpt-root,
+  body #lpt-root *,
+  body #lpt-root *::before,
+  body #lpt-root *::after {
+    box-sizing: border-box;
+  }
+
+  /* ---- デザイントークン（EXPRESS と同じ値） ---- */
+  body #lpt-root {
+    --lpt-navy: #0d2534;
+    --lpt-navy-2: #123a4a;
+    --lpt-ink: #1c3242;
+    --lpt-muted: #5b7180;
+    --lpt-teal: #00b794;
+    --lpt-teal-dark: #009579;
+    --lpt-orange: #f59a1d;
+    --lpt-orange-dark: #e2890f;
+    --lpt-soft: #f2f8f6;
+    --lpt-line: #dfe9e5;
+    --lpt-white: #ffffff;
+    --lpt-radius: 14px;
+    --lpt-shadow: 0 10px 30px rgba(13, 37, 52, 0.08);
+    --lpt-shadow-lg: 0 24px 60px rgba(13, 37, 52, 0.16);
+    --lpt-scroll-margin: 72px;
+    --lpt-header-h: var(--swl-headerH, 73px);
+    --lpt-vw: 100vw;
+    /* ロゴ帯が無いため、ヒーロー高さは「画面高さ − ヘッダー高さ」 */
+    --lpt-hero-h: 520px;
+    --lpt-hero-h: max(360px, calc(100vh - var(--lpt-header-h)));
+    --lpt-hero-h: max(360px, calc(100svh - var(--lpt-header-h)));
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: var(--lpt-ink);
+    background: var(--lpt-white);
+    font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+      "Yu Gothic", "Meiryo", sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+    isolation: isolate;
+  }
+
+  /* ---- SWELL 側のスタイルをリセット ---- */
+  body #lpt-root h1,
+  body #lpt-root h2,
+  body #lpt-root h3,
+  body #lpt-root h4,
+  body #lpt-root p,
+  body #lpt-root figure,
+  body #lpt-root figcaption,
+  body #lpt-root ul,
+  body #lpt-root ol,
+  body #lpt-root li,
+  body #lpt-root dl,
+  body #lpt-root dt,
+  body #lpt-root dd,
+  body #lpt-root nav,
+  body #lpt-root article,
+  body #lpt-root header,
+  body #lpt-root section,
+  body #lpt-root details,
+  body #lpt-root summary,
+  body #lpt-root button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    font-family: inherit;
+  }
+
+  body #lpt-root h1::before,
+  body #lpt-root h1::after,
+  body #lpt-root h2::before,
+  body #lpt-root h2::after,
+  body #lpt-root h3::before,
+  body #lpt-root h3::after,
+  body #lpt-root h4::before,
+  body #lpt-root h4::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body #lpt-root ul,
+  body #lpt-root ol {
+    list-style: none;
+  }
+  body #lpt-root a {
+    color: inherit;
+    text-decoration: none;
+  }
+  body #lpt-root img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  body #lpt-root summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  body #lpt-root summary::-webkit-details-marker {
+    display: none;
+  }
+
+  body #lpt-root .lpt-container {
+    width: min(1160px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+  /* ヒーロー直後のページ内ナビの上下余白（EXPRESS ではロゴ帯の直後に同じ余白） */
+  body #lpt-root .lpt-hero + .lpt-container {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  /* ---- 共通：アイコン ---- */
+  body #lpt-root .lpt-icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+  body #lpt-root .lpt-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    border-radius: 12px;
+    background: rgba(0, 183, 148, 0.1);
+    color: var(--lpt-teal-dark);
+  }
+
+  /* ---- 共通：ボタン ---- */
+  body #lpt-root .lpt-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  body #lpt-root .lpt-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 54px;
+    padding: 12px 30px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease,
+      background 0.18s ease, color 0.18s ease;
+  }
+  body #lpt-root .lpt-button--primary {
+    background: linear-gradient(
+      135deg,
+      var(--lpt-orange) 0%,
+      var(--lpt-orange-dark) 100%
+    );
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(226, 137, 15, 0.35);
+  }
+  body #lpt-root .lpt-button--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(226, 137, 15, 0.45);
+    color: #fff;
+  }
+  body #lpt-root .lpt-button--secondary {
+    background: var(--lpt-white);
+    color: var(--lpt-teal-dark);
+    border: 2px solid var(--lpt-teal);
+  }
+  body #lpt-root .lpt-button--secondary:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 183, 148, 0.08);
+  }
+  body #lpt-root .lpt-button--ghost {
+    background: var(--lpt-white);
+    color: var(--lpt-teal-dark);
+    border: 2px solid var(--lpt-teal);
+  }
+  body #lpt-root .lpt-button--ghost:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 183, 148, 0.08);
+    color: var(--lpt-teal-dark);
+  }
+
+  /* ---- 共通：セクション ---- */
+  body #lpt-root .lpt-section {
+    padding: 88px 0;
+    scroll-margin-top: var(--lpt-scroll-margin);
+  }
+  body #lpt-root .lpt-section--soft {
+    background: var(--lpt-soft);
+  }
+
+  body #lpt-root .lpt-sectionhead {
+    max-width: 820px;
+    margin: 0 auto 52px;
+    text-align: center;
+  }
+  body #lpt-root .lpt-sectionhead__en {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--lpt-teal-dark);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  body #lpt-root .lpt-sectionhead__en::before {
+    content: "";
+    width: 26px;
+    height: 2px;
+    background: var(--lpt-teal);
+  }
+  body #lpt-root .lpt-sectionhead__en::after {
+    content: "";
+    width: 26px;
+    height: 2px;
+    background: var(--lpt-teal);
+  }
+  body #lpt-root .lpt-sectionhead__title {
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+  }
+  /* 長い見出しを言葉のまとまりの途中で折り返さないための囲み。
+     囲んだ部分は1つの塊として扱われ、入りきらないときは塊ごと次の行へ送られる */
+  body #lpt-root .lpt-phrase {
+    display: inline-block;
+  }
+  body #lpt-root .lpt-sectionhead__text {
+    margin-top: 18px;
+    font-size: 15.5px;
+    color: var(--lpt-muted);
+    text-align: left;
+  }
+  body #lpt-root .lpt-card__text {
+    font-size: 14.5px;
+    color: var(--lpt-muted);
+  }
+
+  /* ---- HERO ---- */
+  body #lpt-root .lpt-hero {
+    width: var(--lpt-vw) !important;
+    max-width: none !important;
+    margin-right: 0 !important;
+    margin-left: calc(50% - var(--lpt-vw) / 2) !important;
+  }
+  body #lpt-root .lpt-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: var(--lpt-hero-h);
+    min-height: 360px;
+    background: radial-gradient(
+        900px 500px at 85% -10%,
+        rgba(0, 183, 148, 0.12),
+        transparent 58%
+      ),
+      radial-gradient(
+        700px 420px at -10% 110%,
+        rgba(0, 149, 121, 0.08),
+        transparent 55%
+      ),
+      linear-gradient(180deg, #ffffff 0%, var(--lpt-soft) 100%);
+    color: var(--lpt-ink);
+    padding: 0;
+  }
+  body #lpt-root .lpt-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+        rgba(13, 37, 52, 0.045) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(13, 37, 52, 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 75%);
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.9),
+      transparent 75%
+    );
+    pointer-events: none;
+  }
+  body #lpt-root .lpt-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 40px 0 24px;
+  }
+  body #lpt-root .lpt-hero__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: 48px;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 0;
+  }
+  body #lpt-root .lpt-hero__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  body #lpt-root .lpt-hero__brand img {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+  body #lpt-root .lpt-hero__brand-name {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--lpt-navy);
+  }
+  body #lpt-root .lpt-hero__brand-name span {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--lpt-muted);
+  }
+  body #lpt-root .lpt-hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  body #lpt-root .lpt-hero__chips li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 183, 148, 0.35);
+    background: rgba(0, 183, 148, 0.08);
+    color: var(--lpt-teal-dark);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  body #lpt-root .lpt-hero__title,
+  body #lpt-root h1.lpt-hero__title.c-pageTitle {
+    font-weight: 800;
+    color: var(--lpt-navy);
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    font-size: 17px;
+    margin: 0 0 14px;
+  }
+  body #lpt-root h1.lpt-hero__title.c-pageTitle::before,
+  body #lpt-root h1.lpt-hero__title.c-pageTitle::after {
+    content: none !important;
+    display: none !important;
+  }
+  body #lpt-root .lpt-hero__title .lpt-hero__title-sub {
+    display: block;
+    margin-top: 10px;
+    font-size: clamp(30px, 4.6vw, 46px);
+    line-height: 1.32;
+    letter-spacing: 0.02em;
+    /* PORT の大見出しは長く「輸｜出入」のように単語の途中で折り返すため、文節単位で折り返す（対応ブラウザのみ） */
+    word-break: auto-phrase;
+  }
+  body #lpt-root .lpt-hero__lead {
+    font-size: 15.5px;
+    color: var(--lpt-muted);
+    max-width: 540px;
+    margin-bottom: 28px;
+  }
+
+  body #lpt-root .lpt-hero__visual {
+    position: relative;
+    padding: 8px 0 8px 8px;
+  }
+  body #lpt-root .lpt-hero__visual .lpt-browser img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top left;
+    height: auto;
+  }
+  body #lpt-root .lpt-browser {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #f4f7f6;
+    box-shadow: var(--lpt-shadow-lg);
+    border: 1px solid var(--lpt-line);
+  }
+  body #lpt-root .lpt-browser__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 14px;
+    background: #e7f1ee;
+  }
+  body #lpt-root .lpt-browser__bar span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(13, 37, 52, 0.18);
+  }
+  body #lpt-root .lpt-browser__bar span:first-child {
+    background: var(--lpt-teal);
+  }
+  body #lpt-root .lpt-hero__float {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--lpt-navy);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: var(--lpt-shadow);
+    white-space: nowrap;
+  }
+  body #lpt-root .lpt-hero__float .lpt-icon {
+    width: 17px;
+    height: 17px;
+    color: var(--lpt-teal-dark);
+  }
+  body #lpt-root .lpt-hero__float--1 {
+    top: -8px;
+    left: -14px;
+  }
+  body #lpt-root .lpt-hero__float--2 {
+    top: 34%;
+    right: -12px;
+  }
+  body #lpt-root .lpt-hero__float--3 {
+    bottom: -10px;
+    left: 10%;
+  }
+
+  /* ヒーロー下部の3項目帯（EXPRESS の実績数値帯と同じ見た目で、PORT の特長を表示） */
+  body #lpt-root .lpt-hero__stats {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    border-top: 1px solid var(--lpt-line);
+    background: var(--lpt-white);
+  }
+  body #lpt-root .lpt-hero__stats-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  body #lpt-root .lpt-hero__stat {
+    padding: 20px 12px;
+    text-align: center;
+  }
+  body #lpt-root .lpt-hero__stat + .lpt-hero__stat {
+    border-left: 1px solid var(--lpt-line);
+  }
+  body #lpt-root .lpt-hero__stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--lpt-muted);
+  }
+  body #lpt-root .lpt-hero__stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--lpt-navy);
+    line-height: 1.3;
+  }
+  body #lpt-root .lpt-hero__stat-value em {
+    font-style: normal;
+    color: var(--lpt-teal-dark);
+    font-size: 30px;
+  }
+  body #lpt-root .lpt-hero__stat-value small {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lpt-muted);
+  }
+
+  /* ---- ページ内ナビ（EXPRESS と同じカード型） ---- */
+  body #lpt-root nav.lpt-quicknav {
+    margin: 0 auto;
+  }
+  body #lpt-root .lpt-quicknav__panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--lpt-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #lpt-root .lpt-quicknav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 84px;
+    padding: 12px 8px;
+    border-right: 1px solid var(--lpt-line);
+    border-bottom: 1px solid var(--lpt-line);
+    color: var(--lpt-navy);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+  body #lpt-root .lpt-quicknav__item:nth-child(4n) {
+    border-right: 0;
+  }
+  body #lpt-root .lpt-quicknav__item:nth-last-child(-n + 4) {
+    border-bottom: 0;
+  }
+  body #lpt-root .lpt-quicknav__item:hover {
+    background: var(--lpt-soft);
+  }
+  body #lpt-root .lpt-quicknav__top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 4px;
+    color: var(--lpt-teal-dark);
+  }
+  body #lpt-root .lpt-quicknav__num {
+    display: block;
+    color: var(--lpt-teal-dark);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  body #lpt-root .lpt-quicknav__top .lpt-icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* ---- ISSUE：課題 ---- */
+  /* 現行ページのお悩みは4件のため、EXPRESS の自動並びではなく中央寄せの2列×2段にする */
+  body #lpt-root .lpt-issues {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  body #lpt-root .lpt-issue {
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: var(--lpt-radius);
+    padding: 26px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lpt-root .lpt-issue:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lpt-shadow);
+  }
+  body #lpt-root .lpt-issue__title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.6;
+    margin: 14px 0 0;
+    flex: 1 1 auto;
+  }
+  /* お悩みカード下の一言（解決につながる機能へ移動するリンク。EXPRESS / STORAGE と同じ見た目） */
+  body #lpt-root .lpt-issue__solution {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(0, 183, 148, 0.1);
+    color: var(--lpt-teal-dark);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  body #lpt-root .lpt-issue__solution::before {
+    content: "▶";
+    font-size: 9px;
+  }
+  body #lpt-root .lpt-issues__answer {
+    margin-top: 44px;
+    text-align: center;
+  }
+  body #lpt-root .lpt-issues__answer-arrow {
+    width: 0;
+    height: 0;
+    margin: 0 auto 22px;
+    border-left: 34px solid transparent;
+    border-right: 34px solid transparent;
+    border-top: 22px solid var(--lpt-teal);
+  }
+  body #lpt-root .lpt-issues__answer-text {
+    font-size: clamp(20px, 3vw, 27px);
+    font-weight: 800;
+    line-height: 1.6;
+  }
+  body #lpt-root .lpt-issues__answer-text em {
+    font-style: normal;
+    color: var(--lpt-teal-dark);
+    background: linear-gradient(transparent 68%, rgba(0, 183, 148, 0.22) 68%);
+    padding: 0 2px;
+  }
+
+  /* ---- OVERVIEW：業務の流れ ---- */
+  body #lpt-root .lpt-flowline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  body #lpt-root .lpt-flowline__step {
+    position: relative;
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: 12px;
+    padding: 16px 8px 14px;
+    text-align: center;
+  }
+  body #lpt-root .lpt-flowline__step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -9px;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 9px solid var(--lpt-teal);
+    z-index: 1;
+  }
+  body #lpt-root .lpt-flowline__step .lpt-icon {
+    width: 26px;
+    height: 26px;
+    margin: 0 auto 8px;
+    color: var(--lpt-teal-dark);
+  }
+  body #lpt-root .lpt-flowline__label {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  body #lpt-root .lpt-flowline__sub {
+    font-size: 11px;
+    color: var(--lpt-muted);
+    margin-top: 2px;
+  }
+
+  /* ---- OVERVIEW：製品概要とシリーズ連携のマップ ---- */
+  body #lpt-root .lpt-map {
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: 18px;
+    padding: 36px clamp(18px, 4vw, 44px) 38px;
+    box-shadow: var(--lpt-shadow);
+  }
+  body #lpt-root .lpt-map__base {
+    position: relative;
+    border-radius: 14px;
+    background: var(--lpt-soft);
+    color: var(--lpt-ink);
+    border: 1px solid var(--lpt-line);
+    padding: 28px 30px;
+  }
+  /* 製品画像（ノートPC）を右側に並べるための2列 */
+  body #lpt-root .lpt-map__base-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 28px;
+    align-items: center;
+  }
+  body #lpt-root .lpt-map__base-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  body #lpt-root .lpt-map__tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: #4fe0c2;
+    color: var(--lpt-navy);
+    margin-bottom: 6px;
+  }
+  body #lpt-root .lpt-map__base-title {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+  body #lpt-root .lpt-map__base-text {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--lpt-muted);
+  }
+  body #lpt-root .lpt-map__base-image img {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  body #lpt-root .lpt-map__connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--lpt-muted);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  body #lpt-root .lpt-map__connector::before,
+  body #lpt-root .lpt-map__connector::after {
+    content: "";
+    flex: 1 1 auto;
+    border-top: 2px dashed var(--lpt-line);
+  }
+  /* シリーズ製品は EXPRESS・STORAGE の2つなので2列 */
+  body #lpt-root .lpt-map__options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  body #lpt-root .lpt-map__option {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--lpt-line);
+    border-top: 3px solid var(--lpt-teal);
+    border-radius: 12px;
+    padding: 20px 18px;
+    background: var(--lpt-white);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lpt-root .lpt-map__option:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lpt-shadow);
+  }
+  body #lpt-root .lpt-map__option .lpt-icon-wrap {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    margin-bottom: 12px;
+  }
+  body #lpt-root .lpt-map__option-tag {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--lpt-teal-dark);
+    margin-bottom: 4px;
+  }
+  body #lpt-root .lpt-map__option-title {
+    font-size: 16.5px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  body #lpt-root .lpt-map__option-text {
+    font-size: 12.5px;
+    color: var(--lpt-muted);
+    flex: 1 1 auto;
+  }
+  body #lpt-root .lpt-map__integrations {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--lpt-line);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+  body #lpt-root .lpt-map__integrations-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lpt-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  body #lpt-root .lpt-map__integrations-label .lpt-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--lpt-teal-dark);
+  }
+  body #lpt-root .lpt-map__integrations li {
+    display: inline-flex;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--lpt-line);
+    background: var(--lpt-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+</style>
+<style>
+  /* ---- FEATURE：機能タブ（EXPRESS の機能タブと同じ見た目・動き。5機能をタブで切り替える） ---- */
+  /* タブボタンの並び。JS が動いたとき（.is-js が付いたとき）だけ表示する */
+  body #lpt-root .lpt-tablist {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+  body #lpt-root .lpt-tabs.is-js .lpt-tablist {
+    display: flex;
+  }
+  body #lpt-root .lpt-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--lpt-line);
+    background: var(--lpt-white);
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--lpt-ink);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+  body #lpt-root .lpt-tab .lpt-icon {
+    width: 19px;
+    height: 19px;
+    color: var(--lpt-teal-dark);
+  }
+  body #lpt-root .lpt-tab:hover {
+    border-color: var(--lpt-teal);
+  }
+  body #lpt-root .lpt-tab.is-active {
+    background: var(--lpt-navy);
+    border-color: var(--lpt-navy);
+    color: #fff;
+  }
+  body #lpt-root .lpt-tab.is-active .lpt-icon {
+    color: #4fe0c2;
+  }
+
+  /* タブの中身（1機能ぶんのパネル）。JS が無いときは全パネルが縦に並ぶ */
+  body #lpt-root .lpt-tabpanel {
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: 18px;
+    padding: clamp(24px, 4vw, 44px);
+    scroll-margin-top: var(--lpt-scroll-margin);
+  }
+  body #lpt-root .lpt-tabpanel + .lpt-tabpanel {
+    margin-top: 28px;
+  }
+  body #lpt-root .lpt-tabs.is-js .lpt-tabpanel {
+    display: none;
+  }
+  body #lpt-root .lpt-tabs.is-js .lpt-tabpanel.is-active {
+    display: block;
+    animation: lpt-fadein 0.3s ease;
+  }
+  body #lpt-root .lpt-tabs.is-js .lpt-tabpanel + .lpt-tabpanel {
+    margin-top: 0;
+  }
+  @keyframes lpt-fadein {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  body #lpt-root .lpt-tabpanel__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(24px, 4vw, 44px);
+    align-items: start;
+  }
+  body #lpt-root .lpt-tabpanel__tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--lpt-navy);
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  body #lpt-root .lpt-tabpanel__title {
+    font-size: clamp(21px, 2.6vw, 26px);
+    font-weight: 800;
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+  body #lpt-root .lpt-checklist li {
+    position: relative;
+    padding: 9px 0 9px 30px;
+    font-size: 14.5px;
+    line-height: 1.65;
+    border-bottom: 1px dashed var(--lpt-line);
+  }
+  body #lpt-root .lpt-checklist li:last-child {
+    border-bottom: 0;
+  }
+  body #lpt-root .lpt-checklist li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 15px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--lpt-teal);
+  }
+  body #lpt-root .lpt-checklist li::after {
+    content: "";
+    position: absolute;
+    left: 6.5px;
+    top: 19.5px;
+    width: 7px;
+    height: 4px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg);
+  }
+  body #lpt-root .lpt-shots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  body #lpt-root .lpt-shot:first-child {
+    grid-column: 1 / -1;
+  }
+  /* 画像が2枚のパネル（手配・債権・下払）は、2枚目も横幅いっぱいにする（EXPRESS と同じ） */
+  body #lpt-root .lpt-shot:nth-child(2):last-child {
+    grid-column: 1 / -1;
+  }
+  body #lpt-root .lpt-shot img {
+    border-radius: 10px;
+    border: 1px solid var(--lpt-line);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lpt-root .lpt-shot a:hover img {
+    transform: translateY(-2px);
+    box-shadow: var(--lpt-shadow);
+  }
+  body #lpt-root .lpt-shot figcaption {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--lpt-muted);
+    text-align: center;
+  }
+  body #lpt-root .lpt-shot figcaption::after {
+    content: "（クリックで拡大）";
+    font-size: 10.5px;
+    margin-left: 4px;
+    color: var(--lpt-teal-dark);
+  }
+
+  /* ---- REASON：選ばれる理由 ---- */
+  body #lpt-root .lpt-reason {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    padding: 44px 0;
+  }
+  body #lpt-root .lpt-reason + .lpt-reason {
+    border-top: 1px solid var(--lpt-line);
+  }
+  body #lpt-root .lpt-reason:nth-child(even) .lpt-reason__copy {
+    order: 2;
+  }
+  body #lpt-root .lpt-reason__num {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  body #lpt-root .lpt-reason__num strong {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--lpt-teal);
+    letter-spacing: 0.02em;
+  }
+  body #lpt-root .lpt-reason__num span {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--lpt-muted);
+  }
+  body #lpt-root .lpt-reason__title {
+    font-size: clamp(20px, 2.6vw, 25px);
+    font-weight: 800;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  body #lpt-root .lpt-reason__text {
+    font-size: 14.5px;
+    color: var(--lpt-muted);
+  }
+  body #lpt-root .lpt-reason__visual img {
+    border-radius: 12px;
+    border: 1px solid var(--lpt-line);
+    box-shadow: var(--lpt-shadow);
+  }
+
+  /* ---- MOVIE：動画 ---- */
+  body #lpt-root .lpt-movies {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  body #lpt-root .lpt-movie {
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: var(--lpt-radius);
+    overflow: hidden;
+  }
+  body #lpt-root .lpt-movie__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--lpt-navy);
+  }
+  body #lpt-root .lpt-movie__frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  body #lpt-root .lpt-movie__title {
+    padding: 16px 22px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  /* ---- FAQ ---- */
+  body #lpt-root .lpt-faq {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  body #lpt-root .lpt-faq__item {
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  body #lpt-root .lpt-faq__question {
+    position: relative;
+    padding: 18px 56px 18px 54px;
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  body #lpt-root .lpt-faq__question::before {
+    content: "Q";
+    position: absolute;
+    left: 20px;
+    top: 17px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--lpt-teal-dark);
+  }
+  body #lpt-root .lpt-faq__question::after {
+    content: "＋";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--lpt-teal-dark);
+    transition: transform 0.2s ease;
+  }
+  body #lpt-root .lpt-faq__item[open] .lpt-faq__question::after {
+    content: "−";
+  }
+  body #lpt-root .lpt-faq__answer {
+    position: relative;
+    padding: 2px 24px 20px 54px;
+    font-size: 14px;
+    color: var(--lpt-muted);
+    line-height: 1.8;
+  }
+  body #lpt-root .lpt-faq__answer::before {
+    content: "A";
+    position: absolute;
+    left: 20px;
+    top: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--lpt-orange);
+  }
+  body #lpt-root .lpt-textlink {
+    color: var(--lpt-teal-dark);
+    text-decoration: underline;
+  }
+
+  /* ---- CTA帯 ---- */
+  body #lpt-root .lpt-cta {
+    position: relative;
+    overflow: hidden;
+    background: var(--lpt-soft);
+    border-block: 1px solid var(--lpt-line);
+    color: var(--lpt-ink);
+    padding: 64px 0;
+  }
+  body #lpt-root .lpt-cta__inner {
+    text-align: center;
+  }
+  body #lpt-root .lpt-cta__title {
+    font-size: clamp(22px, 3.4vw, 32px);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--lpt-navy);
+  }
+  body #lpt-root .lpt-cta__text {
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--lpt-muted);
+  }
+  body #lpt-root .lpt-cta__actions {
+    margin-top: 28px;
+    justify-content: center;
+  }
+  body #lpt-root .lpt-cta--compact {
+    padding: 48px 0;
+  }
+  body #lpt-root .lpt-cta--compact .lpt-cta__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    text-align: left;
+  }
+  body #lpt-root .lpt-cta--compact .lpt-cta__title {
+    font-size: clamp(19px, 2.6vw, 24px);
+  }
+  body #lpt-root .lpt-cta--compact .lpt-cta__actions {
+    margin-top: 0;
+  }
+
+  /* ---- COLUMN：関連コラム ----
+     記事一覧は WordPress の SWELL「投稿リスト」ブロック（カテゴリー：PORT）が出力し、
+     JS で #lpt-columns-slot へ移す。ここでは、そのブロックが出力する HTML（.p-postList 以下）を
+     EXPRESS / STORAGE と同じカード（上に画像、下に日付・タイトル・「記事を読む」）の見た目に整える。
+     SWELL 標準の「2列並び・画像の拡大・本文の半透明化・ボタンの色変わり」はここで打ち消す */
+  body #lpt-root .lpt-columns-slot .p-postListWrap {
+    margin: 0;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__item {
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: var(--lpt-radius);
+    overflow: hidden;
+    color: var(--lpt-ink);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__link:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lpt-shadow);
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__thumb {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__thumb::before {
+    display: none;
+  }
+  /* サムネイルは以前のカードと同じ 16:9 */
+  body #lpt-root .lpt-columns-slot .c-postThumb__figure::before {
+    padding-top: 56.25%;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__link:hover .c-postThumb__img {
+    transform: none;
+  }
+  /* カテゴリー名：SWELL 標準の「画像の上のカテゴリー名」は出さない。
+     記事に複数のカテゴリーが付いていると、SWELL はそのうち1つ（例：EXPRESS）しか表示せず、
+     このページの製品と食い違うことがあるため。代わりに日付の前へ、このページの製品名「PORT」を
+     固定で表示する（以前のカードと同じ「PORT｜日付」の形）。
+     投稿リストブロックは PORT カテゴリーの記事だけを表示する設定なので、並ぶ記事はすべて PORT の記事になる */
+  body #lpt-root .lpt-columns-slot .c-postThumb__cat,
+  body #lpt-root .lpt-columns-slot .p-postList__cat {
+    display: none;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__meta::before {
+    content: "PORT｜";
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 20px 22px 22px;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__item:hover .p-postList__body {
+    opacity: 1;
+  }
+  /* 日付などの投稿情報はタイトルの上に置く */
+  body #lpt-root .lpt-columns-slot .p-postList__meta {
+    order: -1;
+    margin: 0 0 8px;
+    font-size: 11.5px;
+    color: var(--lpt-muted);
+    letter-spacing: 0.04em;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__meta > * {
+    margin: 0 8px 0 0;
+    padding: 0;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__meta *::before {
+    display: none;
+  }
+  body #lpt-root .lpt-columns-slot .p-postList__title {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+    flex: 1 1 auto;
+  }
+  /* 抜粋文は以前のカードに無いため出さない */
+  body #lpt-root .lpt-columns-slot .p-postList__excerpt {
+    display: none;
+  }
+  /* カード下の「記事を読む」 */
+  body #lpt-root .lpt-columns-slot .p-postList__body::after,
+  body #lpt-root .lpt-columns-slot .p-postList__link:hover .p-postList__body::after {
+    content: "記事を読む";
+    display: block;
+    align-self: flex-start;
+    width: auto;
+    margin: 0;
+    padding: 0 0 2px;
+    border-radius: 0;
+    border-bottom: 2px solid var(--lpt-teal);
+    background: none;
+    box-shadow: none;
+    color: var(--lpt-teal-dark);
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 1;
+  }
+
+  /* ---- SERIES ---- */
+  /* 関連システムは製品2つだけなので、お悩みカードと同じく中央寄せの2列にする */
+  body #lpt-root .lpt-siblings {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  body #lpt-root .lpt-sibling {
+    display: flex;
+    flex-direction: column;
+    background: var(--lpt-white);
+    border: 1px solid var(--lpt-line);
+    border-radius: var(--lpt-radius);
+    padding: 28px 26px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  body #lpt-root .lpt-sibling:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lpt-shadow);
+  }
+  body #lpt-root .lpt-sibling__title {
+    margin: 14px 0 8px;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  body #lpt-root .lpt-sibling .lpt-card__text {
+    flex: 1 1 auto;
+  }
+  body #lpt-root .lpt-sibling .lpt-actions {
+    margin-top: 16px;
+  }
+
+  /* ---- ライトボックス ---- */
+  body #lpt-root .lpt-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(8, 22, 31, 0.86);
+  }
+  body #lpt-root .lpt-lightbox.is-open {
+    display: flex;
+  }
+  body #lpt-root .lpt-lightbox__dialog {
+    position: relative;
+    max-width: min(1100px, 96vw);
+    max-height: 92vh;
+  }
+  body #lpt-root .lpt-lightbox__image {
+    max-width: 100%;
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    background: #fff;
+  }
+  body #lpt-root .lpt-lightbox__close {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--lpt-navy);
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ---- レスポンシブ（ブレークポイントは EXPRESS と同じ） ---- */
+  @media (max-width: 900px) {
+    body #lpt-root .lpt-quicknav__panel {
+      grid-template-columns: 1fr 1fr;
+    }
+    body #lpt-root .lpt-quicknav__item:nth-child(4n) {
+      border-right: 1px solid var(--lpt-line);
+    }
+    body #lpt-root .lpt-quicknav__item:nth-last-child(-n + 4) {
+      border-bottom: 1px solid var(--lpt-line);
+    }
+    body #lpt-root .lpt-quicknav__item:nth-child(2n) {
+      border-right: 0;
+    }
+    body #lpt-root .lpt-quicknav__item:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+  }
+  @media (max-width: 1023px) {
+    body #lpt-root .lpt-hero {
+      height: auto;
+      min-height: var(--lpt-hero-h);
+    }
+    body #lpt-root .lpt-hero__inner {
+      padding: 32px 0 16px;
+    }
+    body #lpt-root .lpt-hero__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding-bottom: 0;
+    }
+    body #lpt-root .lpt-hero__visual {
+      padding: 0 6px;
+    }
+    body #lpt-root .lpt-hero__float--1 {
+      left: -4px;
+    }
+    body #lpt-root .lpt-hero__float--2 {
+      right: -4px;
+    }
+    body #lpt-root .lpt-map__base-grid {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-tabpanel__grid {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-columns-slot .p-postList {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-siblings {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-flowline {
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      overflow-x: auto;
+    }
+  }
+  @media (max-width: 639px) {
+    body #lpt-root {
+      font-size: 15px;
+    }
+    body #lpt-root .lpt-section {
+      padding: 64px 0;
+    }
+    body #lpt-root .lpt-hero {
+      height: auto;
+      min-height: var(--lpt-hero-h);
+    }
+    body #lpt-root .lpt-hero__inner {
+      padding: 28px 0 16px;
+    }
+    body #lpt-root .lpt-hero__stats-inner {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-hero__stat + .lpt-hero__stat {
+      border-left: 0;
+      border-top: 1px solid var(--lpt-line);
+    }
+    body #lpt-root .lpt-hero__float {
+      display: none;
+    }
+    body #lpt-root .lpt-issues {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-map__options {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-map__base {
+      padding: 22px 20px;
+    }
+    body #lpt-root .lpt-reason {
+      grid-template-columns: 1fr;
+      padding: 36px 0;
+    }
+    body #lpt-root .lpt-reason:nth-child(even) .lpt-reason__copy {
+      order: 0;
+    }
+    body #lpt-root .lpt-shots {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-movies {
+      grid-template-columns: 1fr;
+    }
+    body #lpt-root .lpt-actions .lpt-button {
+      width: 100%;
+    }
+    body #lpt-root .lpt-cta--compact .lpt-cta__inner {
+      text-align: center;
+      justify-content: center;
+    }
+  }
+  /* 幅375px以下の小さいスマホでは、見出しの「「LOGI-Cube PORT」の」が1行に入らず
+     「の」だけが次の行に残るため、画面幅に合わせて見出しの文字を少しずつ小さくして1行に収める。
+     （その部分の幅は文字サイズの約11.4倍。画面幅から左右余白72px程度を引いた幅に収まるよう12で割る）
+     390px以上では従来どおり26px */
+  @media (max-width: 639px) {
+    body #lpt-root .lpt-sectionhead__title {
+      font-size: min(26px, calc((100vw - 72px) / 12));
+    }
+  }
+</style>
+<noscript>
+  <style>
+    /* JS が動かない環境では、ヒーローへ移せない SWELL のタイトルをそのまま表示する */
+    body:has(#lpt-root) .l-mainContent__inner > h1.c-pageTitle {
+      position: static !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 0 1em !important;
+      overflow: visible !important;
+      clip: auto !important;
+      white-space: normal !important;
+    }
+  </style>
+</noscript>
+
+<div id="lpt-root">
+  <script>
+    /* 初回表示のがたつき防止：描画前にヘッダー高さを実測し、ヒーロー高さと全幅の値を先に入れる */
+    (function () {
+      var root = document.getElementById("lpt-root");
+      var header = document.getElementById("header");
+      var headerH = 73;
+      var fold;
+      if (!header) header = document.querySelector(".l-header");
+      if (header) headerH = header.offsetHeight;
+      fold = window.innerHeight - headerH;
+      if (fold < 360) fold = 360;
+      if (!root) return;
+      root.style.setProperty("--lpt-header-h", headerH + "px");
+      root.style.setProperty(
+        "--lpt-vw",
+        document.documentElement.clientWidth + "px",
+      );
+      root.style.setProperty("--lpt-hero-h", Math.round(fold) + "px");
+    })();
+  </script>
+  <!-- ページ内で使うアイコン（EXPRESS / STORAGE と同じ線画アイコンのうち、使うものだけ） -->
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="0"
+    height="0"
+    style="position: absolute; overflow: hidden"
+    aria-hidden="true">
+    <symbol
+      id="lpt-i-layers"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M12 3l8 4-8 4-8-4 8-4z"></path>
+      <path d="M4 12l8 4 8-4M4 16l8 4 8-4"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-link"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M9 12h6"></path>
+      <path d="M8 8H7a4 4 0 000 8h1M16 8h1a4 4 0 010 8h-1"></path>
+    </symbol>
+    <!-- ￥マーク（STORAGE で形を整えたものと同じ） -->
+    <symbol
+      id="lpt-i-yen"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M6.5 4l5.5 7.5L17.5 4M12 11.5V20.5M7.5 13.5h9M7.5 17h9"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-truck"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"></path>
+      <circle cx="7" cy="18" r="1.5"></circle>
+      <circle cx="17" cy="18" r="1.5"></circle>
+    </symbol>
+    <symbol
+      id="lpt-i-clipboard"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="6" y="5" width="12" height="16" rx="2"></rect>
+      <path d="M9 5V4h6v1M9 11h6M9 15h4"></path>
+    </symbol>
+    <!-- 受注管理（台帳・書類）用のアイコン（EXPRESS の file と同じ） -->
+    <symbol
+      id="lpt-i-file"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"></path>
+      <path d="M14 3v5h5M9 13h6M9 17h4"></path>
+    </symbol>
+    <!-- 担当者依存のお悩み用の人物アイコン（EXPRESS の user と同じ） -->
+    <symbol
+      id="lpt-i-user"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="8" r="3.5"></circle>
+      <path d="M5 19c1.2-3 3.6-4.5 7-4.5S17.8 16 19 19"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-chat"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path
+        d="M5 6h14a1 1 0 011 1v8a1 1 0 01-1 1H9l-4 3v-3H5a1 1 0 01-1-1V7a1 1 0 011-1z"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-doc"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="6" y="3" width="12" height="18" rx="2"></rect>
+      <path d="M9 8h6M9 12h6M9 16h3"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-warehouse"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M3 10l9-6 9 6v10H3V10z"></path>
+      <path d="M9 20v-7h6v7"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-ship"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M3 16l2 3h14l2-3H3zM5 16V11h14v5M12 4v7M8 8h8"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-screen"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="12" rx="2"></rect>
+      <path d="M8 21h8"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-invoice"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M7 3h10l2 3v15H5V6l2-3z"></path>
+      <path d="M9 11h6M9 15h4"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-leaf"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M5 19c8-1 13-8 14-15-7 1-14 6-14 15z"></path>
+      <path d="M8 16c2-3 5-5 8-7"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-plug"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M9 7V3M15 7V3M8 7h8v5a4 4 0 01-4 4v5M8 12H5M19 12h-3"></path>
+    </symbol>
+    <symbol
+      id="lpt-i-cog"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path
+        d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"></path>
+    </symbol>
+    <!-- 重複入力のお悩み用の「複写」アイコン（PORT で追加） -->
+    <symbol
+      id="lpt-i-copy"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+      <path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"></path>
+    </symbol>
+    <!-- 実績管理・実績集計用の棒グラフアイコン（PORT で追加） -->
+    <symbol
+      id="lpt-i-chart"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M4 20h16"></path>
+      <path d="M7 16v-5M12 16V6M17 16v-8"></path>
+    </symbol>
+  </svg>
+
+  <!-- ============ HERO ============ -->
+  <section class="lpt-hero">
+    <div class="lpt-container lpt-hero__inner">
+      <div class="lpt-hero__grid">
+        <div class="lpt-hero__copy">
+          <div class="lpt-hero__brand">
+            <img
+              class="skip-lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2026/08/logi-cube-logo.png"
+              alt="LOGI-Cubeロゴ"
+              width="44"
+              height="44" />
+            <div class="lpt-hero__brand-name">
+              LOGI-Cube PORT<span>通関・海貨業向け 輸出入管理システム</span>
+            </div>
+          </div>
+          <!-- 現行ページの説明文にある対象業種と、カバーする業務範囲 -->
+          <ul class="lpt-hero__chips">
+            <li>通関・フォワーダー業者様向け</li>
+            <li>海貨・海運業者様向け</li>
+            <li>受注から実績管理まで</li>
+          </ul>
+          <!-- SWELL の h1 と JS で差し替えるプレースホルダ（中身は空のまま） -->
+          <p class="lpt-hero__title"></p>
+          <!-- 現行ページのメインビジュアルの説明文 -->
+          <p class="lpt-hero__lead">
+            LOGI-Cube（ロジキューブ）シリーズの輸出入管理システム「PORT」は通関・フォワーダー業者様・海貨・海運業者様向けのソリューションとして正確で効率的な業務遂行を強力にサポートします。
+          </p>
+          <div class="lpt-actions">
+            <a
+              class="lpt-button lpt-button--primary"
+              href="https://commoncom.jp/contact/"
+              >今すぐ無料で相談する</a
+            >
+            <a
+              class="lpt-button lpt-button--ghost"
+              href="https://commoncom.jp/logi-cube-download/"
+              >資料請求（無料）</a
+            >
+          </div>
+        </div>
+        <div class="lpt-hero__visual">
+          <a
+            class="lpt-lightbox-trigger"
+            href="#"
+            aria-label="輸出台帳入力画面を拡大表示">
+            <figure class="lpt-browser">
+              <div class="lpt-browser__bar" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <img
+                class="skip-lazy"
+                src="https://commoncom.jp/wp/wp-content/uploads/2025/10/49505a21b01f47a6e872d0d212564a8b.png"
+                alt="輸出入管理システムLOGI-Cube PORTの輸出台帳入力画面。Shipper・Consignee・B/L情報などを入力"
+                fetchpriority="high" />
+            </figure>
+          </a>
+          <div class="lpt-hero__float lpt-hero__float--1">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-file"></use></svg
+            >受注管理
+          </div>
+          <div class="lpt-hero__float lpt-hero__float--2">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-invoice"></use></svg
+            >債権管理
+          </div>
+          <div class="lpt-hero__float lpt-hero__float--3">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-chart"></use></svg
+            >実績管理
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- EXPRESS の実績数値帯と同じ位置に、現行ページ記載の特長を3つ表示（STORAGE と同じ扱い） -->
+    <div class="lpt-hero__stats">
+      <div class="lpt-container">
+        <div class="lpt-hero__stats-inner">
+          <div class="lpt-hero__stat">
+            <div class="lpt-hero__stat-label">管理機能</div>
+            <div class="lpt-hero__stat-value">
+              <em>5</em>つ<small>受注・手配・債権・下払・実績</small>
+            </div>
+          </div>
+          <div class="lpt-hero__stat">
+            <!-- 略語（S/I・B/L など）は業界外の人に伝わりにくく、ページ内の他の箇所の正式表記ともそろわないため、平易な表現にする -->
+            <div class="lpt-hero__stat-label">書類発行</div>
+            <div class="lpt-hero__stat-value">
+              輸出入書類<small>に対応</small>
+            </div>
+          </div>
+          <div class="lpt-hero__stat">
+            <div class="lpt-hero__stat-label">会計への仕訳連携</div>
+            <div class="lpt-hero__stat-value">
+              売上<small> / </small>入金引当<small> / </small>下払
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    /* SWELL の h1 をヒーロー内のプレースホルダと差し替える（処理内容は EXPRESS / STORAGE と同じ） */
+    (function () {
+      var swellH1 = document.querySelector("h1.c-pageTitle");
+      var rootEarly = document.getElementById("lpt-root");
+      var placeholder;
+      var titleMain;
+      var titleSub;
+      var raw;
+      var parts;
+      var sub;
+      function fillTitle(target, main, extra) {
+        target.textContent = "";
+        target.appendChild(document.createTextNode(main));
+        if (extra) {
+          sub = document.createElement("span");
+          sub.className = "lpt-hero__title-sub";
+          sub.textContent = extra;
+          target.appendChild(sub);
+        }
+      }
+      if (!rootEarly) return;
+      placeholder = rootEarly.querySelector(".lpt-hero__title");
+      titleMain = "輸出入管理システム LOGI-Cube PORT";
+      titleSub = "受注から実績管理まで、輸出入業務をシンプルに";
+      if (!swellH1) {
+        if (!placeholder) return;
+        raw = (placeholder.textContent || "").replace(/\s+/g, "");
+        if (!raw) fillTitle(placeholder, titleMain, titleSub);
+        return;
+      }
+      if (!placeholder) return;
+      if (placeholder === swellH1) return;
+      raw = (swellH1.textContent || "").replace(/\s+/g, " ").trim();
+      parts = raw.split("｜");
+      if (parts.length < 2) parts = raw.split("|");
+      if (parts.length > 1) {
+        titleMain = parts[0].trim();
+        titleSub = parts.slice(1).join("｜").trim();
+      } else if (raw) {
+        titleMain = raw;
+        titleSub = "";
+      }
+      swellH1.className = "lpt-hero__title c-pageTitle";
+      swellH1.removeAttribute("data-style");
+      fillTitle(swellH1, titleMain, titleSub);
+      placeholder.parentNode.replaceChild(swellH1, placeholder);
+    })();
+  </script>
+
+  <!-- ============ ページ内ナビ ============ -->
+  <div class="lpt-container">
+    <nav class="lpt-quicknav" aria-label="ページ内メニュー">
+      <div class="lpt-quicknav__panel">
+        <a class="lpt-quicknav__item" href="#lpt-issues"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-clipboard"></use></svg
+            ><span class="lpt-quicknav__num">01</span></span
+          >課題</a
+        >
+        <a class="lpt-quicknav__item" href="#lpt-overview"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-layers"></use></svg
+            ><span class="lpt-quicknav__num">02</span></span
+          >製品概要</a
+        >
+        <a class="lpt-quicknav__item" href="#lpt-features"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-cog"></use></svg
+            ><span class="lpt-quicknav__num">03</span></span
+          >機能</a
+        >
+        <a class="lpt-quicknav__item" href="#lpt-reasons"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-leaf"></use></svg
+            ><span class="lpt-quicknav__num">04</span></span
+          >選ばれる理由</a
+        >
+        <a class="lpt-quicknav__item" href="#lpt-movie"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-screen"></use></svg
+            ><span class="lpt-quicknav__num">05</span></span
+          >動画</a
+        >
+        <a class="lpt-quicknav__item" href="#lpt-faq"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-chat"></use></svg
+            ><span class="lpt-quicknav__num">06</span></span
+          >よくある質問</a
+        >
+        <a class="lpt-quicknav__item" href="#lpt-columns"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-doc"></use></svg
+            ><span class="lpt-quicknav__num">07</span></span
+          >関連コラム</a
+        >
+        <a class="lpt-quicknav__item" href="#lpt-series"
+          ><span class="lpt-quicknav__top" aria-hidden="true"
+            ><svg class="lpt-icon" viewBox="0 0 24 24">
+              <use href="#lpt-i-link"></use></svg
+            ><span class="lpt-quicknav__num">08</span></span
+          >関連システム</a
+        >
+      </div>
+    </nav>
+  </div>
+
+  <!-- ============ ISSUE：課題（現行ページ「こんなお悩みありませんか？」の4件） ============ -->
+  <section class="lpt-section" id="lpt-issues">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">ISSUE</div>
+        <h2 class="lpt-sectionhead__title">
+          輸出入業務で、こんなお悩みありませんか？
+        </h2>
+      </header>
+      <div class="lpt-issues">
+        <!-- 各お悩みの下のリンクは、解決につながる機能タブ・選ばれる理由へ移動する（EXPRESS / STORAGE と同じ） -->
+        <article class="lpt-issue">
+          <span class="lpt-icon-wrap" aria-hidden="true"
+            ><svg class="lpt-icon"><use href="#lpt-i-user"></use></svg
+          ></span>
+          <h3 class="lpt-issue__title">
+            業務が担当者に依存してしまっており、不在では業務がとまってしまう。
+          </h3>
+          <a class="lpt-issue__solution" href="#lpt-sys-tehai"
+            >手配管理で作業状況を全体把握</a
+          >
+        </article>
+        <article class="lpt-issue">
+          <span class="lpt-icon-wrap" aria-hidden="true"
+            ><svg class="lpt-icon"><use href="#lpt-i-copy"></use></svg
+          ></span>
+          <h3 class="lpt-issue__title">
+            同じ情報を重複して入力・管理しないと業務が回らない。
+          </h3>
+          <a class="lpt-issue__solution" href="#lpt-sys-juchu"
+            >受注管理の複写機能で解決</a
+          >
+        </article>
+        <article class="lpt-issue">
+          <span class="lpt-icon-wrap" aria-hidden="true"
+            ><svg class="lpt-icon"><use href="#lpt-i-invoice"></use></svg
+          ></span>
+          <h3 class="lpt-issue__title">請求漏れ、ミスが減らない。</h3>
+          <a class="lpt-issue__solution" href="#lpt-reason-02"
+            >未請求台帳NO確認リストで解決</a
+          >
+        </article>
+        <article class="lpt-issue">
+          <span class="lpt-icon-wrap" aria-hidden="true"
+            ><svg class="lpt-icon"><use href="#lpt-i-chart"></use></svg
+          ></span>
+          <h3 class="lpt-issue__title">取扱実績の集計が大変。</h3>
+          <a class="lpt-issue__solution" href="#lpt-sys-jisseki"
+            >実績管理のデータ蓄積で解決</a
+          >
+        </article>
+      </div>
+      <div class="lpt-issues__answer">
+        <div class="lpt-issues__answer-arrow" aria-hidden="true"></div>
+        <p class="lpt-issues__answer-text">
+          その悩み、輸出入管理システム<br /><em
+            >「LOGI-Cube PORT」が解決</em
+          >します。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OVERVIEW：製品概要 ============ -->
+  <section class="lpt-section lpt-section--soft" id="lpt-overview">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">OVERVIEW</div>
+        <h2 class="lpt-sectionhead__title">
+          <!-- 「製｜品概要」のような途中改行を防ぐため、製品名の前で改行し、残りを言葉のまとまりで囲む -->
+          輸出入管理システム<br /><span class="lpt-phrase"
+            >「LOGI-Cube PORT」の</span
+          ><span class="lpt-phrase">製品概要</span>
+        </h2>
+        <p class="lpt-sectionhead__text">
+          LOGI-Cube PORT（ロジキューブ
+          ポート）は、煩雑な輸出入業務をシンプルにすることで、早くて正確な業務遂行を実現するシステムです。<br />「受注管理」「債権管理」「手配管理」「下払管理」「実績管理」を行うことができます。
+        </p>
+      </header>
+
+      <!-- 現行ページ記載の5つの管理機能を、業務の流れの順に並べたもの -->
+      <div class="lpt-flowline" role="list" aria-label="カバーする業務の流れ">
+        <div class="lpt-flowline__step" role="listitem">
+          <svg class="lpt-icon" aria-hidden="true">
+            <use href="#lpt-i-file"></use>
+          </svg>
+          <div class="lpt-flowline__label">受注管理</div>
+          <div class="lpt-flowline__sub">輸出入台帳</div>
+        </div>
+        <div class="lpt-flowline__step" role="listitem">
+          <svg class="lpt-icon" aria-hidden="true">
+            <use href="#lpt-i-clipboard"></use>
+          </svg>
+          <div class="lpt-flowline__label">手配管理</div>
+          <div class="lpt-flowline__sub">コンテナ・通関情報</div>
+        </div>
+        <div class="lpt-flowline__step" role="listitem">
+          <svg class="lpt-icon" aria-hidden="true">
+            <use href="#lpt-i-invoice"></use>
+          </svg>
+          <div class="lpt-flowline__label">債権管理</div>
+          <div class="lpt-flowline__sub">請求入力・請求書</div>
+        </div>
+        <div class="lpt-flowline__step" role="listitem">
+          <svg class="lpt-icon" aria-hidden="true">
+            <use href="#lpt-i-yen"></use>
+          </svg>
+          <div class="lpt-flowline__label">下払管理</div>
+          <div class="lpt-flowline__sub">下払明細書</div>
+        </div>
+        <div class="lpt-flowline__step" role="listitem">
+          <svg class="lpt-icon" aria-hidden="true">
+            <use href="#lpt-i-chart"></use>
+          </svg>
+          <div class="lpt-flowline__label">実績管理</div>
+          <div class="lpt-flowline__sub">取扱実績・Excel出力</div>
+        </div>
+      </div>
+
+      <div class="lpt-map">
+        <div class="lpt-map__base">
+          <div class="lpt-map__base-grid">
+            <div>
+              <div class="lpt-map__base-head">
+                <span class="lpt-icon-wrap" aria-hidden="true"
+                  ><svg class="lpt-icon"><use href="#lpt-i-ship"></use></svg
+                ></span>
+                <div>
+                  <span class="lpt-map__tag">輸出入管理システム</span>
+                  <h3 class="lpt-map__base-title">LOGI-Cube PORT</h3>
+                </div>
+              </div>
+              <p class="lpt-map__base-text">
+                受注～手配～債権～下払のデータを蓄積し、取扱実績として活用できます。
+              </p>
+            </div>
+            <div class="lpt-map__base-image">
+              <img
+                loading="lazy"
+                src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_product.png"
+                alt="ノートパソコンに表示した輸出入管理システムLOGI-Cube PORTの画面"
+                width="484"
+                height="288" />
+            </div>
+          </div>
+        </div>
+        <!-- 現行ページの関連リンク・FAQ に出てくる LOGI-Cube シリーズの2製品 -->
+        <div class="lpt-map__connector">LOGI-Cubeシリーズ</div>
+        <div class="lpt-map__options">
+          <a
+            class="lpt-map__option"
+            href="https://commoncom.jp/logi-cube/express/">
+            <span class="lpt-icon-wrap" aria-hidden="true"
+              ><svg class="lpt-icon"><use href="#lpt-i-truck"></use></svg
+            ></span>
+            <div class="lpt-map__option-tag">運送管理システム</div>
+            <h3 class="lpt-map__option-title">LOGI-Cube EXPRESS</h3>
+            <p class="lpt-map__option-text">
+              日計表管理を基本に、配車・日報・請求・原価管理をひとつに。
+            </p>
+          </a>
+          <a
+            class="lpt-map__option"
+            href="https://commoncom.jp/logi-cube/storage/">
+            <span class="lpt-icon-wrap" aria-hidden="true"
+              ><svg class="lpt-icon"><use href="#lpt-i-warehouse"></use></svg
+            ></span>
+            <div class="lpt-map__option-tag">倉庫管理システム</div>
+            <h3 class="lpt-map__option-title">LOGI-Cube STORAGE</h3>
+            <p class="lpt-map__option-text">
+              自社で倉庫をお持ちの場合は、「STORAGE」を導入いただくことで管理可能となります。
+            </p>
+          </a>
+        </div>
+        <!-- 現行ページの FAQ・選ばれる理由・実績管理に記載の連携／出力 -->
+        <ul class="lpt-map__integrations">
+          <li
+            class="lpt-map__integrations-label"
+            style="border: 0; background: none; padding: 0">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-plug"></use></svg
+            >データ連携
+          </li>
+          <li>NACCS連携（オプション）</li>
+          <li>仕訳連携（売上・入金引当・下払）</li>
+          <li>Excel出力</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURE：機能（現行ページの5機能を EXPRESS と同じタブで表示） ============ -->
+  <section class="lpt-section" id="lpt-features">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">FEATURE</div>
+        <h2 class="lpt-sectionhead__title">
+          <!-- 「機｜能」のような途中改行を防ぐため、製品名の前で改行し、残りを言葉のまとまりで囲む -->
+          輸出入管理システム<br /><span class="lpt-phrase"
+            >「LOGI-Cube PORT」の</span
+          ><span class="lpt-phrase">機能</span>
+        </h2>
+      </header>
+      <div class="lpt-tabs" id="lpt-tabs">
+        <div class="lpt-tablist" role="tablist" aria-label="管理機能ごとの説明">
+          <button
+            class="lpt-tab is-active"
+            type="button"
+            data-lpt-tab="lpt-sys-juchu">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-file"></use></svg
+            >受注管理
+          </button>
+          <button class="lpt-tab" type="button" data-lpt-tab="lpt-sys-tehai">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-clipboard"></use></svg
+            >手配管理
+          </button>
+          <button class="lpt-tab" type="button" data-lpt-tab="lpt-sys-saiken">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-invoice"></use></svg
+            >債権管理
+          </button>
+          <button class="lpt-tab" type="button" data-lpt-tab="lpt-sys-shitabarai">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-yen"></use></svg
+            >下払管理
+          </button>
+          <button class="lpt-tab" type="button" data-lpt-tab="lpt-sys-jisseki">
+            <svg class="lpt-icon" aria-hidden="true">
+              <use href="#lpt-i-chart"></use></svg
+            >実績管理
+          </button>
+        </div>
+
+        <!-- 受注管理 -->
+        <article class="lpt-tabpanel is-active" id="lpt-sys-juchu">
+          <div class="lpt-tabpanel__grid">
+            <div>
+              <span class="lpt-tabpanel__tag">管理機能 01</span>
+              <h3 class="lpt-tabpanel__title">受注管理</h3>
+              <ul class="lpt-checklist">
+                <li>
+                  入力必須項目を最小限に抑えて、入力業務のスピードアップを図ります。
+                </li>
+                <li>過去の取引履歴は複写機能で再利用できます。</li>
+                <li>
+                  SHIPPING INSTRUCTIONは行あふれの場合、別紙アタッチシートに自動展開。
+                </li>
+              </ul>
+            </div>
+            <div class="lpt-shots">
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="輸出台帳入力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/49505a21b01f47a6e872d0d212564a8b.png"
+                    alt="輸出入管理システムの輸出台帳入力画面" />
+                </a>
+                <figcaption>輸出台帳入力画面</figcaption>
+              </figure>
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="輸入台帳入力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/adf8ceb9ca4c1fa07831640c9d94323f.png"
+                    alt="輸出入管理システムの輸入台帳入力画面" />
+                </a>
+                <figcaption>輸入台帳入力画面</figcaption>
+              </figure>
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="SHIPPING INSTRUCTIONを拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/SHIPPING-INSTRUCTION.png"
+                    alt="輸出入管理システムで発行したSHIPPING INSTRUCTION" />
+                </a>
+                <figcaption>SHIPPING INSTRUCTION</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <!-- 手配管理 -->
+        <article class="lpt-tabpanel" id="lpt-sys-tehai">
+          <div class="lpt-tabpanel__grid">
+            <div>
+              <span class="lpt-tabpanel__tag">管理機能 02</span>
+              <h3 class="lpt-tabpanel__title">手配管理</h3>
+              <ul class="lpt-checklist">
+                <li>受注データをもとにして、作業漏れをなくします。</li>
+                <li>
+                  作業予定・指示状態等、全体把握できるような入力画面です。
+                </li>
+              </ul>
+            </div>
+            <div class="lpt-shots">
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="コンテナ情報（輸入台帳）を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/c0faaa1e81fe18c90e10bb3b5e9d4847.png"
+                    alt="輸入台帳のコンテナ情報入力画面" />
+                </a>
+                <figcaption>コンテナ情報（輸入台帳）</figcaption>
+              </figure>
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="通関情報（輸入台帳）を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/fce7cb83f09549412a1586c9e52df273.png"
+                    alt="輸入台帳の通関情報入力画面" />
+                </a>
+                <figcaption>通関情報（輸入台帳）</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <!-- 債権管理 -->
+        <article class="lpt-tabpanel" id="lpt-sys-saiken">
+          <div class="lpt-tabpanel__grid">
+            <div>
+              <span class="lpt-tabpanel__tag">管理機能 03</span>
+              <h3 class="lpt-tabpanel__title">債権管理</h3>
+              <ul class="lpt-checklist">
+                <li>
+                  月末に集中しがちな請求書は随時発行機能により負荷分散を図ります。
+                </li>
+                <li>
+                  請求入力画面にて下払額の入力も可能。利益把握しながら業務可能です。
+                </li>
+              </ul>
+            </div>
+            <div class="lpt-shots">
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="請求入力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/04b2e1b9ba29e4cacb80d952e3598935.png"
+                    alt="下払額も入力できる請求入力画面" />
+                </a>
+                <figcaption>請求入力</figcaption>
+              </figure>
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="請求書を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/14c1c15e021585a45b90b3b64dcdc0cf.png"
+                    alt="輸出入管理システムから発行した請求書" />
+                </a>
+                <figcaption>請求書</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <!-- 下払管理 -->
+        <article class="lpt-tabpanel" id="lpt-sys-shitabarai">
+          <div class="lpt-tabpanel__grid">
+            <div>
+              <span class="lpt-tabpanel__tag">管理機能 04</span>
+              <h3 class="lpt-tabpanel__title">下払管理</h3>
+              <ul class="lpt-checklist">
+                <li>請求書作成時に入力した下払額より予定管理ができます。</li>
+                <li>立替金の入力もできます。</li>
+                <li>
+                  下払は請求書との結び付けで、どの請求に対する支払かは一目瞭然です。
+                </li>
+              </ul>
+            </div>
+            <div class="lpt-shots">
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="請求入力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/96388e31b70c36b0e1a86706d628bcb3.png"
+                    alt="下払額を入力する請求入力画面" />
+                </a>
+                <figcaption>請求入力</figcaption>
+              </figure>
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="下払明細書を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/506f8cc87e49c8c9e5e56745b8f8eb4f.png"
+                    alt="輸出入管理システムから出力した下払明細書" />
+                </a>
+                <figcaption>下払明細書</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <!-- 実績管理 -->
+        <article class="lpt-tabpanel" id="lpt-sys-jisseki">
+          <div class="lpt-tabpanel__grid">
+            <div>
+              <span class="lpt-tabpanel__tag">管理機能 05</span>
+              <h3 class="lpt-tabpanel__title">実績管理</h3>
+              <ul class="lpt-checklist">
+                <li>
+                  受注～手配～債権～下払のデータを蓄積、取扱実績として活用可能。
+                </li>
+                <li>
+                  通関業者として必要な年次取扱実績報告業務にスピード対応可能。
+                </li>
+                <li>データをExcelに出力して分析資料の作成が可能。</li>
+              </ul>
+            </div>
+            <div class="lpt-shots">
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="ファイル出力画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_system05_01.png"
+                    alt="蓄積したデータを出力するファイル出力画面" />
+                </a>
+                <figcaption>ファイル出力画面</figcaption>
+              </figure>
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="Excel画面を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_system05_02.png"
+                    alt="Excelに出力した取扱実績データ" />
+                </a>
+                <figcaption>Excel画面</figcaption>
+              </figure>
+              <figure class="lpt-shot">
+                <a
+                  class="lpt-lightbox-trigger"
+                  href="#"
+                  aria-label="未収金管理表を拡大表示">
+                  <img
+                    loading="lazy"
+                    src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_system05_03.png"
+                    alt="輸出入管理システムから出力した未収金管理表" />
+                </a>
+                <figcaption>未収金管理表</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA（中間） ============ -->
+  <section class="lpt-cta lpt-cta--compact" aria-label="無料相談のご案内">
+    <div class="lpt-container lpt-cta__inner">
+      <div>
+        <p class="lpt-cta__title">輸出入業務の効率化、まずは無料でご相談ください。</p>
+        <p class="lpt-cta__text">
+          受注・手配から請求・下払、実績管理、NACCS連携までご相談いただけます。
+        </p>
+      </div>
+      <div class="lpt-cta__actions lpt-actions">
+        <a
+          class="lpt-button lpt-button--ghost"
+          href="https://commoncom.jp/logi-cube-download/"
+          >資料請求（無料）</a
+        >
+        <a
+          class="lpt-button lpt-button--primary"
+          href="https://commoncom.jp/contact/"
+          >今すぐ無料で相談する</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REASON：選ばれる理由 ============ -->
+  <section class="lpt-section" id="lpt-reasons">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">REASON</div>
+        <h2 class="lpt-sectionhead__title">
+          <!-- 「選｜ばれる理由」のような途中改行を防ぐため、製品名の前で改行し、残りを言葉のまとまりで囲む -->
+          輸出入管理システム<br /><span class="lpt-phrase"
+            >「LOGI-Cube PORT」が</span
+          ><span class="lpt-phrase">選ばれる理由</span>
+        </h2>
+      </header>
+      <article class="lpt-reason" id="lpt-reason-01">
+        <div class="lpt-reason__copy">
+          <div class="lpt-reason__num">
+            <strong>01</strong><span>POINT</span>
+          </div>
+          <h3 class="lpt-reason__title">輸出入業務に特化した項目、書類</h3>
+          <p class="lpt-reason__text">
+            「SHIPPING INSTRUCTION」「B/L」「A/N」「DELIVERY
+            ORDER」等、必要な書類の発行機能、書類に必要な項目及びアタッチシートへの自動展開など、輸出入取引に特化した機能を標準装備しています。
+          </p>
+        </div>
+        <div class="lpt-reason__visual">
+          <a
+            class="lpt-lightbox-trigger"
+            href="#"
+            aria-label="輸出台帳入力画面を拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_point01.png"
+              alt="S/I NOや業務担当・通関担当を入力する輸出台帳入力画面" />
+          </a>
+        </div>
+      </article>
+      <article class="lpt-reason" id="lpt-reason-02">
+        <div class="lpt-reason__copy">
+          <div class="lpt-reason__num">
+            <strong>02</strong><span>POINT</span>
+          </div>
+          <h3 class="lpt-reason__title">請求書・立替請求書の発行</h3>
+          <p class="lpt-reason__text">
+            請求書、立替請求書をそれぞれ発行でき、請求明細と立替明細を１枚の請求書に反映させる事も可能です。「未請求台帳NO確認リスト」で“請求漏れ”も防ぎます。
+          </p>
+        </div>
+        <div class="lpt-reason__visual">
+          <a
+            class="lpt-lightbox-trigger"
+            href="#"
+            aria-label="請求書・立替請求書の画面を拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_point02.png"
+              alt="請求明細と立替明細を反映できる請求書・立替請求書の発行画面" />
+          </a>
+        </div>
+      </article>
+      <article class="lpt-reason" id="lpt-reason-03">
+        <div class="lpt-reason__copy">
+          <div class="lpt-reason__num">
+            <strong>03</strong><span>POINT</span>
+          </div>
+          <h3 class="lpt-reason__title">収支管理</h3>
+          <p class="lpt-reason__text">
+            「請求入力」にて請求明細毎に下払金額の入力ができます。利益を確認しながらの入力も可能です。これにより、１台帳毎、１項目毎の利益も簡単に把握できます。
+          </p>
+        </div>
+        <div class="lpt-reason__visual">
+          <a
+            class="lpt-lightbox-trigger"
+            href="#"
+            aria-label="収支管理の画面を拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_point03.png"
+              alt="請求明細ごとに下払金額を入力し利益を確認できる請求入力画面" />
+          </a>
+        </div>
+      </article>
+      <article class="lpt-reason" id="lpt-reason-04">
+        <div class="lpt-reason__copy">
+          <div class="lpt-reason__num">
+            <strong>04</strong><span>POINT</span>
+          </div>
+          <h3 class="lpt-reason__title">仕訳連携</h3>
+          <p class="lpt-reason__text">
+            売上、入金引当、下払の仕訳連携が可能です。立替は別科目にて仕訳作成します。取引先毎の補助科目機能もあります。
+          </p>
+        </div>
+        <div class="lpt-reason__visual">
+          <a
+            class="lpt-lightbox-trigger"
+            href="#"
+            aria-label="仕訳連携の画面を拡大表示">
+            <img
+              loading="lazy"
+              src="https://commoncom.jp/wp/wp-content/uploads/2025/10/port_point04.png"
+              alt="売上・入金引当・下払の仕訳連携画面" />
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ MOVIE：動画（現行ページの YouTube 2本） ============ -->
+  <section class="lpt-section lpt-section--soft" id="lpt-movie">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">MOVIE</div>
+        <h2 class="lpt-sectionhead__title">動画でわかる輸出入管理システム</h2>
+      </header>
+      <div class="lpt-movies">
+        <article class="lpt-movie">
+          <div class="lpt-movie__frame">
+            <iframe
+              src="https://www.youtube.com/embed/S8WXgD13iKI"
+              title="LOGI-Cube（ロジキューブ）：輸出入管理システム「PORT」"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen></iframe>
+          </div>
+          <h3 class="lpt-movie__title">
+            LOGI-Cube（ロジキューブ）：輸出入管理システム「PORT」
+          </h3>
+        </article>
+        <article class="lpt-movie">
+          <div class="lpt-movie__frame">
+            <iframe
+              src="https://www.youtube.com/embed/onCJCdJ6xfE"
+              title="【革命】デジタルで進化する港湾業務！サイバーポートの全貌"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen></iframe>
+          </div>
+          <h3 class="lpt-movie__title">
+            【革命】デジタルで進化する港湾業務！サイバーポートの全貌
+          </h3>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="lpt-section" id="lpt-faq">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">FAQ</div>
+        <h2 class="lpt-sectionhead__title">
+          輸出入管理システムに関するよくあるご質問
+        </h2>
+      </header>
+      <div class="lpt-faq">
+        <details class="lpt-faq__item">
+          <summary class="lpt-faq__question">NACCSと連携はできますか？</summary>
+          <p class="lpt-faq__answer">可能です。オプションシステムとなります。</p>
+        </details>
+        <details class="lpt-faq__item">
+          <summary class="lpt-faq__question">
+            自社で倉庫を持ってます。システムで管理可能ですか？
+          </summary>
+          <p class="lpt-faq__answer">
+            LOGI-Cubeシリーズの「Storage」を導入頂くことで管理可能となります。
+          </p>
+        </details>
+        <details class="lpt-faq__item">
+          <summary class="lpt-faq__question">
+            システムの動作環境を教えてもらえますか？
+          </summary>
+          <p class="lpt-faq__answer">
+            システム要件に関しては<a
+              class="lpt-textlink"
+              href="https://commoncom.jp/spec/"
+              target="_blank"
+              rel="noreferrer noopener"
+              >こちら</a
+            >で確認できます。
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA（最終） ============ -->
+  <section class="lpt-cta lpt-cta--final">
+    <div class="lpt-container lpt-cta__inner">
+      <h2 class="lpt-cta__title">輸出入管理の課題、まとめてご相談ください。</h2>
+      <p class="lpt-cta__text">
+        資料請求、導入相談のいずれからでも進められます。
+      </p>
+      <div class="lpt-cta__actions lpt-actions">
+        <a
+          class="lpt-button lpt-button--ghost"
+          href="https://commoncom.jp/logi-cube-download/"
+          >資料請求（無料）</a
+        >
+        <a
+          class="lpt-button lpt-button--primary"
+          href="https://commoncom.jp/contact/"
+          >今すぐ無料で相談する</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COLUMN：関連コラム ============ -->
+  <section class="lpt-section" id="lpt-columns">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">COLUMN</div>
+        <h2 class="lpt-sectionhead__title">関連コラム</h2>
+      </header>
+      <!-- 記事一覧を入れる枠。WordPress でこのHTMLブロックの直後に置いた
+           SWELL「投稿リスト」ブロック（カテゴリー：PORT）を、JS でここへ移す。
+           コラムに「PORT」カテゴリーを付けて公開すると、自動でここに表示される -->
+      <div class="lpt-columns-slot" id="lpt-columns-slot"></div>
+    </div>
+  </section>
+
+  <!-- ============ SERIES：関連システム（現行ページ下部のリンクのうち、LOGI-Cube の製品2つ。
+       「動作環境」は製品ではないため載せない。動作環境への案内は FAQ に残っている） ============ -->
+  <section class="lpt-section lpt-section--soft" id="lpt-series">
+    <div class="lpt-container">
+      <header class="lpt-sectionhead">
+        <div class="lpt-sectionhead__en">SERIES</div>
+        <h2 class="lpt-sectionhead__title">関連する物流システム</h2>
+      </header>
+      <div class="lpt-siblings">
+        <article class="lpt-sibling">
+          <span class="lpt-icon-wrap" aria-hidden="true"
+            ><svg class="lpt-icon"><use href="#lpt-i-truck"></use></svg
+          ></span>
+          <h3 class="lpt-sibling__title">
+            運送管理システム「LOGI-Cube EXPRESS」
+          </h3>
+          <p class="lpt-card__text">
+            日計表管理を基本に、配車・日報・請求・原価管理をひとつに。
+          </p>
+          <div class="lpt-actions">
+            <a
+              class="lpt-button lpt-button--secondary"
+              href="https://commoncom.jp/logi-cube/express/"
+              >EXPRESSを見る</a
+            >
+          </div>
+        </article>
+        <article class="lpt-sibling">
+          <span class="lpt-icon-wrap" aria-hidden="true"
+            ><svg class="lpt-icon"><use href="#lpt-i-warehouse"></use></svg
+          ></span>
+          <h3 class="lpt-sibling__title">
+            倉庫管理システム「LOGI-Cube STORAGE」
+          </h3>
+          <p class="lpt-card__text">
+            入出庫・在庫管理から保管料・荷役料計算まで。倉庫業務をひとつに。
+          </p>
+          <div class="lpt-actions">
+            <a
+              class="lpt-button lpt-button--secondary"
+              href="https://commoncom.jp/logi-cube/storage/"
+              >STORAGEを見る</a
+            >
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 画像クリック時の拡大表示 -->
+  <div class="lpt-lightbox" id="lpt-lightbox" aria-hidden="true">
+    <div
+      class="lpt-lightbox__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="画像拡大表示">
+      <button class="lpt-lightbox__close" type="button" aria-label="閉じる">
+        ×
+      </button>
+      <img class="lpt-lightbox__image" src="" alt="" />
+    </div>
+  </div>
+
+  <!-- 検索エンジン向けの構造化データ（製品情報・FAQ・パンくず） -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "LOGI-Cube PORT",
+      "alternateName": "ロジキューブ ポート",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Windows",
+      "description": "通関・フォワーダー業者様・海貨・海運業者様向けの輸出入管理システム。煩雑な輸出入業務をシンプルにすることで、早くて正確な業務遂行を実現します。受注管理・債権管理・手配管理・下払管理・実績管理に対応しています。",
+      "url": "https://commoncom.jp/logi-cube/port/",
+      "image": "https://commoncom.jp/wp/wp-content/uploads/2025/10/port_product.png",
+      "featureList": [
+        "受注管理（輸出入台帳入力、複写機能、SHIPPING INSTRUCTIONのアタッチシート自動展開）",
+        "手配管理（コンテナ情報・通関情報の管理）",
+        "債権管理（請求書の随時発行、下払額の入力）",
+        "下払管理（下払の予定管理、立替金の入力、下払明細書）",
+        "実績管理（取扱実績の蓄積、年次取扱実績報告、Excel出力）",
+        "SHIPPING INSTRUCTION・B/L・A/N・DELIVERY ORDER等の書類発行",
+        "請求書・立替請求書の発行、未請求台帳NO確認リスト",
+        "売上・入金引当・下払の仕訳連携",
+        "NACCS連携（オプション）"
+      ],
+      "provider": {
+        "@type": "Organization",
+        "name": "コモンコム",
+        "url": "https://commoncom.jp/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "NACCSと連携はできますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可能です。オプションシステムとなります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "自社で倉庫を持ってます。システムで管理可能ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "LOGI-Cubeシリーズの「Storage」を導入頂くことで管理可能となります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "システムの動作環境を教えてもらえますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "LOGI-Cubeのシステム要件ページで対応環境を確認できます。https://commoncom.jp/spec/"
+          }
+        }
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "ホーム",
+          "item": "https://commoncom.jp/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "LOGI-Cube",
+          "item": "https://commoncom.jp/logi-cube/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "LOGI-Cube PORT",
+          "item": "https://commoncom.jp/logi-cube/port/"
+        }
+      ]
+    }
+  </script>
+  <script>
+    (function () {
+      var root = document.getElementById("lpt-root");
+      if (!root) return;
+
+      /* ---- 機能タブ（EXPRESS と同じプログレッシブエンハンスメント） ---- */
+      var tabsWrap = root.querySelector("#lpt-tabs");
+      var tabButtons = [];
+      function activateTab(id) {
+        if (!tabsWrap) return false;
+        var panels = tabsWrap.querySelectorAll(".lpt-tabpanel");
+        var found = false;
+        panels.forEach(function (p) {
+          if (p.id === id) found = true;
+        });
+        if (!found) return false;
+        panels.forEach(function (p) {
+          if (p.id === id) p.classList.add("is-active");
+          else p.classList.remove("is-active");
+        });
+        tabButtons.forEach(function (b) {
+          if (b.getAttribute("data-lpt-tab") === id)
+            b.classList.add("is-active");
+          else b.classList.remove("is-active");
+        });
+        return true;
+      }
+      if (tabsWrap) {
+        tabsWrap.classList.add("is-js");
+        tabButtons = Array.prototype.slice.call(
+          tabsWrap.querySelectorAll(".lpt-tab"),
+        );
+        tabButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            activateTab(btn.getAttribute("data-lpt-tab"));
+          });
+        });
+      }
+
+      /* ---- ライトボックス（画像をクリックすると拡大表示） ---- */
+      var lightbox = root.querySelector("#lpt-lightbox");
+      var lightboxImage = lightbox
+        ? lightbox.querySelector(".lpt-lightbox__image")
+        : null;
+      var closeButton = lightbox
+        ? lightbox.querySelector(".lpt-lightbox__close")
+        : null;
+
+      function bindLightbox(scope) {
+        if (!lightbox) return;
+        if (!lightboxImage) return;
+        var triggers = scope.querySelectorAll(".lpt-lightbox-trigger");
+        triggers.forEach(function (trigger) {
+          if (trigger.dataset.lightboxBound === "true") return;
+          trigger.dataset.lightboxBound = "true";
+          trigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            var img = trigger.querySelector("img");
+            if (!img) return;
+            lightboxImage.src = img.getAttribute("src");
+            lightboxImage.alt = img.alt || "";
+            lightbox.classList.add("is-open");
+            lightbox.setAttribute("aria-hidden", "false");
+            document.documentElement.style.overflow = "hidden";
+            if (closeButton) closeButton.focus();
+          });
+        });
+      }
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove("is-open");
+        lightbox.setAttribute("aria-hidden", "true");
+        if (lightboxImage) lightboxImage.src = "";
+        document.documentElement.style.overflow = "";
+      }
+
+      if (closeButton) closeButton.addEventListener("click", closeLightbox);
+      if (lightbox) {
+        lightbox.addEventListener("click", function (e) {
+          if (e.target === lightbox) closeLightbox();
+        });
+      }
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        if (!lightbox) return;
+        if (!lightbox.classList.contains("is-open")) return;
+        closeLightbox();
+      });
+      bindLightbox(root);
+
+      /* ---- スムーススクロール（固定ヘッダー分を補正。処理内容は EXPRESS / STORAGE と同じ） ---- */
+      function headerEl() {
+        var header = document.querySelector("#header");
+        if (header) return header;
+        header = document.querySelector(".l-header");
+        if (header) return header;
+        var headers = document.querySelectorAll("header");
+        var i;
+        for (i = 0; i < headers.length; i++) {
+          if (!root.contains(headers[i])) return headers[i];
+        }
+        return null;
+      }
+      function overlayHeaderEl() {
+        var fix = document.getElementById("fix_header");
+        var header;
+        var style;
+        if (fix) {
+          style = getComputedStyle(fix);
+          if (style.display !== "none") {
+            if (style.position === "fixed") return fix;
+            if (style.position === "sticky") return fix;
+          }
+        }
+        header = headerEl();
+        if (header) {
+          style = getComputedStyle(header);
+          if (style.position === "fixed") return header;
+          if (style.position === "sticky") return header;
+        }
+        return null;
+      }
+      function headerOffset() {
+        var extra = 16;
+        var adminH = 0;
+        var admin = document.getElementById("wpadminbar");
+        var overlay;
+        var swell;
+        var header;
+        var style;
+        if (admin) {
+          style = getComputedStyle(admin);
+          if (style.display !== "none") {
+            if (style.position === "fixed")
+              adminH = admin.getBoundingClientRect().height;
+            else if (style.position === "sticky")
+              adminH = admin.getBoundingClientRect().height;
+          }
+        }
+        overlay = overlayHeaderEl();
+        if (overlay)
+          return adminH + overlay.getBoundingClientRect().height + extra;
+        swell = parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--swl-offset_y",
+          ),
+        );
+        if (!isNaN(swell)) {
+          if (swell > 0) return adminH + swell + extra;
+        }
+        header = headerEl();
+        if (header) return adminH + header.offsetHeight + extra;
+        return adminH + 72;
+      }
+      /* ヒーローを「画面高さ − ヘッダー高さ」に合わせる（STORAGE と同じ） */
+      function updateFirstFold() {
+        var header = headerEl();
+        var headerH = 0;
+        var fold;
+        var vw;
+        var hh;
+        var headerVar;
+        if (header) headerH = header.offsetHeight;
+        fold = window.innerHeight - headerH;
+        if (fold < 360) fold = 360;
+        vw = document.documentElement.clientWidth + "px";
+        hh = Math.round(fold) + "px";
+        headerVar = Math.round(headerH) + "px";
+        var currentH = parseFloat(root.style.getPropertyValue("--lpt-hero-h"));
+        var delta;
+        if (!isNaN(currentH)) {
+          delta = currentH - fold;
+          if (delta < 0) delta = -delta;
+          if (delta < 8) hh = Math.round(currentH) + "px";
+        }
+        if (root.style.getPropertyValue("--lpt-vw") === vw) {
+          if (root.style.getPropertyValue("--lpt-hero-h") === hh) {
+            if (root.style.getPropertyValue("--lpt-header-h") === headerVar)
+              return;
+          }
+        }
+        root.style.setProperty("--lpt-header-h", headerVar);
+        root.style.setProperty("--lpt-vw", vw);
+        root.style.setProperty("--lpt-hero-h", hh);
+      }
+      function updateScrollMargin() {
+        root.style.setProperty("--lpt-scroll-margin", headerOffset() + "px");
+        updateFirstFold();
+      }
+      function scrollToTarget(target, behavior) {
+        var top =
+          target.getBoundingClientRect().top +
+          window.pageYOffset -
+          headerOffset();
+        window.scrollTo({ top: top, behavior: behavior || "auto" });
+      }
+      function getHashTarget(hash) {
+        var id = (hash || "").replace("#", "");
+        if (!id) return null;
+        return document.getElementById(id);
+      }
+      /* リンク先が機能タブのパネルなら、そのタブを開いてから機能セクションへスクロールする（EXPRESS と同じ） */
+      function prepareTarget(target) {
+        if (!target.classList) return;
+        if (target.classList.contains("lpt-tabpanel")) activateTab(target.id);
+      }
+      function scrollTargetFor(target) {
+        var features;
+        if (!target) return target;
+        if (!target.classList) return target;
+        if (!target.classList.contains("lpt-tabpanel")) return target;
+        features = root.querySelector("#lpt-features");
+        if (features) return features;
+        return target;
+      }
+      function goToTarget(target, behavior) {
+        var dest = scrollTargetFor(target);
+        function run() {
+          scrollToTarget(dest, behavior);
+        }
+        if (window.requestAnimationFrame) requestAnimationFrame(run);
+        else run();
+      }
+
+      document.addEventListener(
+        "click",
+        function (e) {
+          if (e.defaultPrevented) return;
+          if (e.button !== 0) return;
+          if (e.metaKey) return;
+          if (e.ctrlKey) return;
+          if (e.shiftKey) return;
+          if (e.altKey) return;
+          var link = e.target.closest("a");
+          if (!link) return;
+          if (link.getAttribute("target") === "_blank") return;
+          var href = link.getAttribute("href");
+          if (!href) return;
+          if (href.indexOf("#") === -1) return;
+          var url;
+          try {
+            url = new URL(link.href, location.href);
+          } catch (err) {
+            return;
+          }
+          if (url.hash.length < 2) return;
+          var samePath = true;
+          try {
+            samePath =
+              decodeURIComponent(url.pathname) ===
+              decodeURIComponent(location.pathname);
+          } catch (err2) {
+            samePath = url.pathname === location.pathname;
+          }
+          if (!samePath) return;
+          var target = getHashTarget(url.hash);
+          if (!target) return;
+          if (!root.contains(target)) return;
+          e.preventDefault();
+          e.stopPropagation();
+          prepareTarget(target);
+          if (history.pushState) history.pushState(null, "", url.hash);
+          goToTarget(target, "smooth");
+        },
+        true,
+      );
+
+      function syncHashScroll(behavior) {
+        var target = getHashTarget(location.hash);
+        if (!target) return;
+        if (!root.contains(target)) return;
+        prepareTarget(target);
+        goToTarget(target, behavior || "auto");
+      }
+      window.addEventListener("hashchange", function () {
+        syncHashScroll("smooth");
+      });
+      window.addEventListener("resize", updateScrollMargin);
+      window.addEventListener("load", updateFirstFold);
+      updateScrollMargin();
+      if (window.ResizeObserver) {
+        var foldObserver = new ResizeObserver(function () {
+          updateFirstFold();
+        });
+        var siteHeader = headerEl();
+        if (siteHeader) foldObserver.observe(siteHeader);
+      }
+      function correctHashScroll() {
+        if (!location.hash) return;
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 0);
+        setTimeout(function () {
+          syncHashScroll("auto");
+        }, 80);
+      }
+      if (document.readyState === "complete") correctHashScroll();
+      else window.addEventListener("load", correctHashScroll);
+
+      /* ---- 関連コラム：直後に置いた「投稿リスト」ブロックを COLUMN セクションの枠へ移す ----
+         投稿リストブロックはこのHTMLブロックより後ろに出力され、このスクリプトの実行時点では
+         まだ読み込まれていないため、ページの HTML を読み終えてから移す。
+         サイドバーなど別の場所の投稿リストを拾わないよう、#lpt-root の後ろに並ぶ要素だけを探す */
+      function findColumnList() {
+        var node = root.nextElementSibling;
+        while (node) {
+          if (node.classList.contains("p-postListWrap")) return node;
+          node = node.nextElementSibling;
+        }
+        return null;
+      }
+      function mountColumnList() {
+        var slot = root.querySelector("#lpt-columns-slot");
+        var list;
+        if (!slot) return;
+        list = findColumnList();
+        if (!list) return;
+        slot.appendChild(list);
+      }
+      if (document.readyState === "loading")
+        document.addEventListener("DOMContentLoaded", mountColumnList);
+      else mountColumnList();
+    })();
+  </script>
+</div>

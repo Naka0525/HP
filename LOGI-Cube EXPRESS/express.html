@@ -7,6 +7,10 @@
   - 配色は「ネイビー #0d2534 / ティール #00b794」の2色 + CTA専用オレンジ #f59a1d のみ。kintone系(黄)とはトーン分離
   - 汎用クラスを使わず lxp- プレフィックスで隔離。すべてのCSSを #lxp-root 配下にスコープ
   - CONTACT の #lxp-form-slot に、直後の Contact Form 7 ブロックを JS で移動する
+  - 関連コラムは自動更新にする。WordPress でこのHTMLブロックの後ろに SWELL「投稿リスト」ブロックを置き、
+    JS で COLUMN セクションの枠（#lxp-columns-slot）へ移す。ブロックの設定は次のとおり
+    カテゴリー: EXPRESS（ID 18） / 表示件数: 3 / 並び順: 新着順 / 表示タイプ: カード
+    （グループなどで囲まずに置く。コラムに「EXPRESS」カテゴリーを付けると自動で表示される）
   - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子(&の連続)を使わない
   - SWELL の h1.c-pageTitle は残し、直書きHTMLでは h1 もタイトル文言も書かない。
     プレースホルダ p.lxp-hero__title は空にして、JS で SWELL の h1 と差し替える。
@@ -308,6 +312,11 @@
     line-height: 1.4;
     letter-spacing: 0.03em;
   }
+  /* 長い見出しを言葉のまとまりの途中で折り返さないための囲み（STORAGE / PORT と同じ）。
+     囲んだ部分は1つの塊として扱われ、入りきらないときは塊ごと次の行へ送られる */
+  body #lxp-root .lxp-phrase {
+    display: inline-block;
+  }
   body #lxp-root .lxp-sectionhead__text {
     margin-top: 18px;
     font-size: 15.5px;
@@ -464,6 +473,10 @@
     font-size: clamp(30px, 4.6vw, 46px);
     line-height: 1.32;
     letter-spacing: 0.02em;
+    /* 大見出しが「ス｜マート」のように単語の途中で折り返すため、文節単位で折り返す（PORT と同じ・対応ブラウザのみ） */
+    word-break: auto-phrase;
+    /* 3行になる幅で「…スマートに／一元化」と最後の行だけ短くなるため、各行の長さをそろえて折り返す（対応ブラウザのみ） */
+    text-wrap: balance;
   }
   body #lxp-root .lxp-hero__title .lxp-hero__title-sub em {
     font-style: normal;
@@ -1752,61 +1765,129 @@
     box-shadow: none;
   }
 
-  /* ---- COLUMN ---- */
-  body #lxp-root .lxp-columns {
+  /* ---- COLUMN：関連コラム ----
+     記事一覧は WordPress の SWELL「投稿リスト」ブロック（カテゴリー：EXPRESS）が出力し、
+     JS で #lxp-columns-slot へ移す。ここでは、そのブロックが出力する HTML（.p-postList 以下）を
+     STORAGE / PORT と同じカード（上に画像、下に日付・タイトル・「記事を読む」）の見た目に整える。
+     SWELL 標準の「2列並び・画像の拡大・本文の半透明化・ボタンの色変わり」はここで打ち消す */
+  body #lxp-root .lxp-columns-slot .p-postListWrap {
+    margin: 0;
+  }
+  body #lxp-root .lxp-columns-slot .p-postList {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    margin: 0;
+    padding: 0;
   }
-  body #lxp-root .lxp-column {
+  body #lxp-root .lxp-columns-slot .p-postList__item {
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+  body #lxp-root .lxp-columns-slot .p-postList__link {
     display: flex;
     flex-direction: column;
+    height: 100%;
     background: var(--lxp-white);
     border: 1px solid var(--lxp-line);
     border-radius: var(--lxp-radius);
     overflow: hidden;
+    color: var(--lxp-ink);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
-  body #lxp-root .lxp-column:hover {
+  body #lxp-root .lxp-columns-slot .p-postList__link:hover {
     transform: translateY(-3px);
     box-shadow: var(--lxp-shadow);
   }
-  body #lxp-root .lxp-column img {
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+  body #lxp-root .lxp-columns-slot .p-postList__thumb {
+    border-radius: 0;
+    box-shadow: none;
   }
-  body #lxp-root .lxp-column__body {
+  body #lxp-root .lxp-columns-slot .p-postList__thumb::before {
+    display: none;
+  }
+  /* サムネイルは以前のカードと同じ 16:9 */
+  body #lxp-root .lxp-columns-slot .c-postThumb__figure::before {
+    padding-top: 56.25%;
+  }
+  body #lxp-root .lxp-columns-slot .p-postList__link:hover .c-postThumb__img {
+    transform: none;
+  }
+  /* カテゴリー名：SWELL 標準の「画像の上のカテゴリー名」は出さない。
+     記事に複数のカテゴリーが付いていると、SWELL はそのうち1つ（例：EXPRESS）しか表示せず、
+     このページの製品と食い違うことがあるため。代わりに日付の前へ、このページの製品名「EXPRESS」を
+     固定で表示する（以前のカードと同じ「EXPRESS｜日付」の形）。
+     投稿リストブロックは EXPRESS カテゴリーの記事だけを表示する設定なので、並ぶ記事はすべて EXPRESS の記事になる */
+  body #lxp-root .lxp-columns-slot .c-postThumb__cat,
+  body #lxp-root .lxp-columns-slot .p-postList__cat {
+    display: none;
+  }
+  body #lxp-root .lxp-columns-slot .p-postList__meta::before {
+    content: "EXPRESS｜";
+  }
+  body #lxp-root .lxp-columns-slot .p-postList__body {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
     padding: 20px 22px 22px;
   }
-  body #lxp-root .lxp-column__meta {
+  body #lxp-root .lxp-columns-slot .p-postList__item:hover .p-postList__body {
+    opacity: 1;
+  }
+  /* 日付などの投稿情報はタイトルの上に置く */
+  body #lxp-root .lxp-columns-slot .p-postList__meta {
+    order: -1;
+    margin: 0 0 8px;
     font-size: 11.5px;
     color: var(--lxp-muted);
     letter-spacing: 0.04em;
   }
-  body #lxp-root .lxp-column__title {
-    margin: 8px 0 14px;
+  body #lxp-root .lxp-columns-slot .p-postList__meta > * {
+    margin: 0 8px 0 0;
+    padding: 0;
+  }
+  body #lxp-root .lxp-columns-slot .p-postList__meta *::before {
+    display: none;
+  }
+  body #lxp-root .lxp-columns-slot .p-postList__title {
+    margin: 0 0 14px;
     font-size: 15px;
     font-weight: 700;
     line-height: 1.6;
     flex: 1 1 auto;
   }
-  body #lxp-root .lxp-column__link {
+  /* 抜粋文は以前のカードに無いため出さない */
+  body #lxp-root .lxp-columns-slot .p-postList__excerpt {
+    display: none;
+  }
+  /* カード下の「記事を読む」 */
+  body #lxp-root .lxp-columns-slot .p-postList__body::after,
+  body #lxp-root .lxp-columns-slot .p-postList__link:hover .p-postList__body::after {
+    content: "記事を読む";
+    display: block;
     align-self: flex-start;
+    width: auto;
+    margin: 0;
+    padding: 0 0 2px;
+    border-radius: 0;
+    border-bottom: 2px solid var(--lxp-teal);
+    background: none;
+    box-shadow: none;
+    color: var(--lxp-teal-dark);
     font-size: 13px;
     font-weight: 700;
-    color: var(--lxp-teal-dark);
-    border-bottom: 2px solid var(--lxp-teal);
-    padding-bottom: 2px;
+    opacity: 1;
   }
 
   /* ---- SERIES ---- */
+  /* 関連システムは製品2つだけなので、中央寄せの2列にする（STORAGE / PORT と同じ） */
   body #lxp-root .lxp-siblings {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    max-width: 860px;
+    margin: 0 auto;
   }
   body #lxp-root .lxp-sibling {
     display: flex;
@@ -1955,7 +2036,7 @@
     body #lxp-root .lxp-cases {
       grid-template-columns: 1fr;
     }
-    body #lxp-root .lxp-columns {
+    body #lxp-root .lxp-columns-slot .p-postList {
       grid-template-columns: 1fr;
     }
     body #lxp-root .lxp-siblings {
@@ -2060,6 +2141,15 @@
       max-height: 48px !important;
     }
   }
+  /* スマホでは、見出しの「「LOGI-Cube EXPRESS」で」が1行に入らず「で」だけが次の行に残るため、
+     画面幅に合わせて見出しの文字を少しずつ小さくして1行に収める（STORAGE / PORT と同じ考え方）。
+     （その部分の幅は文字サイズの約13.5倍。画面幅から左右余白72px程度を引いた幅に収まるよう14で割る）
+     幅436px以上では従来どおり26px */
+  @media (max-width: 639px) {
+    body #lxp-root .lxp-sectionhead__title {
+      font-size: min(26px, calc((100vw - 72px) / 14));
+    }
+  }
 </style>
 <noscript>
   <style>
@@ -2138,6 +2228,8 @@
       <path d="M9 12h6"></path>
       <path d="M8 8H7a4 4 0 000 8h1M16 8h1a4 4 0 010 8h-1"></path>
     </symbol>
+    <!-- ￥マーク：横棒が下に詰まって縦線が切れたように見えていたため、
+         横棒2本を上に寄せて短くし、縦線を下の横棒より下まで伸ばして形を整えた（STORAGE / PORT と同じ形） -->
     <symbol
       id="lxp-i-yen"
       viewBox="0 0 24 24"
@@ -2146,7 +2238,7 @@
       stroke-width="1.75"
       stroke-linecap="round"
       stroke-linejoin="round">
-      <path d="M7 5l5 7 5-7M12 12v7M7 14h10M7 18h10"></path>
+      <path d="M6.5 4l5.5 7.5L17.5 4M12 11.5V20.5M7.5 13.5h9M7.5 17h9"></path>
     </symbol>
     <symbol
       id="lxp-i-clock"
@@ -2999,7 +3091,10 @@
       <header class="lxp-sectionhead">
         <div class="lxp-sectionhead__en">SOLUTION</div>
         <h2 class="lxp-sectionhead__title">
-          運送管理システム「LOGI-Cube EXPRESS」でできること
+          <!-- 「でで｜きること」のような中途半端な改行を防ぐため、製品名の前で改行し、残りを言葉のまとまりで囲む -->
+          運送管理システム<br /><span class="lxp-phrase"
+            >「LOGI-Cube EXPRESS」で</span
+          ><span class="lxp-phrase">できること</span>
         </h2>
         <p class="lxp-sectionhead__text">
           LOGI-Cube EXPRESS（ロジキューブ
@@ -3127,7 +3222,10 @@
       <header class="lxp-sectionhead">
         <div class="lxp-sectionhead__en">FEATURE</div>
         <h2 class="lxp-sectionhead__title">
-          運送管理システム「LOGI-Cube EXPRESS」の機能
+          <!-- 「機｜能」のような中途半端な改行を防ぐため、製品名の前で改行し、残りを言葉のまとまりで囲む -->
+          運送管理システム<br /><span class="lxp-phrase"
+            >「LOGI-Cube EXPRESS」の</span
+          ><span class="lxp-phrase">機能</span>
         </h2>
         <p class="lxp-sectionhead__text">
           基本の「日計表管理」と4つのオプションシステムの機能を、実際の画面とあわせてご紹介します。運転者台帳・車両台帳は単独でのご利用も可能です。
@@ -3478,7 +3576,10 @@
       <header class="lxp-sectionhead">
         <div class="lxp-sectionhead__en">REASON</div>
         <h2 class="lxp-sectionhead__title">
-          運送管理システム「LOGI-Cube EXPRESS」が選ばれる理由
+          <!-- 「選｜ばれる理由」のような中途半端な改行を防ぐため、製品名の前で改行し、残りを言葉のまとまりで囲む -->
+          運送管理システム<br /><span class="lxp-phrase"
+            >「LOGI-Cube EXPRESS」が</span
+          ><span class="lxp-phrase">選ばれる理由</span>
         </h2>
       </header>
       <article class="lxp-reason">
@@ -4091,57 +4192,15 @@
         <div class="lxp-sectionhead__en">COLUMN</div>
         <h2 class="lxp-sectionhead__title">運送業に関するコラム</h2>
       </header>
-      <div class="lxp-columns">
-        <a
-          class="lxp-column"
-          href="https://commoncom.jp/column/logistics-laws-guide/">
-          <img
-            loading="lazy"
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/05/image9.jpg"
-            alt="運送業の法律一覧に関するコラム" />
-          <div class="lxp-column__body">
-            <div class="lxp-column__meta">EXPRESS｜2026年5月15日</div>
-            <h3 class="lxp-column__title">
-              運送業の法律一覧と重要ポイント｜違反事例・罰則・法改正についても解説
-            </h3>
-            <span class="lxp-column__link">記事を読む</span>
-          </div>
-        </a>
-        <a
-          class="lxp-column"
-          href="https://commoncom.jp/column/%e4%b8%8b%e8%ab%8b%e6%b3%95%e3%81%a7%e9%81%8b%e9%80%81%e5%a7%94%e8%a8%97%e3%81%af%e3%81%a9%e3%81%86%e5%a4%89%e3%82%8f%e3%82%8b%ef%bc%9f%e7%89%b9%e5%ae%9a%e9%81%8b%e9%80%81%e5%a7%94%e8%a8%97%e3%81%ae/">
-          <img
-            loading="lazy"
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/04/image1.jpg"
-            alt="下請法と運送委託に関するコラム" />
-          <div class="lxp-column__body">
-            <div class="lxp-column__meta">EXPRESS｜2026年5月1日</div>
-            <h3 class="lxp-column__title">
-              下請法で運送委託はどう変わる？特定運送委託の条件と実務対応を解説
-            </h3>
-            <span class="lxp-column__link">記事を読む</span>
-          </div>
-        </a>
-        <a
-          class="lxp-column"
-          href="https://commoncom.jp/column/truck-transport-act-amendment/">
-          <img
-            loading="lazy"
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/03/image9.jpg"
-            alt="貨物自動車運送事業法改正に関するコラム" />
-          <div class="lxp-column__body">
-            <div class="lxp-column__meta">EXPRESS｜2026年4月24日</div>
-            <h3 class="lxp-column__title">
-              貨物自動車運送事業法改正とは？最新ポイントと運送業への影響・対策を徹底解説
-            </h3>
-            <span class="lxp-column__link">記事を読む</span>
-          </div>
-        </a>
-      </div>
+      <!-- 記事一覧を入れる枠。WordPress でこのHTMLブロックの直後に置いた
+           SWELL「投稿リスト」ブロック（カテゴリー：EXPRESS）を、JS でここへ移す。
+           コラムに「EXPRESS」カテゴリーを付けて公開すると、自動でここに表示される -->
+      <div class="lxp-columns-slot" id="lxp-columns-slot"></div>
     </div>
   </section>
 
-  <!-- ============ SERIES：関連システム ============ -->
+  <!-- ============ SERIES：関連システム（LOGI-Cube の製品2つ。
+       「システム要件（動作環境）」は製品ではないため載せない。動作環境への案内は FAQ に残っている） ============ -->
   <section class="lxp-section lxp-section--soft" id="lxp-series">
     <div class="lxp-container">
       <header class="lxp-sectionhead">
@@ -4182,22 +4241,6 @@
               class="lxp-button lxp-button--secondary"
               href="https://commoncom.jp/logi-cube/port/"
               >PORTを見る</a
-            >
-          </div>
-        </article>
-        <article class="lxp-sibling">
-          <span class="lxp-icon-wrap" aria-hidden="true"
-            ><svg class="lxp-icon"><use href="#lxp-i-monitor"></use></svg
-          ></span>
-          <h3 class="lxp-sibling__title">LOGI-Cubeシステム要件</h3>
-          <p class="lxp-card__text">
-            動作環境はシステム要件のページで確認できます。
-          </p>
-          <div class="lxp-actions">
-            <a
-              class="lxp-button lxp-button--secondary"
-              href="https://commoncom.jp/spec/"
-              >動作環境を見る</a
             >
           </div>
         </article>
@@ -4891,6 +4934,31 @@
           formObserver.disconnect();
         }, 2000);
       });
+
+      /* ---- 関連コラム：直後に置いた「投稿リスト」ブロックを COLUMN セクションの枠へ移す ----
+         投稿リストブロックはこのHTMLブロックより後ろに出力され、このスクリプトの実行時点では
+         まだ読み込まれていないため、ページの HTML を読み終えてから移す。
+         サイドバーなど別の場所の投稿リストを拾わないよう、#lxp-root の後ろに並ぶ要素だけを探す
+         （Contact Form 7 ブロックと並べて置いても、投稿リストだけを見分けて移す） */
+      function findColumnList() {
+        var node = root.nextElementSibling;
+        while (node) {
+          if (node.classList.contains("p-postListWrap")) return node;
+          node = node.nextElementSibling;
+        }
+        return null;
+      }
+      function mountColumnList() {
+        var slot = root.querySelector("#lxp-columns-slot");
+        var list;
+        if (!slot) return;
+        list = findColumnList();
+        if (!list) return;
+        slot.appendChild(list);
+      }
+      if (document.readyState === "loading")
+        document.addEventListener("DOMContentLoaded", mountColumnList);
+      else mountColumnList();
     })();
   </script>
 </div>
