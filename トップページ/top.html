@@ -569,6 +569,12 @@
     transform: translateY(-2px);
     box-shadow: var(--chp-shadow);
   }
+  /* kintone欄のカードはリンクを一時的に外しているため、マウスを乗せたときの浮き上がり・影を止めている。
+     リンクを復活させる場合は、この指定（下の4行）を削除またはコメントアウトすること。 */
+  body #chp-root #chp-kintone .chp-product:hover {
+    transform: none;
+    box-shadow: none;
+  }
   body #chp-root .chp-product img {
     aspect-ratio: 16 / 9;
     object-fit: cover;
@@ -1901,7 +1907,11 @@
         </h2>
       </header>
       <div class="chp-products chp-products--2">
-        <a class="chp-product" href="https://commoncom.jp/vehicleledger/">
+        <!-- 車両台帳カード：詳細ページへのリンクを一時的に外しているため、a ではなく div にしている。
+             復活させる場合は、下の div（開始・終了とも）を次の a に戻すこと。
+             <a class="chp-product" href="https://commoncom.jp/vehicleledger/"> ～ </a> -->
+        <div class="chp-product">
+          <!-- 写真を一時的に非表示（コメントアウト）。復活させる場合はこのコメントを外す。
           <img
             src="https://commoncom.jp/wp/wp-content/uploads/2026/08/hero-vehicle-ledger.jpg"
             alt="車両台帳パッケージ for kintone"
@@ -1909,6 +1919,7 @@
             height="675"
             loading="lazy"
             decoding="async" />
+          -->
           <div class="chp-product__body">
             <div class="chp-product__en">
               <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -1919,12 +1930,16 @@
             <p class="chp-product__text">
               運送・物流向けの車両管理システムです。Excelや紙の車両台帳をkintoneにまとめ、車検・点検・整備・帳票・期限アラートを一元管理します。更新・検索・共有の手間を減らせます。
             </p>
+            <!-- 「詳細はこちら」を一時的に非表示（コメントアウト）。復活させる場合はこのコメントを外す。
             <span class="chp-product__link">詳細はこちら</span>
+            -->
           </div>
-        </a>
-        <a
-          class="chp-product"
-          href="https://commoncom.jp/%e9%81%8b%e8%bb%a2%e8%80%85%e5%8f%b0%e5%b8%b3%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8-for-kintone/">
+        </div>
+        <!-- 運転者台帳カード：詳細ページへのリンクを一時的に外しているため、a ではなく div にしている。
+             復活させる場合は、下の div（開始・終了とも）を次の a に戻すこと。
+             <a class="chp-product" href="https://commoncom.jp/%e9%81%8b%e8%bb%a2%e8%80%85%e5%8f%b0%e5%b8%b3%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8-for-kintone/"> ～ </a> -->
+        <div class="chp-product">
+          <!-- 写真を一時的に非表示（コメントアウト）。復活させる場合はこのコメントを外す。
           <img
             src="https://commoncom.jp/wp/wp-content/uploads/2026/08/hero-driver-ledger.png"
             alt="運転者台帳パッケージ for kintone"
@@ -1932,6 +1947,7 @@
             height="675"
             loading="lazy"
             decoding="async" />
+          -->
           <div class="chp-product__body">
             <div class="chp-product__en">
               <svg class="chp-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -1942,9 +1958,11 @@
             <p class="chp-product__text">
               運送会社の運転者情報をkintoneで管理するパッケージです。紙やExcelに散らばった免許・適性診断などの情報を一つに集め、最新状況の把握と共有を容易にします。車両台帳パッケージとも連携できます。
             </p>
+            <!-- 「詳細はこちら」を一時的に非表示（コメントアウト）。復活させる場合はこのコメントを外す。
             <span class="chp-product__link">詳細はこちら</span>
+            -->
           </div>
-        </a>
+        </div>
       </div>
     </div>
   </section>
