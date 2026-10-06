@@ -1181,6 +1181,10 @@
   body #lxp-root .lxp-shot:nth-child(2):last-child {
     grid-column: 1 / -1;
   }
+  /* 画像が1枚だけのタブ：上に寄せると下が空いて見えるので、左の文章の高さの中央に置く */
+  body #lxp-root .lxp-shots--single {
+    align-self: center;
+  }
   body #lxp-root .lxp-shot img {
     border-radius: 10px;
     border: 1px solid var(--lxp-line);
@@ -1216,6 +1220,14 @@
   }
   body #lxp-root .lxp-reason:nth-child(even) .lxp-reason__copy {
     order: 2;
+  }
+  /* 画像なしの POINT を2つ左右に並べる段。文章の長さが違っても見出しの位置がそろうよう上端でそろえる */
+  body #lxp-root .lxp-reason--pair {
+    align-items: start;
+  }
+  /* 2つを1段にまとめた分だけ後ろの POINT の順番が1つずれるため、直後の POINT は「文章が左・画像が右」の並びを保つ */
+  body #lxp-root .lxp-reason--pair + .lxp-reason .lxp-reason__copy {
+    order: 0;
   }
   body #lxp-root .lxp-reason__num {
     display: flex;
@@ -2105,6 +2117,14 @@
     }
     body #lxp-root .lxp-reason:nth-child(even) .lxp-reason__copy {
       order: 0;
+    }
+    /* スマホでは POINT 02・03 が縦に並ぶので、ほかの POINT と同じ余白と区切り線で分ける */
+    body #lxp-root .lxp-reason--pair {
+      gap: 36px;
+    }
+    body #lxp-root .lxp-reason--pair .lxp-reason__copy + .lxp-reason__copy {
+      padding-top: 36px;
+      border-top: 1px solid var(--lxp-line);
     }
     body #lxp-root .lxp-shots {
       grid-template-columns: 1fr;
@@ -3313,6 +3333,7 @@
                 </a>
                 <figcaption>請求書</figcaption>
               </figure>
+              <!-- 「請求処理画面」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消す）
               <figure class="lxp-shot">
                 <a
                   class="lxp-lightbox-trigger"
@@ -3325,6 +3346,7 @@
                 </a>
                 <figcaption>請求処理画面</figcaption>
               </figure>
+              -->
             </div>
           </div>
         </article>
@@ -3352,7 +3374,8 @@
                 </li>
               </ul>
             </div>
-            <div class="lxp-shots">
+            <!-- 画像が1枚だけなので、左の文章の高さの中央に置く（lxp-shots--single） -->
+            <div class="lxp-shots lxp-shots--single">
               <figure class="lxp-shot">
                 <a
                   class="lxp-lightbox-trigger"
@@ -3365,6 +3388,7 @@
                 </a>
                 <figcaption>運転日報入力画面</figcaption>
               </figure>
+              <!-- 「車両別収支表」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消し、上の lxp-shots--single も外す）
               <figure class="lxp-shot">
                 <a
                   class="lxp-lightbox-trigger"
@@ -3377,6 +3401,7 @@
                 </a>
                 <figcaption>車両別収支表</figcaption>
               </figure>
+              -->
             </div>
           </div>
         </article>
@@ -3606,6 +3631,30 @@
           </a>
         </div>
       </article>
+      <!-- POINT 02・03 は画像を載せないため、片側が空白にならないよう文章2つを左右に並べて1段にまとめる（lxp-reason--pair） -->
+      <div class="lxp-reason lxp-reason--pair">
+        <article class="lxp-reason__copy">
+          <div class="lxp-reason__num">
+            <strong>02</strong><span>POINT</span>
+          </div>
+          <h3 class="lxp-reason__title">
+            多様な運賃管理で、請求も支払も正確に。
+          </h3>
+          <p class="lxp-reason__text">
+            請求項目（傭車料項目）は自由に登録でき、業務に合った請求書を出力できます。請求書作成の処理状況は見える化され、内容訂正後の発行漏れを防ぐアラート機能とともに、正確で素早い請求書作成をサポートします。
+          </p>
+        </article>
+        <article class="lxp-reason__copy">
+          <div class="lxp-reason__num">
+            <strong>03</strong><span>POINT</span>
+          </div>
+          <h3 class="lxp-reason__title">収支把握から、経営の見える化へ。</h3>
+          <p class="lxp-reason__text">
+            売上実績や稼働状況は、車両毎・運転者毎に集計、出力できます。車両別収支では直接費・間接費・運行三費で集計でき、どの車両が儲かっているかが数字で見えます。
+          </p>
+        </article>
+      </div>
+      <!-- POINT 02・03 の画像つきの元の形は一時的に非表示（復活させるときは、上の lxp-reason--pair のかたまりを消し、この行と下の閉じ記号の行を消す）
       <article class="lxp-reason">
         <div class="lxp-reason__copy">
           <div class="lxp-reason__num">
@@ -3652,6 +3701,7 @@
           </a>
         </div>
       </article>
+      -->
       <article class="lxp-reason">
         <div class="lxp-reason__copy">
           <div class="lxp-reason__num">

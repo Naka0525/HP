@@ -481,6 +481,20 @@
     border-right: 0;
   }
 
+  /* 広い画面（5列×2段）のとき、1段目と2段目の間に横線を入れて見やすくする。
+     画面が狭いときは、下のレスポンシブ指定で全マスに横線が付くため、広い画面のときだけ適用する */
+  @media (min-width: 1101px) {
+    /* 1段目（01〜05）の下に横線を引く */
+    body #vlp-root .vlp-quicknav__item:nth-child(-n + 5) {
+      border-bottom: 1px solid var(--vlp-line);
+    }
+
+    /* 各段の右端（5番目）のマスは、外枠の線と重なるので右の縦線を消す */
+    body #vlp-root .vlp-quicknav__item:nth-child(5n) {
+      border-right: 0;
+    }
+  }
+
   body #vlp-root .vlp-quicknav__item:hover {
     color: var(--vlp-navy);
     background: var(--vlp-sky);
@@ -827,6 +841,88 @@
   body #vlp-root .vlp-menuitem__below .vlp-menuitem__list {
     margin-top: 12px;
     gap: 6px;
+  }
+
+  /* ---- 画像を載せないメニューの並べ方（画像を一時的に非表示にした箇所で、片側が空白にならないようにする） ---- */
+  /* メニューの並びを左右2列の土台にする。通常のメニューは2列ぶんを使うので、見た目は今までどおり1列で縦に並ぶ */
+  body #vlp-root .vlp-menulist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body #vlp-root .vlp-menuitem {
+    grid-column: 1 / -1;
+  }
+
+  /* 文章だけのメニュー：1列ぶんだけ使い、隣の文章だけのメニューと左右に並べる。枠の中は文章の1列にする */
+  body #vlp-root .vlp-menuitem--textonly {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  /* 文章だけの追加機能（Excel風入力・クリック絞り込み）：2つの枠を左右に並べる囲み */
+  body #vlp-root .vlp-menuitem__extras {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    margin-top: 28px;
+  }
+
+  body #vlp-root .vlp-menuitem__extras .vlp-menuitem__extra {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  /* 文章が2つあるメニュー（MENU 10）：画像がない分、文章を左右2列に振り分けて枠の横幅いっぱいを使う。
+     上の段は「左：見出しと説明文／右：箇条書き」、下の段（帳票出力にも対応）は「左：見出し／右：説明文と箇条書き」。
+     画面が狭いときは今までどおり縦1列に並べるため、広い画面のときだけ適用する */
+  @media (min-width: 901px) {
+    body #vlp-root .vlp-menuitem--split {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    body #vlp-root .vlp-menuitem--split > .vlp-menucopy,
+    body #vlp-root .vlp-menuitem--split .vlp-menuitem__below .vlp-menucopy {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 52px;
+    }
+
+    body #vlp-root .vlp-menuitem--split > .vlp-menucopy > * {
+      grid-column: 1;
+      justify-self: start;
+    }
+
+    /* 箇条書きは右の列に置き、左の見出し・説明文の高さの中央にそろえる */
+    body #vlp-root .vlp-menuitem--split > .vlp-menucopy > .vlp-menuitem__list {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      align-self: center;
+      margin-top: 0;
+    }
+
+    body #vlp-root .vlp-menuitem--split .vlp-menuitem__below {
+      grid-template-columns: 1fr;
+      margin-top: 0;
+      padding-top: 40px;
+    }
+
+    body #vlp-root .vlp-menuitem--split .vlp-menuitem__below .vlp-menuitem__title {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+
+    body #vlp-root .vlp-menuitem--split .vlp-menuitem__below .vlp-menuitem__text {
+      grid-column: 2;
+      margin-top: 0;
+    }
+
+    body #vlp-root .vlp-menuitem--split .vlp-menuitem__below .vlp-menuitem__list {
+      grid-column: 2;
+    }
   }
 
   body #vlp-root .vlp-menuitem__extra .vlp-menushot {
@@ -1309,6 +1405,17 @@
     body #vlp-root .vlp-menuitem:nth-child(even) .vlp-menucopy,
     body #vlp-root .vlp-menuitem:nth-child(even) .vlp-menushot {
       order: initial;
+    }
+
+    /* 画面が狭いときは、左右に並べていた文章だけのメニュー・追加機能を縦1列に戻す */
+    body #vlp-root .vlp-menulist,
+    body #vlp-root .vlp-menuitem__extras {
+      grid-template-columns: 1fr;
+    }
+
+    body #vlp-root .vlp-menuitem__extras {
+      gap: 22px;
+      margin-top: 22px;
     }
 
     body #vlp-root .vlp-issues,
@@ -1929,6 +2036,9 @@
             <div class="vlp-menushot__caption">車両台帳入力画面</div>
           </figure>
 
+          <!-- 「Excel風入力」「クリック絞り込み」は画像を載せないため、片側が空白にならないよう2つの枠を左右に並べる（vlp-menuitem__extras）。
+               画像を復活させて元の「文章と画像の左右2列」に戻すときは、この囲み（開始と終了の div）も外す -->
+          <div class="vlp-menuitem__extras">
           <div class="vlp-menuitem__extra" id="vlp-m1-excel">
             <div class="vlp-menucopy">
               <div class="vlp-menuitem__no">
@@ -1945,6 +2055,7 @@
                 <li>メーカーや種別もセル上で選択</li>
               </ul>
             </div>
+            <!-- 「Excel風入力」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消す）
             <figure class="vlp-menushot">
             <a
               class="vlp-lightbox-trigger"
@@ -1962,6 +2073,7 @@
             </a>
             <div class="vlp-menushot__caption"> Excel風入力（車両台帳オプション） </div>
           </figure>
+            -->
           </div>
 
           <div class="vlp-menuitem__extra" id="vlp-m1-filter">
@@ -1979,6 +2091,7 @@
                 <li>検索結果はそのまま一覧表示・Excel出力</li>
               </ul>
             </div>
+            <!-- 「クリック絞り込み」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消す）
             <figure class="vlp-menushot">
             <a
               class="vlp-lightbox-trigger"
@@ -1996,6 +2109,8 @@
             </a>
             <div class="vlp-menushot__caption"> クリック絞り込み（車両台帳） </div>
           </figure>
+            -->
+          </div>
           </div>
         </article>
 
@@ -2151,7 +2266,9 @@
           </figure>
         </article>
 
-        <article class="vlp-menuitem" id="vlp-m6">
+        <!-- MENU 06・07 は画像を載せないため、片側が空白にならないよう2つの枠を左右に並べる（vlp-menuitem--textonly）。
+             画像を復活させるときは、それぞれの vlp-menuitem--textonly も外す -->
+        <article class="vlp-menuitem vlp-menuitem--textonly" id="vlp-m6">
           <div class="vlp-menucopy">
             <div class="vlp-menuitem__no">MENU 06</div>
             <h3 class="vlp-menuitem__title">車両整備年間計画表</h3>
@@ -2165,6 +2282,7 @@
             </ul>
           </div>
 
+          <!-- 「車両整備年間計画表」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消す）
           <figure class="vlp-menushot">
             <a
               class="vlp-lightbox-trigger"
@@ -2182,9 +2300,10 @@
             </a>
             <div class="vlp-menushot__caption">車両整備年間計画表</div>
           </figure>
+          -->
         </article>
 
-        <article class="vlp-menuitem" id="vlp-m7">
+        <article class="vlp-menuitem vlp-menuitem--textonly" id="vlp-m7">
           <div class="vlp-menucopy">
             <div class="vlp-menuitem__no">
               MENU 07<span class="vlp-tag vlp-tag--renewal">リニューアル</span>
@@ -2200,6 +2319,7 @@
             </ul>
           </div>
 
+          <!-- 「車両整備カレンダー」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消す）
           <figure class="vlp-menushot">
             <a
               class="vlp-lightbox-trigger"
@@ -2217,6 +2337,7 @@
             </a>
             <div class="vlp-menushot__caption">車両整備カレンダー</div>
           </figure>
+          -->
         </article>
 
         <article class="vlp-menuitem" id="vlp-m8">
@@ -2285,7 +2406,9 @@
           </figure>
         </article>
 
-        <article class="vlp-menuitem" id="vlp-m10">
+        <!-- MENU 10 は画像を載せないため、片側が空白にならないよう、見出し・説明文と箇条書きを左右2列に振り分ける（vlp-menuitem--split）。
+             画像を復活させるときは、vlp-menuitem--split も外す -->
+        <article class="vlp-menuitem vlp-menuitem--split" id="vlp-m10">
           <div class="vlp-menucopy">
             <div class="vlp-menuitem__no">MENU 10 / OPTION</div>
             <h3 class="vlp-menuitem__title">車両装備部品管理</h3>
@@ -2302,6 +2425,7 @@
             </ul>
           </div>
 
+          <!-- 「車両装備部品管理の画面例」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消す）
           <figure class="vlp-menushot">
             <a
               class="vlp-lightbox-trigger"
@@ -2319,6 +2443,7 @@
             </a>
             <div class="vlp-menushot__caption">車両装備部品管理の画面例</div>
           </figure>
+          -->
 
           <div class="vlp-menuitem__below" id="vlp-m10-report">
             <div class="vlp-menucopy">
@@ -2330,6 +2455,7 @@
                 <li>各軸での帳票出力に対応</li>
               </ul>
             </div>
+            <!-- 「車両別部品管理の帳票」の画像は一時的に非表示（復活させるときは、この行と下の閉じ記号の行を消す）
             <figure class="vlp-menushot">
             <a
               class="vlp-lightbox-trigger"
@@ -2347,6 +2473,7 @@
             </a>
             <div class="vlp-menushot__caption">車両別部品管理の帳票</div>
           </figure>
+            -->
           </div>
         </article>
       </div>
