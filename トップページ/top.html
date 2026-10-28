@@ -12,6 +12,7 @@
       フロントページでは SWELL がヘッダーロゴを h1.c-headLogo にするため、それは動かさない。
       初期HTMLにタイトルを2つ置くと、JSを実行しないSEOクローラが見出しを二重に拾う
     - 構造化データは WP が ld+json を除去する場合があるため JS で head へ挿入する
+    - コラム欄は WP の REST API から「コラム」分類の最新8件を JS で取得して表示する（手での更新は不要）
     - ヒーローと導入ロゴは WP 余白を打ち消して全幅。それより下は既存コンテナ幅のまま
     - ヘッダー＋ヒーロー＋導入ロゴが画面高さいっぱいに収まる
     - インラインJSでは WordPress がアンパサンドを実体参照にするため論理積演算子を使わない
@@ -1707,6 +1708,15 @@
         <h2 class="chp-sectionhead__title">NEWS</h2>
       </header>
       <div class="chp-news">
+        <!-- 最新コラム：LOGI-Cube EXPRESSの解説コラム公開のお知らせ（コラム記事ページへリンク）。NEWSは最新を一番上に置く -->
+        <a
+          class="chp-news__item"
+          href="https://commoncom.jp/column/logi-cube-express/">
+          <div class="chp-news__label">コラム</div>
+          <h3 class="chp-news__title">
+            2026年10月　「LOGI-Cube EXPRESSとは？」　コラムをアップしました！　こちら
+          </h3>
+        </a>
         <!-- 最新NEWS：PHP関連の脆弱性についての重要なお知らせ（お知らせ記事ページへリンク） -->
         <a
           class="chp-news__item"
@@ -1748,12 +1758,6 @@
           <h3 class="chp-news__title">
             アビスパ福岡とのスポンサー契約締結について　こちら
           </h3>
-        </a>
-        <a
-          class="chp-news__item"
-          href="https://commoncom.jp/%e4%bb%a4%e5%92%8c8%e5%b9%b4-%e7%86%8a%e6%9c%ac%e5%9c%b0%e9%9c%87%e3%81%a7%e8%a2%ab%e7%81%bd%e3%81%95%e3%82%8c%e3%81%9f%e7%9a%86%e6%a7%98%e3%81%b8/">
-          <div class="chp-news__label">お知らせ</div>
-          <h3 class="chp-news__title">令和8年 熊本地震で被災された皆様へ</h3>
         </a>
       </div>
     </div>
@@ -2176,160 +2180,10 @@
         </div>
         <h2 class="chp-sectionhead__title">物流の法令・労務コラム</h2>
       </header>
-      <div class="chp-columns">
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/transport-wage-regulations-guide/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/09/unnamed-5.jpg"
-            alt="運送会社の賃金規程には何を定める？作り方や注意点を解説"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-10-06">2026年10月6日</time>
-            </div>
-            <h3 class="chp-column__title">
-              運送会社の賃金規程には何を定める？作り方や注意点を解説
-            </h3>
-          </div>
-        </a>
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/transportation-management-system/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/08/image.jpeg"
-            alt="運送業管理システムとは？導入メリット・主な機能・失敗しない選び方を徹底解説"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-09-08">2026年9月8日</time>
-            </div>
-            <h3 class="chp-column__title">
-              運送業管理システムとは？導入メリット・主な機能・失敗しない選び方を徹底解説
-            </h3>
-          </div>
-        </a>
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/logistics-special-designation/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/07/34458399_s.jpg"
-            alt="物流特殊指定とは？対象・禁止行為・違反事例と企業の対応を解説"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-07-27">2026年7月27日</time>
-            </div>
-            <h3 class="chp-column__title">
-              物流特殊指定とは？対象・禁止行為・違反事例と企業の対応を解説
-            </h3>
-          </div>
-        </a>
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/in-house-logistics/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/07/image7.jpg"
-            alt="物流内製化とは？メリット・デメリット・進め方と効果が出やすい企業を解説"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-07-17">2026年7月17日</time>
-            </div>
-            <h3 class="chp-column__title">
-              物流内製化とは？メリット・デメリット・進め方と効果が出やすい企業を解説
-            </h3>
-          </div>
-        </a>
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/truck-driver-labor-management/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/06/image1.jpg"
-            alt="トラックドライバーの労務管理とは？法令遵守と物流2026年問題への対応ポイントを解説"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-06-24">2026年6月24日</time>
-            </div>
-            <h3 class="chp-column__title">
-              トラックドライバーの労務管理とは？法令遵守と物流2026年問題への対応ポイントを解説
-            </h3>
-          </div>
-        </a>
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/operation-management-if-it-exceeds-15-hours/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/06/image2-1.jpg"
-            alt="運行管理で15時間超えた場合はどうなる？基本ルールを確認しよう"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-06-16">2026年6月16日</time>
-            </div>
-            <h3 class="chp-column__title">
-              運行管理で15時間超えた場合はどうなる？基本ルールを確認しよう
-            </h3>
-          </div>
-        </a>
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/fuel-surcharge-system/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/05/image4-2.jpg"
-            alt="燃料サーチャージ制度とは？仕組み・計算方法・導入背景をわかりやすく解説"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-06-03">2026年6月3日</time>
-            </div>
-            <h3 class="chp-column__title">
-              燃料サーチャージ制度とは？仕組み・計算方法・導入背景をわかりやすく解説
-            </h3>
-          </div>
-        </a>
-        <a
-          class="chp-column"
-          href="https://commoncom.jp/column/workplace-certification-system-for-a-comfortable-working-environment/">
-          <img
-            src="https://commoncom.jp/wp/wp-content/uploads/2026/05/image7-1.jpg"
-            alt="働きやすい職場認証制度とは？取得メリット・認証基準・申請方法をわかりやすく解説"
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async" />
-          <div class="chp-column__body">
-            <div class="chp-column__meta">
-              <time datetime="2026-05-22">2026年5月22日</time>
-            </div>
-            <h3 class="chp-column__title">
-              働きやすい職場認証制度とは？取得メリット・認証基準・申請方法をわかりやすく解説
-            </h3>
-          </div>
-        </a>
-      </div>
+      <!-- コラム欄：記事は手で書かず、WordPressの記事一覧の窓口（REST API）から
+           「コラム」分類の最新8件を自動で取り出して並べる（下のスクリプトの renderColumns）。
+           コラムを公開すれば、このページを貼り直さなくても自動で最新になる -->
+      <div class="chp-columns" id="chp-columns-list"></div>
     </div>
   </section>
 
@@ -2466,6 +2320,86 @@
       }
 
       injectJsonLd();
+
+      // コラム欄を自動で作る。WordPress標準の記事一覧の窓口（REST API）から
+      // 「コラム」分類（カテゴリーID 2）の新しい順8件を、アイキャッチ画像つきで受け取り、
+      // 以前手で書いていたカードと同じ形（a.chp-column）に組み立てて #chp-columns-list に並べる。
+      // URLの区切り記号はWordPressが実体参照に書き換えるため、条件は searchParams で組み立てる
+      function renderColumns() {
+        var list = root.querySelector("#chp-columns-list");
+        if (!list) return;
+        var api = new URL("https://commoncom.jp/wp-json/wp/v2/posts");
+        api.searchParams.set("categories", "2");
+        api.searchParams.set("per_page", "8");
+        api.searchParams.set("_embed", "wp:featuredmedia");
+        fetch(api.toString())
+          .then(function (res) {
+            if (!res.ok) {
+              throw new Error("コラム一覧の取得に失敗しました: " + res.status);
+            }
+            return res.json();
+          })
+          .then(function (posts) {
+            var i;
+            for (i = 0; i < posts.length; i++) {
+              list.appendChild(buildColumnCard(posts[i]));
+            }
+          });
+      }
+      // 記事1件分のデータから、コラムのカード1枚（画像・公開日・題名）を作る
+      function buildColumnCard(post) {
+        var title = decodeHtmlText(post.title.rendered);
+        var card = document.createElement("a");
+        card.className = "chp-column";
+        card.href = post.link;
+        // アイキャッチ画像は記事に設定されているときだけ表示する
+        var media = post._embedded ? post._embedded["wp:featuredmedia"] : null;
+        if (media) {
+          if (media[0]) {
+            if (media[0].source_url) {
+              var img = document.createElement("img");
+              img.src = media[0].source_url;
+              img.alt = title;
+              img.width = 640;
+              img.height = 360;
+              img.loading = "lazy";
+              img.decoding = "async";
+              card.appendChild(img);
+            }
+          }
+        }
+        var body = document.createElement("div");
+        body.className = "chp-column__body";
+        var meta = document.createElement("div");
+        meta.className = "chp-column__meta";
+        // 公開日時「2026-10-28T13:03:04」を、datetime属性用と「2026年10月28日」表記に分ける
+        var ymd = post.date.slice(0, 10);
+        var parts = ymd.split("-");
+        var time = document.createElement("time");
+        time.setAttribute("datetime", ymd);
+        time.textContent =
+          parts[0] +
+          "年" +
+          parseInt(parts[1], 10) +
+          "月" +
+          parseInt(parts[2], 10) +
+          "日";
+        meta.appendChild(time);
+        var heading = document.createElement("h3");
+        heading.className = "chp-column__title";
+        heading.textContent = title;
+        body.appendChild(meta);
+        body.appendChild(heading);
+        card.appendChild(body);
+        return card;
+      }
+      // 題名の記号（ダッシュなど）は数値の文字コード表記で届くことがあるため、普通の文字に戻す
+      function decodeHtmlText(html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        return doc.body.textContent.trim();
+      }
+
+      renderColumns();
 
       function removeInjectedLogos() {
         var injected = document.getElementById("cc-logo-showcase-injected");
